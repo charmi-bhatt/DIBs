@@ -1,9 +1,6 @@
 """
 >find wa   overplot for different molecules(objects)
-> what standard deviation to put in ? study Ameek's code and Rotational energies.py
-> compare boltzmann calculated and Pgopher
 
->> trying github push through github desktop
 """
 
 import pandas as pd
