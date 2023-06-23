@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Created on Thu Jun 22 18:49:43 2023
+
+@author: charmibhatt
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
 Created on Tue Jun 20 16:22:21 2023
 
 @author: charmibhatt
@@ -97,9 +105,9 @@ def allowed_perperndicular_transitions(Jmax):
         
     return combinations
 
-
+startg = timeit.default_timer()
 def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
-    startg = timeit.default_timer()
+   
 
     combinations  = allowed_perperndicular_transitions(Jmax)
     # rotational constants in cm-1
@@ -257,14 +265,16 @@ def obs_curve_to_fit(sightline):
         Obs_data = pd.read_csv(spec_dir / file,
                                 sep=',')
         Obs_data['Wavelength'] = (1 / Obs_data['Wavelength']) * 1e8
+
         Obs_data = Obs_data.iloc[::-1].reset_index(
             drop=True)  # making it ascending order as we transformed wavelength into wavenumbers
 
-        # shifting to zero and scaling flux between 0.9 and 1
+        # # shifting to zero and scaling flux between 0.9 and 1
         min_index = np.argmin(Obs_data['Flux'])
         Obs_data['Wavelength'] = Obs_data['Wavelength'] - Obs_data['Wavelength'][min_index] 
         Obs_data['Flux'] = (Obs_data['Flux'] - min(Obs_data['Flux'])) / (1 - min(Obs_data['Flux'])) * 0.1 + 0.9
-        
+        plt.plot(Obs_data['Wavelength'], Obs_data['Flux'])
+
         # removing red wing
         # Obs_data_trp = Obs_data [(Obs_data['Wavelength'] >= -1) & (Obs_data['Wavelength']<= 1.2)]
         Obs_data_trp = Obs_data[(Obs_data['Flux'] <= 0.95)]  # trp = triple peak structure
@@ -285,18 +295,18 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
     params = mod.make_params( B = B, delta_B = delta_B, zeta = zeta, T=T,sigma = sigma, origin = origin)
     
     print(params)
-    params['B'].min = 0.0005 
-    params['B'].max = 0.01
-    params['T'].min = 2.7
-    params['T'].max = 300
-    params['origin'].min = -2
-    params['origin'].max = 2
-    params['delta_B'].min = -1
-    params['delta_B'].max = 0
-    params['zeta'].min = -1
-    params['zeta'].max = 1
-    params['sigma'].min = 0.05
-    params['sigma'].max = 0.3
+    # params['B'].min = 0.0005 
+    # params['B'].max = 0.01
+    # params['T'].min = 2.7
+    # params['T'].max = 300
+    # params['origin'].min = -2
+    # params['origin'].max = 2
+    # params['delta_B'].min = -1
+    # params['delta_B'].max = 0
+    # params['zeta'].min = -1
+    # params['zeta'].max = 1
+    # params['sigma'].min = 0.05
+    # params['sigma'].max = 0.3
 
     x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
     #print(std_dev)
@@ -313,16 +323,22 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
         plt.show()
             
     plot_best_fit(result, x_equal_spacing, y_obs_data)
+    
     return result
 
 
 '''Inputs'''    
-Jmax = 300
-sightline = '166937'
-spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
-file = '6614_HD{}.txt'.format(sightline)
 
-resul = fit_model(B = 0.002, T = 22.5, delta_B = -0.45, zeta = -0.01, sigma = 0.17, origin =  0.012)
+Jmax = 400
+sightline = '185859'
+spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data/5797")
+file = 'HD{}_avg_spectra.csv'.format(sightline)
 
 
-# d`ArithmeticError      
+result = fit_model(B = 0.009, T = 22.5, delta_B = -0.45, zeta = -0.01, sigma = 0.17, origin =  0.012)
+
+
+# x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
+
+# plt.plot(x_equal_spacing, y_obs_data)
+     
