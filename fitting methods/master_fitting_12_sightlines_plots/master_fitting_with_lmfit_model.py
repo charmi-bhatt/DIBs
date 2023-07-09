@@ -116,7 +116,7 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     # print(B)
     # print(T)
     # print('-----------')
-    sigma = 0.0289
+    #sigma = 0.0289
     
     print(B)
     print(T)

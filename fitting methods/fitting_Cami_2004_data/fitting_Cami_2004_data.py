@@ -43,7 +43,7 @@ stddev_array = np.array([])
 spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Research/Cami_2004_data/heliocentric/6614/")
 
 
-sightlines = ['144217', '144470', '145502', '147165', '149757', '179406', '184915']
+sightlines = ['144217'] #, '144470', '145502', '147165', '149757', '179406', '184915']
 
 #sightlines = ['23180', '24398', '144470', '147165' , '147683', '149757', '166937', '170740', '184915', '185418', '185859', '203532']
 
@@ -67,7 +67,7 @@ def curve_to_fit_wavenos(sightline):
         Obs_data_trp = Obs_data[(Obs_data['Flux'] <= 0.95)]  # trp = triple peak structure
 
         # making data evenly spaced
-        x_equal_spacing = np.linspace(min(Obs_data_trp['Wavelength']), max(Obs_data_trp['Wavelength']), 25)
+        x_equal_spacing = np.linspace(min(Obs_data_trp['Wavelength']), max(Obs_data_trp['Wavelength']), 100)
         
         return x_equal_spacing
     
@@ -88,7 +88,7 @@ for sightline in sightlines:
     Obs_data['Wavelength'] = Obs_data['Wavelength'] - Obs_data['Wavelength'][min_index]
     Obs_data['Flux'] = (Obs_data['Flux'] - min(Obs_data['Flux'])) / (1 - min(Obs_data['Flux'])) * 0.1 + 0.9
     
-    # plt.plot(Obs_data['Wavelength'], Obs_data['Flux'], label  = sightline)
+    plt.plot(Obs_data['Wavelength'], Obs_data['Flux'], label  = sightline)
     # plt.legend()
     # plt.show()
     # removing red wing
@@ -96,7 +96,7 @@ for sightline in sightlines:
 
     # making data evenly spaced
     x_equal_spacing = np.linspace(min(Obs_data_trp['Wavelength']), max(Obs_data_trp['Wavelength']),
-                                  25)
+                                  100)
    
     
     #print(x_equal_spacing)
@@ -116,7 +116,9 @@ combinations = pd.read_csv(r"/Users/charmibhatt/Library/CloudStorage/OneDrive-Th
 startl = timeit.default_timer()
 
 
-def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
+def get_rotational_spectrum(B, delta_B, zeta, T, origin):
+    
+    sigma = 0.0289
     startg = timeit.default_timer()
 
     # print(B)
@@ -307,10 +309,10 @@ def get_multi_spectra( **params_list):
     first_T_index = 3
     last_T_index = first_T_index + len(sightlines) 
  
-    first_sigma_index = last_T_index  
-    last_sigma_index = first_sigma_index + len(sightlines) 
+    # first_sigma_index = last_T_index  
+    # last_sigma_index = first_sigma_index + len(sightlines) 
  
-    first_origin_index = last_sigma_index  
+    first_origin_index = last_T_index  #last_sigma_index
     last_origin_index = first_origin_index +len(sightlines) 
  
     # T_values = params_list[first_T_index:last_T_index]
@@ -318,7 +320,7 @@ def get_multi_spectra( **params_list):
     # origin_values = params_list[first_origin_index:last_origin_index]
     
     T_values = [params_list[f'T{i+1}'] for i in range(len(sightlines))]
-    sigma_values = [params_list[f'sigma{i+1}'] for i in range(len(sightlines))]
+    #sigma_values = [params_list[f'sigma{i+1}'] for i in range(len(sightlines))]
     origin_values = [params_list[f'origin{i+1}'] for i in range(len(sightlines))]
 
 
@@ -328,15 +330,15 @@ def get_multi_spectra( **params_list):
 
     all_y_model_data = np.array([])
     
-    for T, sigma, origin, sightline in zip(T_values, sigma_values, origin_values, sightlines):
+    for T, origin, sightline in zip(T_values, origin_values, sightlines): #sigma_values
         print(B)
         print(T)
         print(delta_B)
         print(zeta)
-        print(sigma)
+        #print(sigma)
         print(origin)
         x_equal_spacing = curve_to_fit_wavenos(sightline)
-        model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+        model_data = get_rotational_spectrum(B, delta_B, zeta, T, origin)
         #print(model_data)
         one_sl_y_model_data  = np.interp(x_equal_spacing, model_data[:, 0], model_data[:, 1])
         #print(one_sl_y_model_data )
@@ -348,7 +350,7 @@ def get_multi_spectra( **params_list):
 
 
 
-def fit_model(B, delta_B, zeta, T, sigma, origin):
+def fit_model(B, delta_B, zeta, T, origin):
     mod = Model(get_multi_spectra) 
     
     
@@ -356,11 +358,11 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
     params_list = [B, delta_B, zeta]
     
     T_list = [T] * len(sightlines)
-    sigma_list = [sigma] * len(sightlines)
+    #sigma_list = [sigma] * len(sightlines)
     origin_list = [origin] * len(sightlines)
 
     params_list.extend(T_list)
-    params_list.extend(sigma_list)
+    #params_list.extend(sigma_list)
     params_list.extend(origin_list)
     
     
@@ -371,10 +373,10 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
     first_T_index = 3
     last_T_index = first_T_index + len(sightlines) 
  
-    first_sigma_index = last_T_index  
-    last_sigma_index = first_sigma_index + len(sightlines) 
+    # first_sigma_index = last_T_index  
+    # last_sigma_index = first_sigma_index + len(sightlines) 
  
-    first_origin_index = last_sigma_index  
+    first_origin_index = last_T_index  #last_sigma_index  
     last_origin_index = first_origin_index +len(sightlines) 
  
     params = Parameters()
@@ -385,8 +387,8 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
     for i, param_value in enumerate(params_list[first_T_index:last_T_index]):
         params.add(f'T{i+1}', value=param_value, min = 2.7, max = 500)
         
-    for i, param_value in enumerate(params_list[first_sigma_index:last_sigma_index]):
-        params.add(f'sigma{i+1}', value=param_value, min = 0.05, max = 0.3)
+    # for i, param_value in enumerate(params_list[first_sigma_index:last_sigma_index]):
+    #     params.add(f'sigma{i+1}', value=param_value, min = 0.05, max = 0.3)
         
     for i, param_value in enumerate(params_list[first_origin_index:last_origin_index]):
         params.add(f'origin{i+1}', value=param_value, min = -1, max = 1)
@@ -415,14 +417,46 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
 
     result = mod.fit(flux_list, params, xx=wave_list, weights = 1/stddev_array )  # method = 'leastsq', fit_kws={'ftol': 1e-12, 'xtol': 1e-12}
     print(result.fit_report())
+    
+    def plot_best_fit(result, x_equal_spacing, y_obs_data):
+        plt.figure()
+        plt.scatter(x_equal_spacing, y_obs_data, label='Observations')
+        plt.plot(x_equal_spacing, result.best_fit, 'r-', label='Best Fit')
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.legend()
+        plt.show()
+            
+    plot_best_fit(result, x_equal_spacing, y_obs_data)
+    
     return result
 
-# # get_rotational_spectrum(x_equal_spacing, B = 0.0020, T = 300, delta_B = -0.005, zeta = -0.400, sigma = 0.262, origin =  0)
-# # get_rotational_spectrum(x_equal_spacing, B = 0.00276, T = 78.23, delta_B = -0.07, zeta = -0.36, sigma = 0.1917, origin =  0.0047)
 
-result1 = fit_model(B=0.005, T = 67, delta_B=-0.053, zeta=-0.197, sigma=0.127, origin=0.061)
+#result1 = fit_model(B=0.002, delta_B=-0.053, zeta=-0.197, T = 87, origin=0.061)
+
+# plt.figure(figsize = (15,8))
 
 
+# plt.plot(x_equal_spacing, y_obs_data)
+# B=        0.00299988
+# delta_B= -0.02255252 
+# zeta=    -0.11856624
+# T=       93.6023585
+# sigma=    0.0289
+# origin=   0.03259578
+
+B= 0.00330374
+delta_B= 0.0266478
+zeta= 0.11822396
+T = 86.19
+origin = 0.034
+model_data =  get_rotational_spectrum(B, delta_B, zeta, T, origin)
+plt.plot(model_data[:,0], model_data[:,1], color = 'red')
+# plt.xlabel('Wavelength')
+# plt.ylabel('Normalized Intenisty')
+# plt.title('ground_B = {:.5f} cm-1   Delta_B = {:.5f}    zeta = {:.5f} Temperature = {:.5f} K   $\sigma$ = {:.5f}    origin= {:.5f}\n\n'.format(B, delta_B, zeta, T, sigma, origin)) 
+# plt.legend(loc = 'lower left')
+# plt.xlim(-4,4)
 
 
 # # result1= fit_model(B = 0.01, T = 2.7, delta_B = -0.1, zeta = -0.1, sigma = 0.02, origin =  0)

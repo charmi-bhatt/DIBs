@@ -270,7 +270,7 @@ def obs_curve_to_fit(sightline):
         Obs_data_trp = Obs_data[(Obs_data['Flux'] <= 1)]  # trp = triple peak structure
 
         # making data evenly spaced
-        x_equal_spacing = np.linspace(min(Obs_data_trp['Wavelength']), max(Obs_data_trp['Wavelength']), 50)
+        x_equal_spacing = np.linspace(min(Obs_data_trp['Wavelength']), max(Obs_data_trp['Wavelength']), 100)
         y_obs_data = np.interp(x_equal_spacing, Obs_data_trp['Wavelength'], Obs_data_trp['Flux'])
 
         Obs_data_continuum = Obs_data [(Obs_data['Wavelength'] >= 9) & (Obs_data['Wavelength']<= 18)]
@@ -325,10 +325,25 @@ spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityo
 file = 'DIB5780_HD{}.txt'.format(sightline)
 
 
-result = fit_model(B = 0.002, T = 22.5, delta_B = -0.45, zeta = -0.01, sigma = 0.17, origin =  0.012)
+#result = fit_model(B = 0.002, T = 22.5, delta_B = -0.45, zeta = -0.01, sigma = 0.17, origin =  0.012)
 
+plt.figure(figsize = (15,8))
 
-# x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
+x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
 
-# plt.plot(x_equal_spacing, y_obs_data)
+plt.plot(x_equal_spacing, y_obs_data, label = sightline )
+
+B =        0.00785447 
+delta_B= -0.03643468 
+zeta=    -0.17344980 
+T=     291.858923 
+sigma=   0.30000000 
+origin=  0.42257102 
+
+linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+plt.plot(model_data[:,0], model_data[:,1], color = 'red')
+plt.xlabel('Wavelength')
+plt.ylabel('Normalized Intenisty')
+plt.title('5780: ground_B = {:.5f} cm-1   Delta_B = {:.5f}    zeta = {:.5f} Temperature = {:.5f} K   $\sigma$ = {:.5f}    origin= {:.5f}\n\n'.format(B, delta_B, zeta, T, sigma, origin)) 
+plt.legend(loc = 'lower left')
      

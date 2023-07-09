@@ -216,7 +216,7 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     smooth_intensities = calculate_smooth_intensities(Wavenos_arr, Intenisty_arr, smooth_wavenos, sigma)
 
     smooth_data = np.array([smooth_wavenos, smooth_intensities]).transpose()
-    smooth_data = np.delete(smooth_data, np.where(smooth_data[:, 1] <= 0.001 * (max(smooth_data[:, 1]))), axis=0)
+    #smooth_data = np.delete(smooth_data, np.where(smooth_data[:, 1] <= 0.00001 * (max(smooth_data[:, 1]))), axis=0)
 
     simu_waveno = smooth_data[:, 0]
     simu_intenisty = 1 - 0.1 * (smooth_data[:, 1] / max(smooth_data[:, 1]))
@@ -253,7 +253,9 @@ def model_curve_to_fit(x_equal_spacing, B, delta_B, zeta, T, sigma, origin):
 
 
 def obs_curve_to_fit(sightline): 
-        
+        spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
+        file = '6614_HD{}.txt'.format(sightline)
+
         Obs_data = pd.read_csv(spec_dir / file,
                                 sep=',')
         Obs_data['Wavelength'] = (1 / Obs_data['Wavelength']) * 1e8
@@ -265,18 +267,21 @@ def obs_curve_to_fit(sightline):
         Obs_data['Wavelength'] = Obs_data['Wavelength'] - Obs_data['Wavelength'][min_index] 
         Obs_data['Flux'] = (Obs_data['Flux'] - min(Obs_data['Flux'])) / (1 - min(Obs_data['Flux'])) * 0.1 + 0.9
         
+        plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset,  label = 'Data (HD ' + str(sightline) + ')' , color=(0.12156862745098039, 0.4666666666666667, 0.7058823529411765))
+
+        
         # removing red wing
         # Obs_data_trp = Obs_data [(Obs_data['Wavelength'] >= -1) & (Obs_data['Wavelength']<= 1.2)]
-        Obs_data_trp = Obs_data[(Obs_data['Flux'] <= 0.95)]  # trp = triple peak structure
+        Obs_data_trp = Obs_data[(Obs_data['Flux'] <= 1)]  # trp = triple peak structure
 
         # making data evenly spaced
-        x_equal_spacing = np.linspace(min(Obs_data_trp['Wavelength']), max(Obs_data_trp['Wavelength']), 25)
+        x_equal_spacing = np.linspace(min(Obs_data_trp['Wavelength']), max(Obs_data_trp['Wavelength']), 100)
         y_obs_data = np.interp(x_equal_spacing, Obs_data_trp['Wavelength'], Obs_data_trp['Flux'])
 
         Obs_data_continuum = Obs_data [(Obs_data['Wavelength'] >= 2) & (Obs_data['Wavelength']<= 5)]
         std_dev = np.std(Obs_data_continuum['Flux'])
         
-        return x_equal_spacing, y_obs_data, std_dev
+        return Obs_data, x_equal_spacing, y_obs_data, std_dev
     
 
 
@@ -318,11 +323,54 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
 
 '''Inputs'''    
 Jmax = 300
-sightline = '166937'
-spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
-file = '6614_HD{}.txt'.format(sightline)
-
-resul = fit_model(B = 0.002, T = 22.5, delta_B = -0.45, zeta = -0.01, sigma = 0.17, origin =  0.012)
+#sightline = '185418'
+#sightlines = ['23180', '24398'] #, '144470', '147165' , '147683', '149757', '166937', '170740', '184915', '185418', '185859', '203532']
 
 
-# d`ArithmeticError      
+#result = fit_model(B = 0.002, T = 22.5, delta_B = -0.45, zeta = -0.01, sigma = 0.17, origin =  0.012)
+plt.figure(figsize = (15,8))
+
+
+#plt.plot(x_equal_spacing, y_obs_data, label = 'Data (HD ' + str(sightline) + ')')
+
+data = pd.read_excel("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/fitting methods/master_fitting_results_in_ a_table copy.xlsx", header = 0)
+
+
+
+B =       0.00248308 #+/- 8.7988e-05 (3.54%) (init = 0.0023)		
+delta_B =  -0.06843322 #+/- 0.00301885 (4.41%) (init = -0.0353)		
+zeta =  -0.31260631 #+/- 0.00953055 (3.05%) (init = -0.4197)		
+
+Ts = list(data['Temp'])
+sigmas = list(data['sigma'])
+origins = list(data['origin'])
+offset = np.arange(0, 6, 0.06)
+sightlines = list(data['Sightline'])
+
+# for T, sigma, origin, offset, sightline in zip(Ts, sigmas, origins, offset, sightlines):
+#     Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
+#     # plt.plot(x_equal_spacing, y_obs_data - offset , label = 'Data (HD ' + str(sightline) + ')', color = blue)
+
+
+#     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+#     plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'red', label = 'Model')
+#     plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
+#     plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
+#     plt.tick_params(axis='both', which='major', labelsize=22)
+#     plt.annotate('HD' + str(sightline), xy = (Obs_data['Wavelength'][150] , Obs_data['Flux'][150] - offset) , xytext = (4, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+#     plt.annotate('T = {:.2f}'.format(T) + ' K', xy = (Obs_data['Wavelength'][40] , Obs_data['Flux'][40] - offset) , xytext = (-7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+#     plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = (Obs_data['Wavelength'][50] , Obs_data['Flux'][50] - offset) , xytext = (-5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
+#     plt.xlim(-7.5, 6)
+    #plt.legend(loc = 'lower left', fontsize = 16)
+    
+    
+    
+
+B= 0.00248374
+delta_B= -0.0666478
+zeta= -0.31822396
+T = 100.19
+sigma = 0.202
+origin = 0.034
+linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+plt.plot(model_data[:,0], model_data[:,1], color = 'red')

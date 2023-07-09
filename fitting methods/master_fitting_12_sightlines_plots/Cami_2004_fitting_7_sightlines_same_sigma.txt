@@ -1,0 +1,37 @@
+
+# fitting method   = leastsq
+# function evals   = 517
+# data points      = 175
+# variables        = 24
+chi-square         = 3711.59282
+reduced chi-square = 24.5800849
+Akaike info crit   = 582.525324
+Bayesian info crit = 658.480187
+R-squared          = -135649.735
+[[Variables]]
+B:        0.00331770 (init = 0.005)
+delta_B: -0.02653625 (init = -0.053)
+zeta:    -0.11820260 (init = -0.197)
+T1:       84.0040936 (init = 67)
+T2:       82.7823542 (init = 67)
+T3:       87.7684260 (init = 67)
+T4:       91.5297879 (init = 67)
+T5:       82.8827974 (init = 67)
+T6:       74.8162735 (init = 67)
+T7:       79.8058634 (init = 67)
+sigma1:   0.12700000 (init = 0.127)
+sigma2:   0.12700000 (init = 0.127)
+sigma3:   0.12700000 (init = 0.127)
+sigma4:   0.12700000 (init = 0.127)
+sigma5:   0.12700000 (init = 0.127)
+sigma6:   0.12700000 (init = 0.127)
+sigma7:   0.12700000 (init = 0.127)
+origin1:  0.03506386 (init = 0.061)
+origin2:  0.00151502 (init = 0.061)
+origin3: -0.06038301 (init = 0.061)
+origin4: -0.03555046 (init = 0.061)
+origin5:  0.06507949 (init = 0.061)
+origin6:  0.07865156 (init = 0.061)
+origin7:  0.01477863 (init = 0.061)
+
+
