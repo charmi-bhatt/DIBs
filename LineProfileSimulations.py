@@ -242,7 +242,7 @@ def model_curve_to_fit(x_equal_spacing, B, delta_B, zeta, T, sigma, origin):
     y_model_data = model_data[:,1]
     
     
-    x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
+    Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
     
     y_model_data = np.interp(x_equal_spacing, model_data[:,0], model_data[:,1])
     
@@ -267,7 +267,7 @@ def obs_curve_to_fit(sightline):
         Obs_data['Wavelength'] = Obs_data['Wavelength'] - Obs_data['Wavelength'][min_index] 
         Obs_data['Flux'] = (Obs_data['Flux'] - min(Obs_data['Flux'])) / (1 - min(Obs_data['Flux'])) * 0.1 + 0.9
         
-        plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset,  label = 'Data (HD ' + str(sightline) + ')' , color=(0.12156862745098039, 0.4666666666666667, 0.7058823529411765))
+        #plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset,  label = 'Data (HD ' + str(sightline) + ')' , color=(0.12156862745098039, 0.4666666666666667, 0.7058823529411765))
 
         
         # removing red wing
@@ -303,7 +303,7 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
     params['sigma'].min = 0.05
     params['sigma'].max = 0.3
 
-    x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
+    Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
     #print(std_dev)
     result = mod.fit(y_obs_data, params, x_equal_spacing = x_equal_spacing, weights = 1/std_dev)
     print(result.fit_report())
@@ -323,29 +323,29 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
 
 '''Inputs'''    
 Jmax = 300
-#sightline = '185418'
+sightline = '185418'
 #sightlines = ['23180', '24398'] #, '144470', '147165' , '147683', '149757', '166937', '170740', '184915', '185418', '185859', '203532']
 
 
-#result = fit_model(B = 0.002, T = 22.5, delta_B = -0.45, zeta = -0.01, sigma = 0.17, origin =  0.012)
+result = fit_model(B = 0.002, T = 22.5, delta_B = -0.45, zeta = -0.01, sigma = 0.17, origin =  0.012)
 plt.figure(figsize = (15,8))
 
 
 #plt.plot(x_equal_spacing, y_obs_data, label = 'Data (HD ' + str(sightline) + ')')
 
-data = pd.read_excel("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/fitting methods/master_fitting_results_in_ a_table copy.xlsx", header = 0)
+#data = pd.read_excel("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/fitting methods/master_fitting_results_in_ a_table copy.xlsx", header = 0)
 
 
 
-B =       0.00248308 #+/- 8.7988e-05 (3.54%) (init = 0.0023)		
-delta_B =  -0.06843322 #+/- 0.00301885 (4.41%) (init = -0.0353)		
-zeta =  -0.31260631 #+/- 0.00953055 (3.05%) (init = -0.4197)		
+# B =       0.00248308 #+/- 8.7988e-05 (3.54%) (init = 0.0023)		
+# delta_B =  -0.06843322 #+/- 0.00301885 (4.41%) (init = -0.0353)		
+# zeta =  -0.31260631 #+/- 0.00953055 (3.05%) (init = -0.4197)		
 
-Ts = list(data['Temp'])
-sigmas = list(data['sigma'])
-origins = list(data['origin'])
-offset = np.arange(0, 6, 0.06)
-sightlines = list(data['Sightline'])
+# Ts = list(data['Temp'])
+# sigmas = list(data['sigma'])
+# origins = list(data['origin'])
+# offset = np.arange(0, 6, 0.06)
+# sightlines = list(data['Sightline'])
 
 # for T, sigma, origin, offset, sightline in zip(Ts, sigmas, origins, offset, sightlines):
 #     Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
@@ -366,12 +366,12 @@ sightlines = list(data['Sightline'])
     
     
 
-B= 0.00280374
-delta_B= 0.0266478
-zeta= -0.11822396
-T = 100.19
-origin = 0.034
-sigma = 0.208
+# B= 0.00280374
+# delta_B= 0.0266478
+# zeta= -0.11822396
+# T = 100.19
+# origin = 0.034
+# sigma = 0.208
 
-linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-plt.plot(model_data[:,0], model_data[:,1], color = 'red')
+# linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+# plt.plot(model_data[:,0], model_data[:,1], color = 'red')
