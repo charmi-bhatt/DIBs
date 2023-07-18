@@ -366,11 +366,12 @@ sightlines = list(data['Sightline'])
     
     
 
-B= 0.00248374
-delta_B= -0.0666478
-zeta= -0.31822396
+B= 0.00280374
+delta_B= 0.0266478
+zeta= -0.11822396
 T = 100.19
-sigma = 0.202
 origin = 0.034
+sigma = 0.208
+
 linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
 plt.plot(model_data[:,0], model_data[:,1], color = 'red')
