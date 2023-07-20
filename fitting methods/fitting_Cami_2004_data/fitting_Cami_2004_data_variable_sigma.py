@@ -43,7 +43,7 @@ stddev_array = np.array([])
 spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Research/Cami_2004_data/heliocentric/6614/")
 
 
-sightlines = ['184915'] #'144217'] #, '144470', '145502', '147165', '149757', '179406', '184915']
+sightlines = ['184915'] #, '184915', '144470', '145502', '147165', '149757', '179406', '184915']
 
 #sightlines = ['23180', '24398', '144470', '147165' , '147683', '149757', '166937', '170740', '184915', '185418', '185859', '203532']
 
@@ -116,9 +116,9 @@ combinations = pd.read_csv(r"/Users/charmibhatt/Library/CloudStorage/OneDrive-Th
 startl = timeit.default_timer()
 
 
-def get_rotational_spectrum(B, delta_B, zeta, T, origin):
+def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     
-    sigma = 0.029 #recalculate this
+    #recalculate this
     startg = timeit.default_timer()
 
     # print(B)
@@ -305,6 +305,7 @@ def get_multi_spectra( **params_list):
     delta_B = params_list['delta_B']
     zeta = params_list['zeta']
     T = params_list['T']
+    sigma = params_list['sigma']
     origin = params_list['origin']
     
    
@@ -340,7 +341,7 @@ def get_multi_spectra( **params_list):
     #     #print(sigma)
     #     print(origin)
     x_equal_spacing = curve_to_fit_wavenos(sightline)
-    model_data = get_rotational_spectrum(B, delta_B, zeta, T, origin)
+    model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
     #print(model_data)
     one_sl_y_model_data  = np.interp(x_equal_spacing, model_data[:, 0], model_data[:, 1])
     #print(one_sl_y_model_data )
@@ -352,7 +353,7 @@ def get_multi_spectra( **params_list):
 
 
 
-def master_fit_model(B, delta_B, zeta, T, origin):
+def master_fit_model(B, delta_B, zeta, T, sigma, origin):
     mod = Model(get_multi_spectra) 
     
     
@@ -387,6 +388,7 @@ def master_fit_model(B, delta_B, zeta, T, origin):
     params.add('zeta', value = zeta, min = -1, max = 1)
     
     params.add('T', value = T, min = 2.7, max = 500)
+    params.add('sigma', value = T, min = 0.05, max = 3)
     params.add('origin', value = origin, min = -1, max =1)
     
     # for i, param_value in enumerate(params_list[first_T_index:last_T_index]):
@@ -401,20 +403,18 @@ def master_fit_model(B, delta_B, zeta, T, origin):
    
     #params = mod.make_params(B=B, T1=T, T2=T, delta_B=delta_B, zeta=zeta, sigma1=sigma, sigma2=sigma, origin1=origin, origin2=origin)
 
-    # params['B'].min = 0.0005
-    # params['B'].max = 0.01
-    # params['T1'].min = 2.7
-    # params['T1'].max = 300
-    # params['T2'].min = 2.7
-    # params['T2'].max = 300
-    # params['origin'].min = -2
-    # params['origin'].max = 2
-    # params['delta_B'].min = -1
-    # params['delta_B'].max = 0
-    # params['zeta'].min = -1
-    # params['zeta'].max = 1
-    # params['sigma'].min = 0.05
-    # params['sigma'].max = 0.3  
+    params['B'].min = 0.0005
+    params['B'].max = 0.01
+    params['T'].min = 2.7
+    params['T'].max = 300
+    params['origin'].min = -2
+    params['origin'].max = 2
+    params['delta_B'].min = -1
+    params['delta_B'].max = 0
+    params['zeta'].min = -1
+    params['zeta'].max = 1
+    params['sigma'].min = 0.01
+    params['sigma'].max = 0.3  
     
     
 
@@ -442,18 +442,18 @@ def master_fit_model(B, delta_B, zeta, T, origin):
 
 
 
-# result1= master_fit_model(B = 0.01,  delta_B = -0.1, zeta = -0.1, T = 2.7, origin =  0)
-# result2= master_fit_model(B = 0.005,  delta_B = -0.4, zeta = -0.9,T = 32.7,  origin =  0.039)
+#result1= master_fit_model(B = 0.01,  delta_B = -0.1, zeta = -0.1, T = 2.7, sigma = 0.15, origin =  0)
+#result2= master_fit_model(B = 0.002,  delta_B = -0.4, zeta = -0.9,T = 92.7,  sigma = 0.2, origin =  0.039)
 # result3= master_fit_model(B = 0.002, delta_B = -0.8, zeta = -0.5, T = 62.5,   origin =  0.072)
 # result4= master_fit_model(B = 0.0003,  delta_B = -0.45, zeta = -0.01,T = 32.0 , origin =  0.012)
 # result5= master_fit_model(B = 0.0075, delta_B = -0.23, zeta = -0.23,T = 92.5 , origin =  0.02)
 
-# results_list = [result1, result2, result3, result4, result5]
+#results_list = [result2] #, result2, result3, result4, result5]
 
 
 def write_results_to_csv(results_list, filename):
     with open(filename, 'w', newline='') as csvfile:
-        fieldnames = ['result_name', 'B_init', 'T_init', 'delta_B_init', 'zeta_init'  ,'origin_init' ,  'B', 'T',  'delta_B', 'zeta',  'origin', 'chi2', 'redchi', 'func_evals', 'B_unc', 'T_unc', 'delta_B_unc', 'zeta_unc', 'origin_unc']
+        fieldnames = ['result_name', 'B_init', 'T_init', 'delta_B_init', 'zeta_init'  ,'sigma_init'  ,'origin_init' ,  'B', 'T',  'delta_B', 'zeta', 'sigma', 'origin', 'chi2', 'redchi', 'func_evals', 'B_unc', 'T_unc', 'delta_B_unc', 'zeta_unc', 'sigma_unc', 'origin_unc']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 
@@ -466,13 +466,13 @@ def write_results_to_csv(results_list, filename):
                 'T_init': params['T'].init_value,
                 'delta_B_init': params['delta_B'].init_value,
                 'zeta_init': params['zeta'].init_value,
-                # 'sigma_init': params['sigma'].init_value,
+                'sigma_init': params['sigma'].init_value,
                 'origin_init': params['origin'].init_value,
                 'B': params['B'].value,
                 'T': params['T'].value,
                 'delta_B': params['delta_B'].value,
                 'zeta': params['zeta'].value,
-                # 'sigma': params['sigma'].value,
+                'sigma': params['sigma'].value,
                 'origin': params['origin'].value,
                 'chi2': result.chisqr,
                 'redchi': result.redchi,
@@ -487,9 +487,9 @@ def write_results_to_csv(results_list, filename):
             }
             writer.writerow(row)
             
-            
-            
-#write_results_to_csv(results_list, '184915_Cami_2004.csv')     
+name_of_file = str(sightlines[0])+ "_Cami_2004_variable_sigma.csv"
+print(name_of_file)
+#write_results_to_csv(results_list, name_of_file)     
             
 
 
@@ -513,8 +513,75 @@ def save_lmfit_report(filename, report):
             f.write(f"{func_name}: {func_value}\n")
         f.write("\n")
 
+# Example usage
+# Assuming you have an lmfit report object called 'fit_report'
+#save_lmfit_report('output.txt', fit_report)
+
+def obs_curve_to_fit(sightline): 
+        file = 'hd{}_dib6614.txt'.format(sightline)
+        Obs_data = pd.read_csv(spec_dir / file,
+                               delim_whitespace=(True))
+        Obs_data['Wavelength'] = (1 / Obs_data['Wavelength']) * 1e8
+        Obs_data = Obs_data.iloc[::-1].reset_index(
+            drop=True)  # making it ascending order as we transformed wavelength into wavenumbers
+
+        # shifting to zero and scaling flux between 0.9 and 1
+        min_index = np.argmin(Obs_data['Flux'])
+        Obs_data['Wavelength'] = Obs_data['Wavelength'] - Obs_data['Wavelength'][min_index] 
+        Obs_data['Flux'] = (Obs_data['Flux'] - min(Obs_data['Flux'])) / (1 - min(Obs_data['Flux'])) * 0.1 + 0.9
+        
+        #plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset,  label = 'Data (HD ' + str(sightline) + ')' , color=(0.12156862745098039, 0.4666666666666667, 0.7058823529411765))
+
+        
+        # removing red wing
+        # Obs_data_trp = Obs_data [(Obs_data['Wavelength'] >= -1) & (Obs_data['Wavelength']<= 1.2)]
+        Obs_data_trp = Obs_data[(Obs_data['Flux'] <= 1)]  # trp = triple peak structure
+
+        # making data evenly spaced
+        x_equal_spacing = np.linspace(min(Obs_data_trp['Wavelength']), max(Obs_data_trp['Wavelength']), 100)
+        y_obs_data = np.interp(x_equal_spacing, Obs_data_trp['Wavelength'], Obs_data_trp['Flux'])
+
+        Obs_data_continuum = Obs_data [(Obs_data['Wavelength'] >= 2) & (Obs_data['Wavelength']<= 5)]
+        std_dev = np.std(Obs_data_continuum['Flux'])
+        
+        return Obs_data, x_equal_spacing, y_obs_data, std_dev
+    
+# Example usage
+# Assuming you have an lmfit report object called 'fit_report'
+#save_lmfit_report('output.txt', fit_report)
+sightlines = ['144217', '144470', '145502', '147165', '149757', '179406', '184915']
+
+plt.figure(figsize = (15, 30))
+B =       0.00330308 #+/- 8.7988e-05 (3.54%) (init = 0.0023)		
+delta_B =  -0.026643322 #+/- 0.00301885 (4.41%) (init = -0.0353)		
+zeta =  -0.11860631 #+/- 0.00953055 (3.05%) (init = -0.4197)		
+
+Ts = [86.19, 84.64, 93.08, 96.69, 82.35, 75.69, 79.07]
+origins =  [0.034, 0.0033, -0.052, -0.0197, 0.070, 0.079, 0.016]
+sigma = 0.0289 #, 0.11, 0.20]
+offset = np.arange(0, 7, 0.06)
+# sightlines = list(data['Sightline'])
+
+for T, origin, offset, sightline in zip(Ts, origins, offset, sightlines):
+    Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
+    plt.plot(x_equal_spacing, y_obs_data - offset , label = 'HD ' + str(sightline) + ',  T = {} K' .format(T), color = 'black')
 
 
+    model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+    plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'red')
+    plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
+    plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
+    plt.tick_params(axis='both', which='major', labelsize=22)
+    plt.title('Cami_2004_data: ground_B = {:.5f} cm-1   Delta_B = {:.5f}    zeta = {:.5f}'.format(B, delta_B, zeta)) 
+
+    #plt.annotate('HD' + str(sightline), xy = (Obs_data['Wavelength'][120] , Obs_data['Flux'][150] - offset) , xytext = (2, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+    # plt.annotate('T = {:.2f}'.format(T) + ' K', xy = (Obs_data['Wavelength'][40] , Obs_data['Flux'][40] - offset) , xytext = (-7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+    # plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = (Obs_data['Wavelength'][50] , Obs_data['Flux'][50] - offset) , xytext = (-5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
+    plt.xlim(-6, 6)
+    plt.legend(loc = 'lower left', fontsize = 16)
+    
+    
+    
 
 '''Previously used code'''
  # plt.figure(figsize = (15,8))

@@ -110,9 +110,16 @@ spec_dir = Path("//Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversity
 combinations = pd.read_csv(r"/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/edibles/edibles/utils/simulations/Charmi/Jmax=300.txt", delim_whitespace=(True))
 
 
-def get_rotational_spectrum(B, delta_B, zeta, T, origin):
+def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     startg = timeit.default_timer()
-    sigma = 0.0289
+    
+    print(B)
+    print(T)
+    print(delta_B)
+    print(zeta)
+    print(sigma)
+    print(origin)
+    
     #combinations  = allowed_perperndicular_transitions(Jmax)
     # rotational constants in cm-1
     ground_B = B
@@ -286,14 +293,13 @@ for i, sightline in enumerate(sightlines, start=1):
     T = variables.get('T{}'.format(i), None)
     sigma = variables.get('sigma{}'.format(i), None)
     origin = variables.get('origin{}'.format(i), None)
-    print(T)
-    linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, origin)
-    
-    x_equal_spacing, y_obs_data, std_dev, data_to_plot = curve_to_fit_wavenos(sightline)
-    
+    sigma = 0.0289
+    linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+
+    #x_equal_spacing, y_obs_data, std_dev, data_to_plot = curve_to_fit_wavenos(sightline)
     
     plt.figure(figsize = (15,8))
     #print(model_data)
-    plt.plot(data_to_plot[:,0], data_to_plot[:,1], color = 'black' , label = str('HD') + str(sightline ))
+    #plt.plot(data_to_plot[:,0], data_to_plot[:,1], color = 'black' , label = str('HD') + str(sightline ))
     plt.plot(model_data[:,0], model_data[:,1], color = 'red') #, label = str(r"$\chi^2$ =  ") + str('{:.3f}'.format(reduced_chi_squared)) + str('  (Altogether)') )
     
