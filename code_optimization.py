@@ -109,7 +109,8 @@ Jmax = 300
 combinations  = allowed_perperndicular_transitions(Jmax)
 
 def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
-    
+    startfull = timeit.default_timer()
+
     start1 = timeit.default_timer()
 
     '''Takes in 6 parameters (molecular and environmental) 
@@ -141,97 +142,93 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
 
     start2 = timeit.default_timer()
     ground_Es = []
-    for J, K in zip(ground_Js, ground_Ks):
-        ground_E = ground_B * J * (J + 1) + (ground_C - ground_B) * (K ** 2)
-        ground_Es.append(ground_E)
+    # for J, K in zip(ground_Js, ground_Ks):
+    #     ground_E = ground_B * J * (J + 1) + (ground_C - ground_B) * (K ** 2)
+    #     ground_Es.append(ground_E)
 
-    linelist['ground_Es'] = ground_Es
+    # linelist['ground_Es'] = ground_Es
 
     excited_Es = []
-    for J, K, del_K in zip(excited_Js, excited_Ks, delta_K):
-        if del_K == -1:
-            excited_E = excited_B * J * (J + 1) + (excited_C - excited_B) * (K ** 2) - (
-                (-2 * excited_C * zeta)) * K + excited_C ** 2
-        elif del_K == 1:
-            excited_E = excited_B * J * (J + 1) + (excited_C - excited_B) * (K ** 2) + (
-                (-2 * excited_C * zeta)) * K + excited_C ** 2
+    # for J, K, del_K in zip(excited_Js, excited_Ks, delta_K):
+    #     if del_K == -1:
+    #         excited_E = excited_B * J * (J + 1) + (excited_C - excited_B) * (K ** 2) - (
+    #             (-2 * excited_C * zeta)) * K + excited_C ** 2
+    #     elif del_K == 1:
+    #         excited_E = excited_B * J * (J + 1) + (excited_C - excited_B) * (K ** 2) + (
+    #             (-2 * excited_C * zeta)) * K + excited_C ** 2
 
-        excited_Es.append(excited_E)
+    #     excited_Es.append(excited_E)
 
-    linelist['excited_Es'] = excited_Es
+    # linelist['excited_Es'] = excited_Es
 
     wavenos = []
-    for i in range(len(linelist.index)):
-        wavenumber = origin + excited_Es[i] - ground_Es[i]
-        wavenos.append(wavenumber)
+    # for i in range(len(linelist.index)):
+    #     wavenumber = origin + excited_Es[i] - ground_Es[i]
+    #     wavenos.append(wavenumber)
 
-    linelist['wavenos'] = wavenos
+    # linelist['wavenos'] = wavenos
     
+    
+    def calculate_ground_Es(Js, Ks, B, C):
+        return B * Js * (Js + 1) + (C - B) * (Ks ** 2)
+
+    def calculate_excited_Es(Js, Ks, del_K, B, C, zeta):
+        base_Es = B * Js * (Js + 1) + (C - B) * (Ks ** 2) 
+        zeta_component = ((-2 * C * zeta)) * Ks + C ** 2
+        return np.where(del_K == -1, base_Es - zeta_component, base_Es + zeta_component)
+    
+    def calculate_wavenos(origin, excited_Es, ground_Es):
+        return origin + excited_Es - ground_Es
+    
+    # Then we apply these functions
+    linelist['ground_Es'] = calculate_ground_Es(ground_Js, ground_Ks, ground_B, ground_C)
+    linelist['excited_Es'] = calculate_excited_Es(excited_Js, excited_Ks, delta_K, excited_B, excited_C, zeta)
+    linelist['wavenos'] = calculate_wavenos(origin, linelist['excited_Es'], linelist['ground_Es'])
+
     end2 = timeit.default_timer()
     print('>>>> Time taken to calculate wavenos  ' + str(end2 - start2) + '  sec')
     print('==========')
 
     start3 = timeit.default_timer()
 
-    HL_factors = []
+    # HL_factors = []
     
-    for J, K, delta_J, delta_K in zip(ground_Js, ground_Ks, delta_J, delta_K):
-        if delta_J == -1 and delta_K == -1:
-            HL_factor = ((J - 1 + K) * (J + K)) / (J * ((2 * J) + 1))
-        elif delta_J == -1 and delta_K == 1:
-            HL_factor = ((J - 1 - K) * (J - K)) / (J * ((2 * J) + 1))
-        elif delta_J == 0 and delta_K == -1:
-            HL_factor = (J + 1 - K) * (J + K) / (J * (J + 1))
-        elif delta_J == 0 and delta_K == 1:
-            HL_factor = (J + 1 + K) * (J - K) / (J * (J + 1))
-        elif delta_J == 1 and delta_K == -1:
-            HL_factor = (J + 2 - K) * (J + 1 - K) / ((J + 1) * ((2 * J) + 1))
-        elif delta_J == 1 and delta_K == 1:
-            HL_factor = (J + 2 + K) * (J + 1 + K) / ((J + 1) * ((2 * J) + 1))
+    # for J, K, delta_J, delta_K in zip(ground_Js, ground_Ks, delta_J, delta_K):
+    #     if delta_J == -1 and delta_K == -1:
+    #         HL_factor = ((J - 1 + K) * (J + K)) / (J * ((2 * J) + 1))
+    #     elif delta_J == -1 and delta_K == 1:
+    #         HL_factor = ((J - 1 - K) * (J - K)) / (J * ((2 * J) + 1))
+    #     elif delta_J == 0 and delta_K == -1:
+    #         HL_factor = (J + 1 - K) * (J + K) / (J * (J + 1))
+    #     elif delta_J == 0 and delta_K == 1:
+    #         HL_factor = (J + 1 + K) * (J - K) / (J * (J + 1))
+    #     elif delta_J == 1 and delta_K == -1:
+    #         HL_factor = (J + 2 - K) * (J + 1 - K) / ((J + 1) * ((2 * J) + 1))
+    #     elif delta_J == 1 and delta_K == 1:
+    #         HL_factor = (J + 2 + K) * (J + 1 + K) / ((J + 1) * ((2 * J) + 1))
     
-        HL_factors.append(HL_factor)
+    #     HL_factors.append(HL_factor)
+    
+    # linelist['HL_factors'] = HL_factors
+    
+    
+    # Compute HL_factors directly in a list comprehension
+    HL_factors = [((J - 1 + K) * (J + K)) / (J * ((2 * J) + 1)) if (delta_J == -1 and delta_K == -1) else
+                  ((J - 1 - K) * (J - K)) / (J * ((2 * J) + 1)) if (delta_J == -1 and delta_K == 1) else
+                  (J + 1 - K) * (J + K) / (J * (J + 1)) if (delta_J == 0 and delta_K == -1) else
+                  (J + 1 + K) * (J - K) / (J * (J + 1)) if (delta_J == 0 and delta_K == 1) else
+                  (J + 2 - K) * (J + 1 - K) / ((J + 1) * ((2 * J) + 1)) if (delta_J == 1 and delta_K == -1) else
+                  (J + 2 + K) * (J + 1 + K) / ((J + 1) * ((2 * J) + 1)) if (delta_J == 1 and delta_K == 1) else
+                  None for J, K, delta_J, delta_K in zip(ground_Js, ground_Ks, delta_J, delta_K)]
     
     linelist['HL_factors'] = HL_factors
     
-    import numpy as np
+    
 
-# Convert your data to numpy arrays
-#     ground_Js_np = np.array(ground_Js)
-#     ground_Ks_np = np.array(ground_Ks)
-#     delta_J_np = np.array(delta_J)
-#     delta_K_np = np.array(delta_K)
-    
-#     # Initialize an array of zeros
-#     HL_factors = np.zeros_like(ground_Js_np)
-    
-#     # Perform Boolean indexing to calculate HL_factor for each condition
-#     cond1 = (delta_J_np == -1) & (delta_K_np == -1)
-#     HL_factors[cond1] = ((ground_Js_np[cond1] - 1 + ground_Ks_np[cond1]) * (ground_Js_np[cond1] + ground_Ks_np[cond1])) / (ground_Js_np[cond1] * ((2 * ground_Js_np[cond1]) + 1))
-    
-#     cond2 = (delta_J_np == -1) & (delta_K_np == 1)
-#     HL_factors[cond2] = ((ground_Js_np[cond2] - 1 - ground_Ks_np[cond2]) * (ground_Js_np[cond2] - ground_Ks_np[cond2])) / (ground_Js_np[cond2] * ((2 * ground_Js_np[cond2]) + 1))
-    
-#     cond3 = (delta_J_np == 0) & (delta_K_np == -1)
-#     HL_factors[cond3] = (ground_Js_np[cond3] + 1 - ground_Ks_np[cond3]) * (ground_Js_np[cond3] + ground_Ks_np[cond3]) / (ground_Js_np[cond3] * (ground_Js_np[cond3] + 1))
-    
-#     cond4 = (delta_J_np == 0) & (delta_K_np == 1)
-#     HL_factors[cond4] = (ground_Js_np[cond4] + 1 + ground_Ks_np[cond4]) * (ground_Js_np[cond4] - ground_Ks_np[cond4]) / (ground_Js_np[cond4] * (ground_Js_np[cond4] + 1))
-    
-#     cond5 = (delta_J_np == 1) & (delta_K_np == -1)
-#     HL_factors[cond5] = (ground_Js_np[cond5] + 2 - ground_Ks_np[cond5]) * (ground_Js_np[cond5] + 1 - ground_Ks_np[cond5]) / ((ground_Js_np[cond5] + 1) * ((2 * ground_Js_np[cond5]) + 1))
-    
-#     cond6 = (delta_J_np == 1) & (delta_K_np == 1)
-#     HL_factors[cond6] = (ground_Js_np[cond6] + 2 + ground_Ks_np[cond6]) * (ground_Js_np[cond6] + 1 + ground_Ks_np[cond6]) / ((ground_Js_np[cond6] + 1) * ((2 * ground_Js_np[cond6]) + 1))
-
-# # Convert the numpy array back to list if necessary
-#     HL_factors_list = HL_factors.tolist()
-    
-#     # Assign the list to your dataframe
-#     linelist['HL_factors'] = HL_factors_list
 
 
     end3 = timeit.default_timer()
-    print('>>>> Time taken to calculate HL factors' + str(end3 - start3) + '  sec')
+    print('>>>> Time taken to calculate HL factors  ' + str(end3 - start3) + '  sec')
     print('==========')
     
     startbd = timeit.default_timer()
@@ -273,7 +270,7 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
 
     linelist['BD_factors'] = BD_factors
     endbd = timeit.default_timer()
-    print('>>>> Time taken to calculate BD factors' + str(endbd - startbd) + '  sec')
+    print('>>>> Time taken to calculate BD factors  ' + str(endbd - startbd) + '  sec')
     print('==========')
 
     starti = timeit.default_timer()
@@ -286,7 +283,7 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     linelist['intensities'] = intensities
     
     endi = timeit.default_timer()
-    print('>>>> Time taken to calculate intenisties' + str(endi - starti) + '  sec')
+    print('>>>> Time taken to calculate intenisties  ' + str(endi - starti) + '  sec')
     print('==========')
 
     # endl = timeit.default_timer()
@@ -332,6 +329,10 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     
     end4 = timeit.default_timer()
     print('>>>> Time taken for convolution  ' + str(end4 - start4) + '  sec')
+    print('==========')
+
+    endfull = timeit.default_timer()
+    print('>>>> Time taken for full run ' + str(endfull - startfull) + '  sec')
     print('==========')
 
     return linelist, model_data
