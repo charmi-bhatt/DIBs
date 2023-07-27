@@ -141,50 +141,45 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     '''Calculating Linelist'''
 
     start2 = timeit.default_timer()
-    ground_Es = []
-    # for J, K in zip(ground_Js, ground_Ks):
-    #     ground_E = ground_B * J * (J + 1) + (ground_C - ground_B) * (K ** 2)
-    #     ground_Es.append(ground_E)
+   # Ensure the inputs are NumPy arrays
+    ground_Js = np.array(ground_Js)
+    ground_Ks = np.array(ground_Ks)
+    
+    # Perform the calculation on the whole arrays
+    ground_Es = ground_B * ground_Js * (ground_Js + 1) + (ground_C - ground_B) * (ground_Ks ** 2)
+    
+    # Assign the result to your DataFrame
+    linelist['ground_Es'] = ground_Es
 
-    # linelist['ground_Es'] = ground_Es
 
     excited_Es = []
-    # for J, K, del_K in zip(excited_Js, excited_Ks, delta_K):
-    #     if del_K == -1:
-    #         excited_E = excited_B * J * (J + 1) + (excited_C - excited_B) * (K ** 2) - (
-    #             (-2 * excited_C * zeta)) * K + excited_C ** 2
-    #     elif del_K == 1:
-    #         excited_E = excited_B * J * (J + 1) + (excited_C - excited_B) * (K ** 2) + (
-    #             (-2 * excited_C * zeta)) * K + excited_C ** 2
+    
+    
+    # Ensure that all the inputs are NumPy arrays
+    excited_Js = np.array(excited_Js)
+    excited_Ks = np.array(excited_Ks)
+    delta_K = np.array(delta_K)
+    
+    # Calculate the common parts
+    base_Es = excited_B * excited_Js * (excited_Js + 1) + (excited_C - excited_B) * (excited_Ks ** 2)
+    zeta_component = (-2 * excited_C * zeta) * excited_Ks + excited_C ** 2
+    
+    # Use delta_K to decide the sign
+    excited_Es = base_Es + delta_K * zeta_component
+    
+    # Assign the calculated excited_Es to the 'linelist' DataFrame
+    linelist['excited_Es'] = excited_Es
 
-    #     excited_Es.append(excited_E)
-
-    # linelist['excited_Es'] = excited_Es
 
     wavenos = []
-    # for i in range(len(linelist.index)):
-    #     wavenumber = origin + excited_Es[i] - ground_Es[i]
-    #     wavenos.append(wavenumber)
+    for i in range(len(linelist.index)):
+        wavenumber = origin + excited_Es[i] - ground_Es[i]
+        wavenos.append(wavenumber)
 
-    # linelist['wavenos'] = wavenos
+    linelist['wavenos'] = wavenos
     
     
-    def calculate_ground_Es(Js, Ks, B, C):
-        return B * Js * (Js + 1) + (C - B) * (Ks ** 2)
-
-    def calculate_excited_Es(Js, Ks, del_K, B, C, zeta):
-        base_Es = B * Js * (Js + 1) + (C - B) * (Ks ** 2) 
-        zeta_component = ((-2 * C * zeta)) * Ks + C ** 2
-        return np.where(del_K == -1, base_Es - zeta_component, base_Es + zeta_component)
-    
-    def calculate_wavenos(origin, excited_Es, ground_Es):
-        return origin + excited_Es - ground_Es
-    
-    # Then we apply these functions
-    linelist['ground_Es'] = calculate_ground_Es(ground_Js, ground_Ks, ground_B, ground_C)
-    linelist['excited_Es'] = calculate_excited_Es(excited_Js, excited_Ks, delta_K, excited_B, excited_C, zeta)
-    linelist['wavenos'] = calculate_wavenos(origin, linelist['excited_Es'], linelist['ground_Es'])
-
+   
     end2 = timeit.default_timer()
     print('>>>> Time taken to calculate wavenos  ' + str(end2 - start2) + '  sec')
     print('==========')
