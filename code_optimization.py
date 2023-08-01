@@ -579,17 +579,6 @@ for sightline in sightlines:
 # fit_report_filename = str(sightline) + '3_init_conditions_Cami_2004.csv'
 # write_results_to_csv(results_list,fit_report_filename  )
 
-B = 0.00256618
-delta_B = -0.0270427
-zeta = -0.32709176
-T = 97.3630470 #, 94.1524257, 103.356815, 109.216188, 94.6232728, 83.1577894, 90.3789475]
-sigma = 0.18683958 #, 0.17238475, 0.18252429, 0.18832571, 0.18890352, 0.19325940, 0.20730193]
-origin = 0.03082452 #, -0.01550851, -0.07090288, -0.04426105, 0.06003777, 0.06930614, 0.01284413]
- 
-
-linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-plt.plot(model_data[:,0], model_data[:,1], color = 'red', label = 'Model')
-    
 
 
 

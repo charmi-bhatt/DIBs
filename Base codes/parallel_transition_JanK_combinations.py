@@ -127,23 +127,23 @@ selection_rules = pd.DataFrame(columns)
 selection_rules['delta_J'] = selection_rules['excited_J'] - selection_rules['ground_J']
 selection_rules['delta_K'] = selection_rules['excited_K'] - selection_rules['ground_K']
 
-# label = []
+label = []
 
-# for i in range(len(selection_rules['J'])):
-#     if selection_rules['Jprime'][i] - selection_rules['J'][i] == -1 and selection_rules['Kprime'][i] - selection_rules['K'][i] == -1:
-#         label.append('pP')
-#     if selection_rules['Jprime'][i] - selection_rules['J'][i] == -1 and selection_rules['Kprime'][i] - selection_rules['K'][i] == 1:
-#         label.append('rP')
-#     if selection_rules['Jprime'][i] - selection_rules['J'][i] == 0 and selection_rules['Kprime'][i] - selection_rules['K'][i] == -1:
-#         label.append('pQ')
-#     if selection_rules['Jprime'][i] - selection_rules['J'][i] == 0 and selection_rules['Kprime'][i] - selection_rules['K'][i] == 1:
-#         label.append('rQ')
-#     if selection_rules['Jprime'][i] - selection_rules['J'][i] == 1 and selection_rules['Kprime'][i] - selection_rules['K'][i] == -1:
-#         label.append('pR')
-#     if selection_rules['Jprime'][i] - selection_rules['J'][i] == 1 and selection_rules['Kprime'][i] - selection_rules['K'][i] == 1:
-#         label.append('rR')
+for i in range(len(selection_rules['J'])):
+    if selection_rules['Jprime'][i] - selection_rules['J'][i] == -1 and selection_rules['Kprime'][i] - selection_rules['K'][i] == -1:
+        label.append('pP')
+    if selection_rules['Jprime'][i] - selection_rules['J'][i] == -1 and selection_rules['Kprime'][i] - selection_rules['K'][i] == 1:
+        label.append('rP')
+    if selection_rules['Jprime'][i] - selection_rules['J'][i] == 0 and selection_rules['Kprime'][i] - selection_rules['K'][i] == -1:
+        label.append('pQ')
+    if selection_rules['Jprime'][i] - selection_rules['J'][i] == 0 and selection_rules['Kprime'][i] - selection_rules['K'][i] == 1:
+        label.append('rQ')
+    if selection_rules['Jprime'][i] - selection_rules['J'][i] == 1 and selection_rules['Kprime'][i] - selection_rules['K'][i] == -1:
+        label.append('pR')
+    if selection_rules['Jprime'][i] - selection_rules['J'][i] == 1 and selection_rules['Kprime'][i] - selection_rules['K'][i] == 1:
+        label.append('rR')
 
-# selection_rules['Label'] = label
+selection_rules['Label'] = label
 
 print(selection_rules.to_string())
 
@@ -195,9 +195,9 @@ for i in range(len(linelist.index)):
     
 linelist['wavenos'] = wavenos
 
-print(ground_Es)
-print(excited_Es)
-print(wavenos)
+# print(ground_Es)
+# print(excited_Es)
+# print(wavenos)
 
 for i in range(len(wavenos)):
     plt.axhline(y=wavenos[i], xmin = 0.2, xmax=0.6, color='green')

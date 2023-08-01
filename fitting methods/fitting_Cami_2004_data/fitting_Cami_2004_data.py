@@ -275,7 +275,7 @@ def get_rotational_spectrum(B, delta_B, zeta, T, origin):
 
     print('>>>> full takes   ' + str(endg - startg) + '  sec')
     print('==========')
-    return model_data
+    return linelist, model_data
 
 
 def get_multi_spectra( **params_list):
@@ -513,7 +513,36 @@ def save_lmfit_report(filename, report):
             f.write(f"{func_name}: {func_value}\n")
         f.write("\n")
 
+B =       0.00327308 #+/- 8.7988e-05 (3.54%) (init = 0.0023)		
+delta_B =  -0.0260743322 #+/- 0.00301885 (4.41%) (init = -0.0353)		
+zeta =  -0.11700631 #+/- 0.00953055 (3.05%) (init = -0.4197)		
 
+Ts = [86.19, 85.339, 93.43, 96.44, 83.18, 76.53, 79.64]
+origins =  [0.033, 0.0025, -0.054, -0.024, 0.068, 0.078, 0.016]
+sigma  = 0.029
+
+# Ts = list(data['Temp'])
+# sigmas = list(data['sigma'])
+# origins = list(data['origin'])
+offset = np.arange(0, 6, 0.06)
+# # sightlines = list(data['Sightline'])
+
+for T, origin, offset, sightline in zip(Ts, origins, offset, sightlines):
+    #Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
+    # plt.plot(x_equal_spacing, y_obs_data - offset , label = 'Data (HD ' + str(sightline) + ')', color = blue)
+
+
+    linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, origin)
+    plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'red', label = 'Model')
+    plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
+    plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
+    plt.tick_params(axis='both', which='major', labelsize=22)
+    plt.annotate('HD' + str(sightline), xy = (Obs_data['Wavelength'][150] , Obs_data['Flux'][150] - offset) , xytext = (4, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+    plt.annotate('T = {:.2f}'.format(T) + ' K', xy = (Obs_data['Wavelength'][40] , Obs_data['Flux'][40] - offset) , xytext = (-7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+    plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = (Obs_data['Wavelength'][50] , Obs_data['Flux'][50] - offset) , xytext = (-5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
+    plt.xlim(-7.5, 6)
+    plt.legend(loc = 'lower left', fontsize = 16)
+    
 
 
 '''Previously used code'''

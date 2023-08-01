@@ -99,13 +99,16 @@ def allowed_perperndicular_transitions(Jmax):
         
     return combinations
 
+startfull = timeit.default_timer()
 
 def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
-    
+
+    start1 = timeit.default_timer()
+
     '''Takes in 6 parameters (molecular and environmental) 
     and calculates spectra for it. It returns linelist and model data (i.e profile after convolution)
     '''
-    startg = timeit.default_timer()
+    
 
     combinations  = allowed_perperndicular_transitions(Jmax)
     # rotational constants in cm-1
@@ -125,8 +128,12 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     delta_J = linelist['excited_J'] - linelist['ground_J']
     delta_K = linelist['excited_K'] - linelist['ground_K']
 
+    end1 = timeit.default_timer()
+    # print('>>>> Time taken to import parameters ' + str(end1 - start1) + '  sec')
+    # print('==========')
     '''Calculating Linelist'''
 
+    start2 = timeit.default_timer()
     ground_Es = []
     for J, K in zip(ground_Js, ground_Ks):
         ground_E = ground_B * J * (J + 1) + (ground_C - ground_B) * (K ** 2)
@@ -153,6 +160,12 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
         wavenos.append(wavenumber)
 
     linelist['wavenos'] = wavenos
+    
+    end2 = timeit.default_timer()
+    # print('>>>> Time taken to calculate wavenos  ' + str(end2 - start2) + '  sec')
+    # print('==========')
+
+    start3 = timeit.default_timer()
 
     HL_factors = []
 
@@ -174,6 +187,12 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
 
     linelist['HL_factors'] = HL_factors
 
+    end3 = timeit.default_timer()
+    # print('>>>> Time taken to calculate HL factors' + str(end3 - start3) + '  sec')
+    # print('==========')
+    
+    startbd = timeit.default_timer()
+
     BD_factors = []
 
     h = const.h.cgs.value
@@ -189,6 +208,11 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
         BD_factors.append(boltzmann_equation)
 
     linelist['BD_factors'] = BD_factors
+    endbd = timeit.default_timer()
+    # print('>>>> Time taken to calculate BD factors' + str(endbd - startbd) + '  sec')
+    # print('==========')
+
+    starti = timeit.default_timer()
 
     intensities = []
     for i in range(len(linelist.index)):
@@ -196,16 +220,22 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
         intensities.append(strength)
 
     linelist['intensities'] = intensities
+    
+    endi = timeit.default_timer()
+    # print('>>>> Time taken to calculate intenisties' + str(endi - starti) + '  sec')
+    # print('==========')
 
     # endl = timeit.default_timer()
     # print('>>>> linelist calculation takes   ' + str(endl - startl) + '  sec')
 
     '''Smoothening the linelist'''
-
+    start4 = timeit.default_timer() 
+    
     smooth_wavenos = np.linspace(np.min(linelist['wavenos']) - 1, np.max(linelist['wavenos']) + 1, 1000)  # grid_size
 
     Wavenos_arr = np.array(linelist['wavenos'])
     Intenisty_arr = np.array(linelist['intensities'])
+
 
     @nb.njit(parallel=True)
     def calculate_smooth_intensities(wavenos, intensities, smooth_wavenos, sigma):
@@ -236,10 +266,13 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     # model_data = model_data[::-1]
 
     
-    endg = timeit.default_timer()
+    end4 = timeit.default_timer()
+    # print('>>>> Time taken for convolution  ' + str(end4 - start4) + '  sec')
+    # print('==========')
 
-    print('>>>> Time taken to simulate thi profile  ' + str(endg - startg) + '  sec')
-    print('==========')
+    endfull = timeit.default_timer()
+    print('>>>> Time taken for this profile  ' + str(endfull - startfull) + '  sec')
+    print('=====')
     return linelist, model_data
 
 
@@ -346,6 +379,43 @@ def get_multi_spectra( **params_list):
     
     return all_y_model_data
 
+def write_results_to_csv(results_list, filename):
+    with open(filename, 'w', newline='') as csvfile:
+        fieldnames = ['result_name', 'B_init', 'delta_B_init', 'zeta_init' , 'T1_init', 'sigma1_init' ,'origin1_init' ,  'B',   'delta_B', 'zeta', 'T1','sigma1', 'origin1', 'chi2', 'redchi', 'func_evals', 'B_unc', 'delta_B_unc', 'zeta_unc', 'T1_unc',  'sigma1_unc', 'origin1_unc']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+
+        for i, result in enumerate(results_list):
+            result_name = f'result{i+1}'
+            params = result.params
+            row = {
+                'result_name': result_name,
+                'B_init': params['B'].init_value,
+                'delta_B_init': params['delta_B'].init_value,
+                'zeta_init': params['zeta'].init_value,
+                'T1_init': params['T1'].init_value,
+                'sigma1_init': params['sigma1'].init_value,
+                'origin1_init': params['origin1'].init_value,
+                'B': params['B'].value,
+                'delta_B': params['delta_B'].value,
+                'zeta': params['zeta'].value,
+                'T1': params['T1'].value,
+                'sigma1': params['sigma1'].value,
+                'origin1': params['origin1'].value,
+                'chi2': result.chisqr,
+                'redchi': result.redchi,
+                'func_evals': result.nfev,
+                'B_unc': params['B'].stderr,
+                'delta_B_unc': params['delta_B'].stderr,
+                'zeta_unc': params['zeta'].stderr,
+                'T1_unc': params['T1'].stderr,
+                'sigma1_unc': params['sigma1'].stderr,
+                'origin1_unc': params['origin1'].stderr,
+
+            }
+            writer.writerow(row)
+
+
 
 def fit_model(B, delta_B, zeta, T, sigma, origin):
     mod = Model(get_multi_spectra) 
@@ -391,7 +461,7 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
         params.add(f'origin{i+1}', value=param_value, min = -1, max = 1)
         
    
-    result = mod.fit(flux_list, params, xx=wave_list, weights = 1/stddev_array )  # method = 'leastsq', fit_kws={'ftol': 1e-12, 'xtol': 1e-12}
+    result = mod.fit(flux_list, params, xx=wave_list, weights = 1/stddev_array , method = method) #, fit_kws={'ftol': 1e-2, 'xtol': 1e-2} )
     print(result.fit_report())
     
     def plot_best_fit(result, x_equal_spacing, y_obs_data):
@@ -403,7 +473,7 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
         plt.legend()
         plt.show()
             
-    plot_best_fit(result, x_equal_spacing, y_obs_data)
+    #plot_best_fit(result, x_equal_spacing, y_obs_data)
     
     return result
 
@@ -415,9 +485,10 @@ Jmax = 300
 
 #Cami 2004
 spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Research/Cami_2004_data/heliocentric/6614/")
-sightlines = ['184915'] #['144217', '144470'] #, '145502', '147165', '149757', '179406', '184915']
+#sightlines = ['144217', '144470',  '145502', '147165', '149757', '179406', '184915'] 
+sightlines = ['144217']
 filename = 'hd{}_dib6614.txt'
-
+method = 'differential_evolution'
 
 #EDIBLES data
 #spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
@@ -437,28 +508,139 @@ for sightline in sightlines:
     
     one_sl_stddev = [std_dev] * len(x_equal_spacing)
     stddev_array = np.concatenate((stddev_array, one_sl_stddev))
-    
-    
+  
 
-#result = fit_model(B = 0.002, T = 82.5, delta_B = -0.45, zeta = -0.01, sigma = 0.17, origin =  0.012)
+result1 = fit_model(B = 0.01, delta_B = -0.1, zeta = -0.312, T = 10, sigma = 0.18 , origin =  0.014)
+result2 = fit_model(B = 0.005, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
+result3 = fit_model(B = 0.0001, delta_B = -0.1, zeta = -0.312, T = 180, sigma = 0.18 , origin =  0.014)
+
+results_list = [result1, result2, result3] #, result4, result5]
+fit_report_filename = str(sightline) + '_3_init_conditions_Cami_2004_' + str(method) + '.csv'
+write_results_to_csv(results_list,fit_report_filename  )
+
 
 
 '''PLotting'''
 
+#reviewing 3 init conditions one slightline at a time fit results
+# for sightline in sightlines: 
+#     fit_report = pd.read_csv('/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/{}3_init_conditions_Cami_2004.csv'.format(sightline))
+#     for i in range(len(fit_report['B'])):
+
+#         plt.figure(figsize = (15,8))
+    
+#         B = fit_report['B'][i]
+#         delta_B = fit_report['delta_B'][i] 
+#         zeta = fit_report['zeta'][i]
+#         T = fit_report['T1'][i]
+#         sigma = fit_report['sigma1'][i]
+#         origin = fit_report['origin1'][i]
+        
+#         linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+#         plt.plot(model_data[:,0], model_data[:,1], color = 'red', label = 'Model')
+    
+    
+#         Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
+#         plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'],  label = 'Data (HD ' + str(sightline) + ')' , color=(0.12156862745098039, 0.4666666666666667, 0.7058823529411765))
+#         title_text = ' B = {:.4f} cm-1, Delta_B = {:.4f}, zeta = {:.4f}, Temperature = {:.4f} K, $\sigma$ = {:.4f}, origin = {:.4f}'.format(B, delta_B,  zeta, T, sigma, origin)
+#         plt.title(title_text, fontsize = 17) 
+    
+#         plt.legend(fontsize = 15)
+#         plt.show()
+    
+
+#altogether init 1
+# B = 0.00258792
+# delta_B = -0.02696335
+# zeta = -0.32505451
+# Ts = [95.6801784, 92.6800681, 101.434804, 106.927171, 92.9660592, 81.9853734, 88.8462821]
+# sigmas = [0.18544432, 0.17102981, 0.18105244, 0.18667330, 0.18745625, 0.19205089, 0.20584935]
+# origins = [0.03058103, -0.01568777, -0.07118868, -0.04417317, 0.05996478, 0.06902381, 0.01248981]
+
+#altogether init 2
+# B = 0.00256618
+# delta_B = -0.0270427
+# zeta = -0.32709176
+# Ts = [97.3630470, 94.1524257, 103.356815, 109.216188, 94.6232728, 83.1577894, 90.3789475]
+# sigmas = [0.18683958, 0.17238475, 0.18252429, 0.18832571, 0.18890352, 0.19325940, 0.20730193]
+# origins = [0.03082452, -0.01550851, -0.07090288, -0.04426105, 0.06003777, 0.06930614, 0.01284413]
+
+#altogether init 3
+# B = 0.00358824
+# delta_B = -0.03592810
+# zeta = -0.30557765
+# Ts = [64.2055690, 64.1357596, 68.4328938, 70.4409091, 61.6433262, 56.3053709, 59.2680825]
+# sigmas = [0.16881947, 0.15561425, 0.16380323, 0.16631262, 0.16997689, 0.17793917, 0.18717446]
+# origins = [0.02773232, -0.01778257, -0.07371238, -0.04116312, 0.05825675, 0.06593325, 0.00224110]
+
+
+offset = np.arange(0, 7, 0.06)
+
+B = 0.00364096
+
+delta_B = -0.03663677
+
+zeta = -0.30571869
+
+Ts = [63.3029726, 63.2518116, 67.5140475, 69.5359851, 60.7732203, 55.5086144, 58.4298677]
+
+sigmas = [0.16883673, 0.15563615, 0.16382190, 0.16634141, 0.17000036, 0.17797145, 0.18719722]
+
+origins = [0.02772030, -0.01775670, -0.07370215, -0.04095399, 0.05825999, 0.06585543, 0.00212036]
+
+
+plt.figure(figsize = (15,30))
+for T, sigma, origin, offset, sightline in zip(Ts, sigmas, origins, offset, sightlines):
+    Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
+    plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset , label = 'Data (HD ' + str(sightline) + ')', color = 'black')
+
+
+    linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+    plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'red', label = 'T = {:.3f} K, sigma = {:.3f} cm-1'.format(T, sigma))
+    plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
+    plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
+    plt.tick_params(axis='both', which='major', labelsize=22)
+    # plt.annotate('HD' + str(sightline), xy = (Obs_data['Wavelength'][150] , Obs_data['Flux'][150] - offset) , xytext = (4, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+    # plt.annotate('T = {:.2f}'.format(T) + ' K', xy = (Obs_data['Wavelength'][40] , Obs_data['Flux'][40] - offset) , xytext = (-7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+    #plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = (Obs_data['Wavelength'][50] , Obs_data['Flux'][50] - offset) , xytext = (-5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
+    
+    
+    title_text = ' B = {:.4f} cm-1, Delta_B = {:.4f}, zeta = {:.4f}'.format(B, delta_B,  zeta)
+    plt.title(title_text, fontsize = 17) 
+    plt.xlim(-7.5, 6)
+    plt.legend(loc = 'lower left', fontsize = 16)
+    
+
+# B=       0.00701776 
+# delta_B= -0.04991853 
+# zeta=   -0.29885821 
+# T=       33.3047616 
+# sigma=   0.16767868 
+# origin=  0.02034466 
+# linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+# plt.plot(model_data[:,0], model_data[:,1], color = 'red', label = 'Model')
+
+
+# Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
+# plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'],  label = 'Data (HD ' + str(sightline) + ')' , color=(0.12156862745098039, 0.4666666666666667, 0.7058823529411765))
+
+
+
+
 
 # plt.figure(figsize = (15,8))
-B =       0.00330308 #+/- 8.7988e-05 (3.54%) (init = 0.0023)		
-delta_B =  -0.026643322 #+/- 0.00301885 (4.41%) (init = -0.0353)		
-zeta =  -0.11860631 #+/- 0.00953055 (3.05%) (init = -0.4197)		
+# B =       0.00330308 #+/- 8.7988e-05 (3.54%) (init = 0.0023)		
+# delta_B =  -0.026643322 #+/- 0.00301885 (4.41%) (init = -0.0353)		
+# zeta =  -0.11860631 #+/- 0.00953055 (3.05%) (init = -0.4197)		
 
-Ts = [86.19, 84.64, 93.08, 96.69, 82.35, 75.69, 79.07]
-origins =  [0.034, 0.0033, -0.052, -0.0197, 0.070, 0.016]
-sigma = 0.0289 #, 0.11, 0.20]
+# Ts = [86.19, 84.64, 93.08, 96.69, 82.35, 75.69, 79.07]
+# origins =  [0.034, 0.0033, -0.052, -0.0197, 0.070, 0.016]
+# sigma = 0.0289 #, 0.11, 0.20]
 
-for T,  origin in zip(Ts,  origins):
-    linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-    plt.plot(model_data[:,0], model_data[:,1], label = sigma)
-    plt.legend()
+# for T,  origin in zip(Ts,  origins):
+#     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+#     plt.plot(model_data[:,0], model_data[:,1], label = sigma)
+#     plt.legend()
 
 
 #plt.plot(x_equal_spacing, y_obs_data, label = 'Data (HD ' + str(sightline) + ')')
