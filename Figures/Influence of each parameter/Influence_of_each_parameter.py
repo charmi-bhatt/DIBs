@@ -19,13 +19,13 @@ import astropy.constants as const
 import matplotlib.pyplot as plt
 import timeit
 import scipy.stats as ss
-from edibles.utils.edibles_oracle import EdiblesOracle
-from edibles.utils.edibles_spectrum import EdiblesSpectrum
+# from edibles.utils.edibles_oracle import EdiblesOracle
+# from edibles.utils.edibles_spectrum import EdiblesSpectrum
 import warnings
 from astropy.modeling import models
 from astropy import units as u
-from specutils.spectra import Spectrum1D
-from specutils.fitting import fit_generic_continuum
+# from specutils.spectra import Spectrum1D
+# from specutils.fitting import fit_generic_continuum
 import seaborn as sns
 from scipy.signal import argrelextrema
 
@@ -33,7 +33,7 @@ from scipy.signal import argrelextrema
 
 origin = 0 
 #Jmax = 300 (Kmax = Jmax (i.e all K allowed))
-combinations = pd.read_csv(r"C:\Users\Charmi Bhatt\OneDrive\Desktop\my_local_github\edibles\edibles\utils\simulations\Charmi\Jmax=300.txt", delim_whitespace=(True))
+combinations = pd.read_csv(r"/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Jmax=300.txt", delim_whitespace=(True))
 
 
 
@@ -196,8 +196,11 @@ def get_rotational_spectrum(T, ground_B, delta_B, delta_C, zeta, sigma):
         
     'Calculated'
     #axes[m].plot(((smooth_data[:,0])), 1-0.1*(smooth_data[:,1]/max(smooth_data[:,1])), linewidth = 1, label = ''r'$\Delta B =$'r'$\Delta C =$ ' + str(delta_B) + '% ') #, label = str(delta_B))
-    axes[m].plot(((smooth_data[:,0])), 1-0.1*(smooth_data[:,1]/max(smooth_data[:,1])), linewidth = 1, label = 'B = ' + str(ground_B) + ' cm$^{-1}$') #, label = str(delta_B))
+    #axes[m].plot(((smooth_data[:,0])), 1-0.1*(smooth_data[:,1]/max(smooth_data[:,1])), linewidth = 1, label = 'B = ' + str(ground_B) + ' cm$^{-1}$') #, label = str(delta_B))
     #axes[m].plot(((smooth_data[:,0])), 1-0.1*(smooth_data[:,1]/max(smooth_data[:,1])), linewidth = 1, label = 'T = ' + str(T) + ' K') #, label = str(delta_B))
+    #axes[m].plot(((smooth_data[:,0])), 1-0.1*(smooth_data[:,1]/max(smooth_data[:,1])), linewidth = 1, label = ''r'$\zeta^{\prime}  = $' + str(zeta) + ' cm$^{-1}$') #, label = str(delta_B))
+    axes[m].plot(((smooth_data[:,0])), 1-0.1*(smooth_data[:,1]/max(smooth_data[:,1])), linewidth = 1, label = ''r'$\sigma = $'+ str(sigma) + 'cm$^{-1}$') #, label = str(delta_B))
+
 
     axes[m].xaxis.set_major_locator(plt.MultipleLocator(2))
     axes[m].xaxis.set_minor_locator(plt.MultipleLocator(0.5))
@@ -235,9 +238,10 @@ def get_rotational_spectrum(T, ground_B, delta_B, delta_C, zeta, sigma):
 # delta_Bs = (0, -0.2, -0.4, -0.6, -0.8)
 # delta_Cs = (0, -0.2, -0.4, -0.6, -0.8)
 
-ground_Bs = (0.000501, 0.001584, 0.005011, 0.0158489, 0.0501187)
+#ground_Bs = (0.000501, 0.001584, 0.005011, 0.0158489, 0.0501187)
 
-#zetas = (-0.35, -0.4) #, -0.45, -0.5, -0.55)
+#zetas = (-1, -0.5, 0, 0.5, 1)
+sigmas  = (0.05, 0.11, 0.17, 0.23, 0.3)
 
 T = 61.2
 ground_B = 0.00336
@@ -258,13 +262,16 @@ fig, axes = plt.subplots(5, figsize=(7,10), sharex=(True), sharey=(True))
 #fig.suptitle('B = ' + str(ground_B) + ' cm$^{-1}$ , 'r'$\Delta B =$ ' + str(delta_B) + '% ,  'r'$\Delta C =$ ' + str(delta_C) + '% , 'r'$\zeta^{\prime}  = $' + str(zeta) , size ='x-large', y = 0.97)
 
 #for zeta:
-#fig.suptitle('T = ' + str(T) + ' K , B = ' + str(ground_B) + ' cm$^{-1}$ , 'r'$\Delta B =$ ' + str(delta_B) + '% ,  'r'$\Delta C =$ ' + str(delta_C) + '% , 'r'$\sigma = $'+ str(sigma) + 'cm$^{-1}$ \n' , size ='x-large', y =0.95)
+#fig.suptitle('T = ' + str(T) + ' K , B = ' + str(ground_B) + ' cm$^{-1}$ , 'r'$\Delta B =$ ' + str(delta_B) + '% , 'r'$\sigma = $'+ str(sigma) + 'cm$^{-1}$ \n' , size ='x-large', y =0.97)
 
 #for B:
-fig.suptitle('T = ' + str(T) + ' K,  'r'$\Delta B =$ ' + str(delta_B) + '% ,  'r'$\Delta C =$ ' + str(delta_C) + '%, 'r'$\zeta^{\prime}  = $' + str(zeta) , size ='x-large', y =0.97)
+#fig.suptitle('T = ' + str(T) + ' K,  'r'$\Delta B =$ ' + str(delta_B) + '% ,  'r'$\Delta C =$ ' + str(delta_C) + '%, 'r'$\zeta^{\prime}  = $' + str(zeta) , size ='x-large', y =0.97)
 
 #for delta_B=
 #fig.suptitle('T = ' + str(T) + ' K , B = ' + str(ground_B) + ' cm$^{-1}$ , 'r'$\zeta^{\prime}  = $' + str(zeta) , size ='x-large', y =0.97)
+
+#for sigma:
+fig.suptitle(' B = ' + str(ground_B) + ' cm$^{-1}$ , 'r'$\Delta B =$ ' + str(delta_B) + '% 'r'$\zeta^{\prime}  = $' + str(zeta) + 'T = ' + str(T) + ' K' , size ='x-large', y =0.97)
 
 
 # rows = ['T = {} K'.format(row) for row in Ts ]
@@ -295,12 +302,14 @@ fig.tight_layout()
 
 m = 0
 #for delta_B, delta_C in zip(delta_Bs, delta_Cs):
-for ground_B in ground_Bs:
+#for ground_B in ground_Bs:
 #for T in Ts:
-        get_rotational_spectrum(T, ground_B, delta_B, delta_C, zeta, sigma)
-        m = m + 1
-        
-
+#for zeta in zetas:
+for sigma in sigmas:
+    get_rotational_spectrum(T, ground_B, delta_B, delta_C, zeta, sigma)
+    m = m + 1
+    
+plt.savefig("IOEP_sigma.pdf", format="pdf", bbox_inches="tight")
     
 
 

@@ -186,39 +186,75 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
 
     start3 = timeit.default_timer()
 
-    # HL_factors = []
+    HL_factors = []
     
-    # for J, K, delta_J, delta_K in zip(ground_Js, ground_Ks, delta_J, delta_K):
-    #     if delta_J == -1 and delta_K == -1:
-    #         HL_factor = ((J - 1 + K) * (J + K)) / (J * ((2 * J) + 1))
-    #     elif delta_J == -1 and delta_K == 1:
-    #         HL_factor = ((J - 1 - K) * (J - K)) / (J * ((2 * J) + 1))
-    #     elif delta_J == 0 and delta_K == -1:
-    #         HL_factor = (J + 1 - K) * (J + K) / (J * (J + 1))
-    #     elif delta_J == 0 and delta_K == 1:
-    #         HL_factor = (J + 1 + K) * (J - K) / (J * (J + 1))
-    #     elif delta_J == 1 and delta_K == -1:
-    #         HL_factor = (J + 2 - K) * (J + 1 - K) / ((J + 1) * ((2 * J) + 1))
-    #     elif delta_J == 1 and delta_K == 1:
-    #         HL_factor = (J + 2 + K) * (J + 1 + K) / ((J + 1) * ((2 * J) + 1))
+    for J, K, delta_J, delta_K in zip(ground_Js, ground_Ks, delta_J, delta_K):
+        if delta_J == -1 and delta_K == -1:
+            HL_factor = ((J - 1 + K) * (J + K)) / (2*J * ((2 * J) + 1))
+        elif delta_J == -1 and delta_K == 1:
+            HL_factor = ((J - 1 - K) * (J - K)) / (2*J * ((2 * J) + 1))
+        elif delta_J == 0 and delta_K == -1:
+            HL_factor = (J + 1 - K) * (J + K) / (2*J * (J + 1))
+        elif delta_J == 0 and delta_K == 1:
+            HL_factor = (J + 1 + K) * (J - K) / (2*J * (J + 1))
+        elif delta_J == 1 and delta_K == -1:
+            HL_factor = (J + 2 - K) * (J + 1 - K) / ((2*J + 1) * ((2 * J) + 1))
+        elif delta_J == 1 and delta_K == 1:
+            HL_factor = (J + 2 + K) * (J + 1 + K) / ((J + 1) * ((2 * J) + 1))
     
-    #     HL_factors.append(HL_factor)
-    
-    # linelist['HL_factors'] = HL_factors
-    
-    
-    # Compute HL_factors directly in a list comprehension
-    HL_factors = [((J - 1 + K) * (J + K)) / (J * ((2 * J) + 1)) if (delta_J == -1 and delta_K == -1) else
-                  ((J - 1 - K) * (J - K)) / (J * ((2 * J) + 1)) if (delta_J == -1 and delta_K == 1) else
-                  (J + 1 - K) * (J + K) / (J * (J + 1)) if (delta_J == 0 and delta_K == -1) else
-                  (J + 1 + K) * (J - K) / (J * (J + 1)) if (delta_J == 0 and delta_K == 1) else
-                  (J + 2 - K) * (J + 1 - K) / ((J + 1) * ((2 * J) + 1)) if (delta_J == 1 and delta_K == -1) else
-                  (J + 2 + K) * (J + 1 + K) / ((J + 1) * ((2 * J) + 1)) if (delta_J == 1 and delta_K == 1) else
-                  None for J, K, delta_J, delta_K in zip(ground_Js, ground_Ks, delta_J, delta_K)]
+        HL_factors.append(HL_factor)
     
     linelist['HL_factors'] = HL_factors
     
     
+    # Compute HL_factors directly in a list comprehension
+    # HL_factors = [((J - 1 + K) * (J + K)) / (J * ((2 * J) + 1)) if (delta_J == -1 and delta_K == -1) else
+    #               ((J - 1 - K) * (J - K)) / (J * ((2 * J) + 1)) if (delta_J == -1 and delta_K == 1) else
+    #               (J + 1 - K) * (J + K) / (J * (J + 1)) if (delta_J == 0 and delta_K == -1) else
+    #               (J + 1 + K) * (J - K) / (J * (J + 1)) if (delta_J == 0 and delta_K == 1) else
+    #               (J + 2 - K) * (J + 1 - K) / ((J + 1) * ((2 * J) + 1)) if (delta_J == 1 and delta_K == -1) else
+    #               (J + 2 + K) * (J + 1 + K) / ((J + 1) * ((2 * J) + 1)) if (delta_J == 1 and delta_K == 1) else
+    #               None for J, K, delta_J, delta_K in zip(ground_Js, ground_Ks, delta_J, delta_K)]
+    
+    # linelist['HL_factors'] = HL_factors
+    
+    
+
+    # Convert your lists to numpy arrays
+    # ground_Js = np.array(ground_Js)
+    # ground_Ks = np.array(ground_Ks)
+    # delta_J = np.array(delta_J)
+    # delta_K = np.array(delta_K)
+    
+    # # Calculate the common factors
+    # two_J_plus_one = (2 * ground_Js) + 1
+    # J_plus_one = ground_Js + 1
+    
+    # # Calculate the factors for each condition
+    # cond1 = ((ground_Js - 1 + ground_Ks) * (ground_Js + ground_Ks)) / (ground_Js * two_J_plus_one)
+    # cond2 = ((ground_Js - 1 - ground_Ks) * (ground_Js - ground_Ks)) / (ground_Js * two_J_plus_one)
+    # cond3 = (J_plus_one - ground_Ks) * (ground_Js + ground_Ks) / (ground_Js * J_plus_one)
+    # cond4 = (J_plus_one + ground_Ks) * (ground_Js - ground_Ks) / (ground_Js * J_plus_one)
+    # cond5 = (ground_Js + 2 - ground_Ks) * (J_plus_one - ground_Ks) / (J_plus_one * two_J_plus_one)
+    # cond6 = (ground_Js + 2 + ground_Ks) * (J_plus_one + ground_Ks) / (J_plus_one * two_J_plus_one)
+    
+    # # Create an array of zeros of the same shape as your conditions
+    # HL_factors = np.zeros(cond1.shape)
+    
+    # # Update 'HL_factors' array for each condition
+    # HL_factors[(delta_J == -1) & (delta_K == -1)] = cond1[(delta_J == -1) & (delta_K == -1)]
+    # HL_factors[(delta_J == -1) & (delta_K == 1)] = cond2[(delta_J == -1) & (delta_K == 1)]
+    # HL_factors[(delta_J == 0) & (delta_K == -1)] = cond3[(delta_J == 0) & (delta_K == -1)]
+    # HL_factors[(delta_J == 0) & (delta_K == 1)] = cond4[(delta_J == 0) & (delta_K == 1)]
+    # HL_factors[(delta_J == 1) & (delta_K == -1)] = cond5[(delta_J == 1) & (delta_K == -1)]
+    # HL_factors[(delta_J == 1) & (delta_K == 1)] = cond6[(delta_J == 1) & (delta_K == 1)]
+    
+    # linelist['HL_factors'] = HL_factors
+    
+    # np.set_printoptions(threshold=np.inf)
+
+    # #print(HL_factors)
+
 
 
 
@@ -578,6 +614,19 @@ for sightline in sightlines:
 # results_list = [result1, result2, result3] #, result4, result5]
 # fit_report_filename = str(sightline) + '3_init_conditions_Cami_2004.csv'
 # write_results_to_csv(results_list,fit_report_filename  )
+
+B=       0.00201776 
+delta_B= -0.03991853 
+zeta=   -0.49885821 
+T=       93.3047616 
+sigma=   0.16767868 
+origin=  0.02034466 
+linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+plt.plot(model_data[:,0], model_data[:,1], color = 'red', label = 'Model')
+
+
+# Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
+# plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'],  label = 'Data (HD ' + str(sightline) + ')' , color=(0.12156862745098039, 0.4666666666666667, 0.7058823529411765))
 
 
 

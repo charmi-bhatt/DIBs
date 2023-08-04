@@ -289,8 +289,11 @@ def obs_curve_to_fit(sightline):
         the triple peak for fitting and calculates std dev for each sightline '''
     
         file = filename.format(sightline)
+        # Obs_data = pd.read_csv(spec_dir / file,
+        #                         delim_whitespace=(True))
+        
         Obs_data = pd.read_csv(spec_dir / file,
-                               delim_whitespace=(True))
+                                sep = ',')
         
         Obs_data['Wavelength'] = (1 / Obs_data['Wavelength']) * 1e8
         Obs_data = Obs_data.iloc[::-1].reset_index(
@@ -447,7 +450,7 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
     last_origin_index = first_origin_index +len(sightlines) 
  
     params = Parameters()
-    params.add('B', value = B, min = 0.0005, max = 0.01)
+    params.add('B', value = B, min = 0.0005, max = 0.05)
     params.add('delta_B', value = delta_B, min = -1, max =0)
     params.add('zeta', value = zeta, min = -1, max = 1)
     
@@ -484,16 +487,16 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
 Jmax = 300
 
 #Cami 2004
-spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Research/Cami_2004_data/heliocentric/6614/")
-#sightlines = ['144217', '144470',  '145502', '147165', '149757', '179406', '184915'] 
-sightlines = ['144217']
-filename = 'hd{}_dib6614.txt'
-method = 'differential_evolution'
+# spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Research/Cami_2004_data/heliocentric/6614/")
+# #sightlines = ['144217', '144470',  '145502', '147165', '149757', '179406', '184915'] 
+# sightlines = ['144217']
+# filename = 'hd{}_dib6614.txt'
+method = 'ampgo'
 
 #EDIBLES data
-#spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
-#filename = '6614_HD{}.txt'
-#sightlines = ['23180', '24398'] #, '144470', '147165' , '147683', '149757', '166937', '170740', '184915', '185418', '185859', '203532']
+spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
+filename = '6614_HD{}.txt'
+sightlines = ['23180', '24398', '144470', '147165' , '147683', '149757', '166937', '170740', '184915', '185418', '185859', '203532']
 
 
 flux_list = np.array([])
@@ -510,13 +513,13 @@ for sightline in sightlines:
     stddev_array = np.concatenate((stddev_array, one_sl_stddev))
   
 
-result1 = fit_model(B = 0.01, delta_B = -0.1, zeta = -0.312, T = 10, sigma = 0.18 , origin =  0.014)
-result2 = fit_model(B = 0.005, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
-result3 = fit_model(B = 0.0001, delta_B = -0.1, zeta = -0.312, T = 180, sigma = 0.18 , origin =  0.014)
+# result1 = fit_model(B = 0.01, delta_B = -0.1, zeta = -0.312, T = 10, sigma = 0.18 , origin =  0.014)
+# result2 = fit_model(B = 0.005, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
+# result3 = fit_model(B = 0.0001, delta_B = -0.1, zeta = -0.312, T = 180, sigma = 0.18 , origin =  0.014)
 
-results_list = [result1, result2, result3] #, result4, result5]
-fit_report_filename = str(sightline) + '_3_init_conditions_Cami_2004_' + str(method) + '.csv'
-write_results_to_csv(results_list,fit_report_filename  )
+# results_list = [result1, result2, result3] #, result4, result5]
+# fit_report_filename = str(sightline) + '_3_init_conditions_Cami_2004_'  + str(method) + '.csv'
+# write_results_to_csv(results_list,fit_report_filename  )
 
 
 
@@ -574,29 +577,26 @@ write_results_to_csv(results_list,fit_report_filename  )
 # origins = [0.02773232, -0.01778257, -0.07371238, -0.04116312, 0.05825675, 0.06593325, 0.00224110]
 
 
-offset = np.arange(0, 7, 0.06)
+offset = np.arange(0, 12, 0.06)
 
-B = 0.00364096
+B = 0.00247690
+delta_B = -0.06864414
+zeta = -0.31136112
 
-delta_B = -0.03663677
+Ts = [84.8194157, 95.5401280, 97.2287829, 116.540106, 99.2097303, 86.6632524, 98.4034623, 89.0236501, 97.3496743, 87.8768841, 103.793851, 86.2283890]
 
-zeta = -0.30571869
+sigmas = [0.18496609, 0.20292189, 0.18936606, 0.19319891, 0.22004922, 0.16349391, 0.17929137, 0.19690720, 0.20881159, 0.22038457, 0.24982774, 0.18963846]
 
-Ts = [63.3029726, 63.2518116, 67.5140475, 69.5359851, 60.7732203, 55.5086144, 58.4298677]
-
-sigmas = [0.16883673, 0.15563615, 0.16382190, 0.16634141, 0.17000036, 0.17797145, 0.18719722]
-
-origins = [0.02772030, -0.01775670, -0.07370215, -0.04095399, 0.05825999, 0.06585543, 0.00212036]
-
+origins = [0.02918830, -0.00869084, 0.01065963, -0.00253786, 0.02965486, -0.00276476, 0.06965812, 0.02549114, 0.12524227, 0.07957677, 0.04544019, 0.08117755]
 
 plt.figure(figsize = (15,30))
 for T, sigma, origin, offset, sightline in zip(Ts, sigmas, origins, offset, sightlines):
     Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
-    plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset , label = 'Data (HD ' + str(sightline) + ')', color = 'black')
+    plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset, color = 'black' ) #, label = 'HD ' + str(sightline) , color = 'black')
 
 
     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-    plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'red', label = 'T = {:.3f} K, sigma = {:.3f} cm-1'.format(T, sigma))
+    plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'red', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
     plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
     plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
     plt.tick_params(axis='both', which='major', labelsize=22)
@@ -605,10 +605,11 @@ for T, sigma, origin, offset, sightline in zip(Ts, sigmas, origins, offset, sigh
     #plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = (Obs_data['Wavelength'][50] , Obs_data['Flux'][50] - offset) , xytext = (-5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
     
     
-    title_text = ' B = {:.4f} cm-1, Delta_B = {:.4f}, zeta = {:.4f}'.format(B, delta_B,  zeta)
-    plt.title(title_text, fontsize = 17) 
+    title_text = ' B = {:.5f} cm-1, Delta_B = {:.4f}, zeta = {:.4f}'.format(B, delta_B,  zeta)
+    plt.title(title_text, fontsize = 22) 
     plt.xlim(-7.5, 6)
-    plt.legend(loc = 'lower left', fontsize = 16)
+   # plt.legend(loc = 'lower left', fontsize = 16)
+    plt.legend(bbox_to_anchor=(1.8, 0.7), loc='lower right', fontsize = 22)
     
 
 # B=       0.00701776 
