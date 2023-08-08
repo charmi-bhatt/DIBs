@@ -317,7 +317,7 @@ def obs_curve_to_fit(sightline):
         Obs_data_continuum = Obs_data [(Obs_data['Wavelength'] >= 2) & (Obs_data['Wavelength']<= 5)]
         std_dev = np.std(Obs_data_continuum['Flux'])
         
-        return Obs_data, x_equal_spacing, y_obs_data, std_dev
+        return Obs_data_trp, x_equal_spacing, y_obs_data, std_dev
     
     
 
@@ -484,7 +484,7 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
 
 
 '''Inputs'''    
-Jmax = 300
+Jmax = 400
 
 #Cami 2004
 # spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Research/Cami_2004_data/heliocentric/6614/")
@@ -521,6 +521,75 @@ for sightline in sightlines:
 # fit_report_filename = str(sightline) + '_3_init_conditions_Cami_2004_'  + str(method) + '.csv'
 # write_results_to_csv(results_list,fit_report_filename  )
 
+def fwhm(x, y):
+    """
+    Compute Full Width at Half Maximum (FWHM) of a peak in y.
+    x and y are arrays of the x and y data of the peak.
+    """
+    half_max = max(y) / 2.
+    # indices of points above half max
+    indices = np.where(y > half_max)[0]
+    
+    # In case the peak is not well-defined or other data irregularities
+    if len(indices) == 0:
+        return None
+    
+    
+    # Width in x of data above half max
+    return x[indices[2]] - x[indices[1]]
+
+for sightline in sightlines: 
+    
+    file = filename.format(sightline)
+    # Obs_data = pd.read_csv(spec_dir / file,
+    #                         delim_whitespace=(True))
+    
+    Obs_data = pd.read_csv(spec_dir / file,
+                            sep = ',')
+    Obs_data['Flux'] = (Obs_data['Flux'] - min(Obs_data['Flux'])) / (1 - min(Obs_data['Flux'])) * 0.1 + 0.9
+
+    plt.plot(Obs_data['Wavelength'], Obs_data['Flux'])
+
+    Obs_data_trp = Obs_data[(Obs_data['Flux'] <= 0.95)]  # trp = triple peak 
+    #print(max(Obs_data_trp['Wavelength']))
+    plt.plot(Obs_data_trp['Wavelength'], Obs_data_trp['Flux'])
+    print('============')
+    
+    
+    Obs_data_new = Obs_data[(Obs_data['Wavelength'] >= 6612.8) & (Obs_data['Wavelength']<= 6614.0)]
+    plt.plot(Obs_data_new['Wavelength'], Obs_data_new['Flux'], color = 'green')
+
+    delta_lambda = fwhm(Obs_data['Wavelength'], Obs_data['Flux'])
+    print("Estimated resolution (FWHM):", delta_lambda, "nm")
+    
+    central_lambda = Obs_data['Wavelength'][np.argmin(Obs_data['Flux'])]
+    print(central_lambda)
+    resolution_R = central_lambda / delta_lambda
+    print(resolution_R)
+    plt.show()
+
+
+
+
+
+
+# B = 0.00336
+# delta_B = -0.17
+# zetas=  (-1, -0.5, 0, 0.5, 1)
+# T = 61.2
+# sigma = 0.1953
+# origin = 0
+
+# for zeta in zetas:
+#     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+#     linelist['intensities'] = 1-0.1*(linelist['intensities']/max(linelist['intensities']))
+#     plt.stem(linelist['wavenos'], linelist['intensities'], label = 'zeta = ' + str(zeta), bottom = 1)
+    
+#     plt.plot(model_data[:,0], model_data[:,1], color = 'red', label = 'Model')
+#     plt.title('kerr condition c')
+#     plt.legend()
+#     plt.show()
+    
 
 
 '''PLotting'''
@@ -577,39 +646,39 @@ for sightline in sightlines:
 # origins = [0.02773232, -0.01778257, -0.07371238, -0.04116312, 0.05825675, 0.06593325, 0.00224110]
 
 
-offset = np.arange(0, 12, 0.06)
+# offset = np.arange(0, 12, 0.06)
 
-B = 0.00247690
-delta_B = -0.06864414
-zeta = -0.31136112
+# B = 0.00247690
+# delta_B = -0.06864414
+# zeta = -0.31136112
 
-Ts = [84.8194157, 95.5401280, 97.2287829, 116.540106, 99.2097303, 86.6632524, 98.4034623, 89.0236501, 97.3496743, 87.8768841, 103.793851, 86.2283890]
+# Ts = [84.8194157, 95.5401280, 97.2287829, 116.540106, 99.2097303, 86.6632524, 98.4034623, 89.0236501, 97.3496743, 87.8768841, 103.793851, 86.2283890]
 
-sigmas = [0.18496609, 0.20292189, 0.18936606, 0.19319891, 0.22004922, 0.16349391, 0.17929137, 0.19690720, 0.20881159, 0.22038457, 0.24982774, 0.18963846]
+# sigmas = [0.18496609, 0.20292189, 0.18936606, 0.19319891, 0.22004922, 0.16349391, 0.17929137, 0.19690720, 0.20881159, 0.22038457, 0.24982774, 0.18963846]
 
-origins = [0.02918830, -0.00869084, 0.01065963, -0.00253786, 0.02965486, -0.00276476, 0.06965812, 0.02549114, 0.12524227, 0.07957677, 0.04544019, 0.08117755]
+# origins = [0.02918830, -0.00869084, 0.01065963, -0.00253786, 0.02965486, -0.00276476, 0.06965812, 0.02549114, 0.12524227, 0.07957677, 0.04544019, 0.08117755]
 
-plt.figure(figsize = (15,30))
-for T, sigma, origin, offset, sightline in zip(Ts, sigmas, origins, offset, sightlines):
-    Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
-    plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset, color = 'black' ) #, label = 'HD ' + str(sightline) , color = 'black')
+# plt.figure(figsize = (15,30))
+# for T, sigma, origin, offset, sightline in zip(Ts, sigmas, origins, offset, sightlines):
+#     Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
+#     plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset, color = 'black' ) #, label = 'HD ' + str(sightline) , color = 'black')
 
 
-    linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-    plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'red', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
-    plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
-    plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
-    plt.tick_params(axis='both', which='major', labelsize=22)
-    # plt.annotate('HD' + str(sightline), xy = (Obs_data['Wavelength'][150] , Obs_data['Flux'][150] - offset) , xytext = (4, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
-    # plt.annotate('T = {:.2f}'.format(T) + ' K', xy = (Obs_data['Wavelength'][40] , Obs_data['Flux'][40] - offset) , xytext = (-7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
-    #plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = (Obs_data['Wavelength'][50] , Obs_data['Flux'][50] - offset) , xytext = (-5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
+#     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+#     plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'red', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
+#     plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
+#     plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
+#     plt.tick_params(axis='both', which='major', labelsize=22)
+#     # plt.annotate('HD' + str(sightline), xy = (Obs_data['Wavelength'][150] , Obs_data['Flux'][150] - offset) , xytext = (4, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+#     # plt.annotate('T = {:.2f}'.format(T) + ' K', xy = (Obs_data['Wavelength'][40] , Obs_data['Flux'][40] - offset) , xytext = (-7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+#     #plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = (Obs_data['Wavelength'][50] , Obs_data['Flux'][50] - offset) , xytext = (-5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
     
     
-    title_text = ' B = {:.5f} cm-1, Delta_B = {:.4f}, zeta = {:.4f}'.format(B, delta_B,  zeta)
-    plt.title(title_text, fontsize = 22) 
-    plt.xlim(-7.5, 6)
-   # plt.legend(loc = 'lower left', fontsize = 16)
-    plt.legend(bbox_to_anchor=(1.8, 0.7), loc='lower right', fontsize = 22)
+#     title_text = ' B = {:.5f} cm-1, Delta_B = {:.4f}, zeta = {:.4f}'.format(B, delta_B,  zeta)
+#     plt.title(title_text, fontsize = 22) 
+#     plt.xlim(-7.5, 6)
+#    # plt.legend(loc = 'lower left', fontsize = 16)
+#     plt.legend(bbox_to_anchor=(1.8, 0.7), loc='lower right', fontsize = 22)
     
 
 # B=       0.00701776 
