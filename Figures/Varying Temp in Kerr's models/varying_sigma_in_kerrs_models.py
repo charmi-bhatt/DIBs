@@ -317,7 +317,7 @@ def obs_curve_to_fit(sightline):
         Obs_data_continuum = Obs_data [(Obs_data['Wavelength'] >= 2) & (Obs_data['Wavelength']<= 5)]
         std_dev = np.std(Obs_data_continuum['Flux'])
         
-        return Obs_data_trp, x_equal_spacing, y_obs_data, std_dev
+        return Obs_data, x_equal_spacing, y_obs_data, std_dev
     
     
 
@@ -521,80 +521,44 @@ for sightline in sightlines:
 # fit_report_filename = str(sightline) + '_3_init_conditions_Cami_2004_'  + str(method) + '.csv'
 # write_results_to_csv(results_list,fit_report_filename  )
 
-def fwhm(x, y):
-    """
-    Compute Full Width at Half Maximum (FWHM) of a peak in y.
-    x and y are arrays of the x and y data of the peak.
-    """
-    half_max = max(y) / 2.
-    # indices of points above half max
-    indices = np.where(y > half_max)[0]
-    
-    # In case the peak is not well-defined or other data irregularities
-    if len(indices) == 0:
-        return None
-    
-    
-    # Width in x of data above half max
-    return x[indices[2]] - x[indices[1]]
-
-# for sightline in sightlines: 
-    
-#     file = filename.format(sightline)
-#     # Obs_data = pd.read_csv(spec_dir / file,
-#     #                         delim_whitespace=(True))
-    
-#     Obs_data = pd.read_csv(spec_dir / file,
-#                             sep = ',')
-#     Obs_data['Flux'] = (Obs_data['Flux'] - min(Obs_data['Flux'])) / (1 - min(Obs_data['Flux'])) * 0.1 + 0.9
-
-#     plt.plot(Obs_data['Wavelength'], Obs_data['Flux'])
-
-#     Obs_data_trp = Obs_data[(Obs_data['Flux'] <= 0.95)]  # trp = triple peak 
-#     #print(max(Obs_data_trp['Wavelength']))
-#     plt.plot(Obs_data_trp['Wavelength'], Obs_data_trp['Flux'])
-#     print('============')
-    
-    
-#     Obs_data_new = Obs_data[(Obs_data['Wavelength'] >= 6612.8) & (Obs_data['Wavelength']<= 6614.0)]
-#     plt.plot(Obs_data_new['Wavelength'], Obs_data_new['Flux'], color = 'green')
-
-#     delta_lambda = fwhm(Obs_data['Wavelength'], Obs_data['Flux'])
-#     print("Estimated resolution (FWHM):", delta_lambda, "nm")
-    
-#     central_lambda = Obs_data['Wavelength'][np.argmin(Obs_data['Flux'])]
-#     print(central_lambda)
-#     resolution_R = central_lambda / delta_lambda
-#     print(resolution_R)
-#     plt.show()
 
 
-for sightline in sightlines: 
+
+B = 0.00336
+delta_B = -0.17
+zeta=  -0.49
+Ts = (40,55)
+#sigmas = (0.1512, 0.1953)
+sigma = 0.1953
+origin = 0.12
+sightlines = ('166937', '185418')
+plt.figure(figsize=(15,8))
+vertical_offset = 0.05
+
+for T in Ts:
+    linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+    # linelist['intensities'] = 1-0.1*(linelist['intensities']/max(linelist['intensities']))
+    # plt.stem(linelist['wavenos'], linelist['intensities'], label = 'zeta = ' + str(zeta), bottom = 1)
+    plt.plot(model_data[:,0], model_data[:,1], label = 'Simulated at T = ' + str(T) + ' K')
+
+   # plt.plot(model_data[:,0], model_data[:,1], label = 'Simulated at $\sigma$ = ' + str(sigma) + ' cm$^{{-1}}$')
+    plt.axvline(x = -0.70, color = 'black', linestyle = 'dotted')
+    plt.axvline(x = -0.58, color = 'black', linestyle = 'dotted')
+    plt.axvline(x = 0.64, color = 'black', linestyle = 'dotted')
+    plt.axvline(x = 0.78, color = 'black', linestyle = 'dotted')
+    plt.title(f"B = {B} $cm^{{-1}}$  $\Delta B = ${delta_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$ $\sigma = ${sigma} cm$^{{-1}}$")
+    plt.legend()
+    
+   
+    
+for sightline in sightlines:
+    
     Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
-    print(std_dev)
-#plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'], color = 'black' ) #, label = 'HD ' + str(sightline) , color = 'black')
+    plt.plot(Obs_data['Wavelength'], Obs_data['Flux'] - vertical_offset, label = 'HD ' + str(sightline))
+    plt.xlim(-3,3)
+    plt.legend()
 
-
-
-
-# B = 0.00336
-# delta_B = -0.17
-# zetas=  (-1, -0.5, 0, 0.5, 1)
-# T = 61.2
-# sigma = 0.1953
-# origin = 0
-
-# for zeta in zetas:
-#     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-#     linelist['intensities'] = 1-0.1*(linelist['intensities']/max(linelist['intensities']))
-#     plt.stem(linelist['wavenos'], linelist['intensities'], label = 'zeta = ' + str(zeta), bottom = 1)
-    
-#     plt.plot(model_data[:,0], model_data[:,1], color = 'red', label = 'Model')
-#     plt.title('kerr condition c')
-#     plt.legend()
-#     plt.show()
-    
-
+plt.savefig("Varying_T_in_kerr_model_c.pdf", format="pdf", bbox_inches="tight")
 
 '''PLotting'''
 

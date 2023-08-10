@@ -12,21 +12,21 @@ import astropy.constants as const
 import matplotlib.pyplot as plt
 import timeit
 import scipy.stats as ss
-from edibles.utils.edibles_oracle import EdiblesOracle
-from edibles.utils.edibles_spectrum import EdiblesSpectrum
-import warnings
-from astropy.modeling import models
-from astropy import units as u
-from specutils.spectra import Spectrum1D
-from specutils.fitting import fit_generic_continuum
-import seaborn as sns
+# from edibles.utils.edibles_oracle import EdiblesOracle
+# from edibles.utils.edibles_spectrum import EdiblesSpectrum
+# import warnings
+# from astropy.modeling import models
+# from astropy import units as u
+# from specutils.spectra import Spectrum1D
+# from specutils.fitting import fit_generic_continuum
+# import seaborn as sns
 from scipy.signal import argrelextrema
 
 
 
 origin = 0 
 #Jmax = 300 (Kmax = Jmax (i.e all K allowed))
-combinations = pd.read_csv(r"C:\Users\Charmi Bhatt\OneDrive\Desktop\my_local_github\edibles\edibles\utils\simulations\Charmi\Jmax=300.txt", delim_whitespace=(True))
+combinations = pd.read_csv(r"/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Jmax=300.txt", delim_whitespace=(True))
 
 pr_peak_seps =[]
 pq_peak_seps =[]
@@ -304,6 +304,7 @@ Ts = (8,11)
 #Ts = (40,55)
 #Ts = (45,60)
 #T = 8.9
+
 ground_B = 0.01913
 # ground_B = 0.00947
 # ground_B= 0.00336

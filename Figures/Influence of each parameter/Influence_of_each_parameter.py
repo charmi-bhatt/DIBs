@@ -235,10 +235,10 @@ def get_rotational_spectrum(T, ground_B, delta_B, delta_C, zeta, sigma):
 
 #Ts = (2.7, 10, 30, 70, 100)
 
-# delta_Bs = (0, -0.2, -0.4, -0.6, -0.8)
-# delta_Cs = (0, -0.2, -0.4, -0.6, -0.8)
+delta_Bs = (0, -0.2, -0.4, -0.6, -0.8)
+delta_Cs = (0, -0.2, -0.4, -0.6, -0.8)
 
-#ground_Bs = (0.000501, 0.001584, 0.005011, 0.0158489, 0.0501187)
+ground_Bs = (0.000501, 0.001584, 0.005011, 0.0158489, 0.0501187)
 
 #zetas = (-1, -0.5, 0, 0.5, 1)
 sigmas  = (0.05, 0.11, 0.17, 0.23, 0.3)
@@ -254,25 +254,26 @@ conditions = 'condition c'
 
 fig, axes = plt.subplots(5, figsize=(7,10), sharex=(True), sharey=(True))
 
+#for B:
+#fig.suptitle(' 'r'$\Delta B =$ ' + str(delta_B) + '%   'r'$\zeta^{\prime}  = $' + str(zeta) +' cm$^{-1}$   T = ' + str(T) + ' K   'r'$\sigma = $'+ str(sigma) + ' cm$^{-1}$ ' , size ='x-large', y =0.97)
+
+#for T:
+#fig.suptitle(f"B = {ground_B} cm$^{{-1}}$  $\Delta B =$ {delta_B}%  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$  $\sigma =$ {sigma} cm$^{{-1}}$", size='x-large', y=0.98)
+
+#for zeta:
+#fig.suptitle(f"B = {ground_B} cm$^{{-1}}$  $\Delta B =$ {delta_B}%  T = {T} K  $\sigma =$ {sigma} cm$^{{-1}}$", size='x-large', y=0.98)
+
+
+#for delta_B=
+fig.suptitle(f"B = {ground_B} cm$^{{-1}}$  $\Delta B =$ {delta_B}%  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$  T = {T} K ", size='x-large', y=0.98)
+
+#for sigma:
+#fig.suptitle(f"B = {ground_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$  T = {T} K  $\sigma =$ {sigma} cm$^{{-1}}$", size='x-large', y=0.98)
+
+
 
 
 #fig.suptitle('2D Parametric survey with $ T_{rot} $ and B \n \n 'r'$\Delta B =$ ' + str(delta_B) + '% ,  'r'$\Delta C =$ ' + str(delta_C) + '% , 'r'$\zeta  = $' + str(zeta) + ', 'r'$\sigma = $'+ str(sigma) + '$cm^{-1}$ \n' , size ='xx-large')
-
-#for T:
-#fig.suptitle('B = ' + str(ground_B) + ' cm$^{-1}$ , 'r'$\Delta B =$ ' + str(delta_B) + '% ,  'r'$\Delta C =$ ' + str(delta_C) + '% , 'r'$\zeta^{\prime}  = $' + str(zeta) , size ='x-large', y = 0.97)
-
-#for zeta:
-#fig.suptitle('T = ' + str(T) + ' K , B = ' + str(ground_B) + ' cm$^{-1}$ , 'r'$\Delta B =$ ' + str(delta_B) + '% , 'r'$\sigma = $'+ str(sigma) + 'cm$^{-1}$ \n' , size ='x-large', y =0.97)
-
-#for B:
-#fig.suptitle('T = ' + str(T) + ' K,  'r'$\Delta B =$ ' + str(delta_B) + '% ,  'r'$\Delta C =$ ' + str(delta_C) + '%, 'r'$\zeta^{\prime}  = $' + str(zeta) , size ='x-large', y =0.97)
-
-#for delta_B=
-#fig.suptitle('T = ' + str(T) + ' K , B = ' + str(ground_B) + ' cm$^{-1}$ , 'r'$\zeta^{\prime}  = $' + str(zeta) , size ='x-large', y =0.97)
-
-#for sigma:
-fig.suptitle(' B = ' + str(ground_B) + ' cm$^{-1}$ , 'r'$\Delta B =$ ' + str(delta_B) + '% 'r'$\zeta^{\prime}  = $' + str(zeta) + 'T = ' + str(T) + ' K' , size ='x-large', y =0.97)
-
 
 # rows = ['T = {} K'.format(row) for row in Ts ]
 # cols = ['B = {} cm$^{}$ '.format(ground_B, {-1})]

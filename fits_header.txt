@@ -1,0 +1,611 @@
+SIMPLE  =                    T / Fits standard                                  
+BITPIX  =                  -32 / Bits per pixel                                 
+NAXIS   =                    1 / Number of axes                                 
+NAXIS1  =                51603 / Axis length                                    
+EXTEND  =                    T / File may contain extensions                    
+ORIGIN  = 'NOAO-IRAF FITS Image Kernel July 2003' / FITS file originator        
+IRAF-TLM= '2019-02-26T05:26:29' / Time of last modification                     
+OBJECT  = 'HD166937'           / Name of the object observed                    
+COMMENT   FITS (Flexible Image Transport System) format is defined in 'Astronomy
+COMMENT   and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H 
+DATE    = '2019-02-26T05:26:29' / file creation date (YYYY-MM-DDThh:mm:ss UT)   
+CTYPE1  = 'LINEAR  '                                                            
+CUNIT1  = 'Angstrom'           / Wavelength units                               
+BUNIT   = 'ADU     '                                                            
+CRVAL1  =     5654.45996093751                                                  
+CRPIX1  =                   1.                                                  
+CDELT1  =    0.020000000756996                                                  
+LAMRMS  =              0.00082 / RMS of wavelength solution [CUNIT1]            
+LAMNLIN =                  297 / No. of lines used in wavelength solution       
+CRDER1  =             4.76E-05 / Wavelength uncertainty [CUNIT1]                
+CSYER1  =             0.000206 / Typical systematic wavelength error [CUNIT1]   
+TELESCOP= 'ESO-VLT-U2'         / ESO Telescope Name                             
+INSTRUME= 'UVES    '           / Instrument used.                               
+RA      =           273.440732 / 18:13:45.7 RA (J2000) pointing                 
+DEC     =             -21.0595 / -21:03:34.1 DEC (J2000) pointing               
+EQUINOX =                2000. / Standard FK5                                   
+RADECSYS= 'FK5     '           / Coordinate reference frame                     
+MJD-OBS =      57881.364635608 / MJD start (2017-05-08T08:45:04.517)            
+DATE-OBS= '2017-05-08T08:45:04.516' / Date of observation                       
+UTC     =               31499. / 08:44:59.000 UTC at start                      
+LST     =            68931.519 / 19:08:51.519 LST at start                      
+PI-COI  = 'UNKNOWN '           / PI-COI name.                                   
+OBSERVER= 'UNKNOWN '           / Name of observer.                              
+ARCFILE = 'UVES.2017-05-08T08:45:04.517.fits' / Archive File Name               
+DATAMD5 = 'dbd536785141bee072804fbb04f3adb9' / MD5 checksum                     
+PIPEFILE= 'red_science_redu.fits' / Filename of data product                    
+EXPTIME =              29.9989 / Total integration time                         
+CD1_1   =    0.020000000756996                                                  
+HIERARCH ESO OBS AIRM =     2. / Req. max. airmass                              
+HIERARCH ESO OBS AMBI FWHM = 2. / Req. max. seeing                              
+HIERARCH ESO OBS AMBI TRANS = '4THK    ' / Req. sky transparency                
+HIERARCH ESO OBS ATM = 'NATM    ' / Req. Atmospheric Turbulence Model           
+HIERARCH ESO OBS CONTAINER ID = 1706200 / Scheduling container ID               
+HIERARCH ESO OBS CONTAINER TYPE = 'G       ' / Scheduling container type        
+HIERARCH ESO OBS CONTRAST = 0. / Req. contrast                                  
+HIERARCH ESO OBS DID = 'ESO-VLT-DIC.OBS-2.0' / OBS Dictionary                   
+HIERARCH ESO OBS EXECTIME = 1255 / Expected execution time                      
+HIERARCH ESO OBS GRP = '0       ' / linked blocks                               
+HIERARCH ESO OBS ID =  1706201 / Observation block ID                           
+HIERARCH ESO OBS MOON DIST = 30 / Req. min. angular dist. from moon             
+HIERARCH ESO OBS MOON FLI = 1. / Req. max. fractional lunar illum.              
+HIERARCH ESO OBS NAME = 'hd166937_dic1' / OB name                               
+HIERARCH ESO OBS OBSERVER = 'UNKNOWN ' / Observer Name                          
+HIERARCH ESO OBS PI-COI ID = 11857 / ESO internal PI-COI ID                     
+HIERARCH ESO OBS PI-COI NAME = 'UNKNOWN ' / PI-COI name                         
+HIERARCH ESO OBS PROG ID = '194.C-0833(H)' / ESO program identification         
+HIERARCH ESO OBS STREHLRATIO = 0. / Req. strehl ratio                           
+HIERARCH ESO OBS TARG NAME = 'HD166937' / OB target name                        
+HIERARCH ESO OBS TWILIGHT =  0 / Req. twilight                                  
+HIERARCH ESO OBS WATERVAPOUR = 0. / Req. water vapour                           
+HIERARCH ESO OBS START = '2017-05-08T08:37:47' / OB start time                  
+HIERARCH ESO OBS NTPL =      2 / Number of templates within OB                  
+HIERARCH ESO OBS TPLNO =     2 / Template number within OB                      
+HIERARCH ESO TPL DID = 'ESO-VLT-DIC.TPL-1.9' / Data dictionary for TPL          
+HIERARCH ESO TPL ID = 'UVES_dic1_obs_exp' / Template signature ID               
+HIERARCH ESO TPL NAME = 'Dic1 Observation' / Template name                      
+HIERARCH ESO TPL PRESEQ = 'UVES_dic_obs.seq' / Sequencer script                 
+HIERARCH ESO TPL START = '2017-05-08T08:41:00' / TPL start time                 
+HIERARCH ESO TPL VERSION = '@(#) $Revision: 163655 $' / Version of the templ    
+HIERARCH ESO TPL NEXP =     19 / Number of exposures within templat             
+HIERARCH ESO TPL EXPNO =     4 / Exposure number within template                
+HIERARCH ESO TEL DID = 'ESO-VLT-DIC.TCS' / Data dictionary for TEL              
+HIERARCH ESO TEL ID = 'v 296517' / TCS version number                           
+HIERARCH ESO TEL DATE = '2000-01-01T00:00:00' / TCS installation date           
+HIERARCH ESO TEL ALT =  77.053 / Alt angle at start                             
+HIERARCH ESO TEL AZ =  103.318 / Az angle at start S=0,W=90                     
+HIERARCH ESO TEL GEOELEV = 2648. / Elevation above sea level (m)                
+HIERARCH ESO TEL GEOLAT = -24.6272 / Tel geo latitute (+=North)                 
+HIERARCH ESO TEL GEOLON = -70.4048 / Tel geo longitude (+=East)                 
+HIERARCH ESO TEL OPER = 'I, Condor' / Telescope Operator                        
+HIERARCH ESO TEL FOCU ID = 'NB      ' / Telescope focus station ID              
+HIERARCH ESO TEL FOCU LEN = 120. / Focal length                                 
+HIERARCH ESO TEL FOCU SCALE = 1.718 / Focal scale                               
+HIERARCH ESO TEL FOCU VALUE = -29.353 / M2 setting                              
+HIERARCH ESO TEL PARANG START = 108.586 / Parallactic angle at start            
+HIERARCH ESO TEL AIRM START = 1.026 / Airmass at start                          
+HIERARCH ESO TEL AMBI FWHM START = 1.44 / Observatory Seeing queried from AS    
+HIERARCH ESO TEL AMBI PRES START = 742.5 / Observatory ambient air pressure q   
+HIERARCH ESO TEL AMBI WINDSP = 12.23 / Observatory ambient wind speed que       
+HIERARCH ESO TEL AMBI WINDDIR = 20.5 / Observatory ambient wind direction       
+HIERARCH ESO TEL AMBI RHUM = 11.5 / Observatory ambient relative humid          
+HIERARCH ESO TEL AMBI TEMP = 9.8 / Observatory ambient temperature qu           
+HIERARCH ESO TEL AMBI IWV START = 1.97 / Integrated Water Vapor                 
+HIERARCH ESO TEL AMBI IWVSTD START = 0.01 / Standard Deviation of Integrated W  
+HIERARCH ESO TEL AMBI IWV30D START = 2.02 / IWV at 30deg elev.                  
+HIERARCH ESO TEL AMBI IWV30DSTD START = 0.05 / IWV at 30deg elev.               
+HIERARCH ESO TEL AMBI IRSKY TEMP = -95.2 / Temperature of the IR sky, from ra   
+HIERARCH ESO TEL MOON RA = 198.814491 / 13:15:15.4 RA (J2000)                   
+HIERARCH ESO TEL MOON DEC = -3.79831 / -03:47:53.9 DEC (J2000)                  
+HIERARCH ESO TEL TH M1 TEMP = 8.98 / M1 superficial temperature                 
+HIERARCH ESO TEL TRAK STATUS = 'NORMAL  ' / Tracking status                     
+HIERARCH ESO TEL DOME STATUS = 'FULLY-OPEN' / Dome status                       
+HIERARCH ESO TEL CHOP ST =   F / True when chopping is active                   
+HIERARCH ESO TEL FO POS =   0. / Adapter focus position during trac             
+HIERARCH ESO TEL TARG ALPHA = 181345.81 / Alpha coordinate for the target       
+HIERARCH ESO TEL TARG DELTA = -210331.8 / Delta coordinate for the target       
+HIERARCH ESO TEL TARG EPOCH = 2000. / Epoch                                     
+HIERARCH ESO TEL TARG EPOCHSYSTEM = 'J       ' / Epoch system (default J=Julian)
+HIERARCH ESO TEL TARG EQUINOX = 2000. / Equinox                                 
+HIERARCH ESO TEL TARG PMA = 0.0003 / Proper Motion Alpha                        
+HIERARCH ESO TEL TARG PMD = -0.00048 / Proper motion Delta                      
+HIERARCH ESO TEL TARG RADVEL = 0. / Radial velocity                             
+HIERARCH ESO TEL TARG PARALLAX = 0. / Parallax                                  
+HIERARCH ESO TEL TARG COORDTYPE = 'M       ' / Coordinate type (M=mean A=apparen
+HIERARCH ESO TEL PARANG END = 108.432 / Parallactic angle at end                
+HIERARCH ESO TEL AIRM END = 1.027 / Airmass at end                              
+HIERARCH ESO TEL AMBI FWHM END = 1.08 / Observatory Seeing queried from AS      
+HIERARCH ESO TEL IA FWHM = 0.88 / Delivered seeing corrected by airm            
+HIERARCH ESO TEL IA FWHMLIN = 0.92 / Delivered seeing on IA detector (l         
+HIERARCH ESO TEL IA FWHMLINOBS = 0.93 / Delivered seeing on IA detector (l      
+HIERARCH ESO TEL AMBI PRES END = 742.48 / Observatory ambient air pressure q    
+HIERARCH ESO TEL AMBI IWV END = 1.97 / Integrated Water Vapor                   
+HIERARCH ESO TEL AMBI IWVSTD END = 0.01 / Standard Deviation of Integrated W    
+HIERARCH ESO TEL AMBI IWV30D END = 2.02 / IWV at 30deg elev.                    
+HIERARCH ESO TEL AMBI IWV30DSTD END = 0.05 / IWV at 30deg elev.                 
+HIERARCH ESO TEL AMBI TAU0 = 0.0033 / Average coherence time                    
+HIERARCH ESO INS ID = 'UVES/$Revision: 280654 $' / Instrument ID.               
+HIERARCH ESO INS DID = 'ESO-VLT-DIC.UVES_ICS-215796' / Data dictionary f        
+HIERARCH ESO INS SWSIM = 'NORMAL  ' / Software simulation.                      
+HIERARCH ESO INS PATH = 'RED     ' / Optical path used.                         
+HIERARCH ESO INS ADC MODE = 'OFF     ' / ADC mode.                              
+HIERARCH ESO INS DPOL MODE = 'OFF     ' / Instrument depolarizer mode.          
+HIERARCH ESO INS MODE = 'DICHR#1 ' / Instrument mode used.                      
+HIERARCH ESO INS SHUT1 ID = 'TSH     ' / Shutter ID.                            
+HIERARCH ESO INS SHUT1 NAME = 'Tel_Shutter' / Shutter name.                     
+HIERARCH ESO INS SHUT1 ST =  T / Shutter open.                                  
+HIERARCH ESO INS MIRR1 ID = 'FREE    ' / Mirror unique ID.                      
+HIERARCH ESO INS MIRR1 NAME = 'FREE    ' / Mirror common name.                  
+HIERARCH ESO INS MIRR1 NO =  1 / Mirror slide position.                         
+HIERARCH ESO INS SHUT3 ID = 'TSH3    ' / Shutter ID.                            
+HIERARCH ESO INS SHUT3 NAME = 'D2L_Shutter' / Shutter name.                     
+HIERARCH ESO INS SHUT3 ST =  F / Shutter open.                                  
+HIERARCH ESO INS SHUT4 ID = 'TSH4    ' / Shutter ID.                            
+HIERARCH ESO INS SHUT4 NAME = 'ThAr_Shutter' / Shutter name.                    
+HIERARCH ESO INS SHUT4 ST =  F / Shutter open.                                  
+HIERARCH ESO INS SLIT3 WID = 0.3 / Slit width [arcsec].                         
+HIERARCH ESO INS SLIT3 Y1FRML= 'ENC=OFFSET+RESOL*acos((WID-(MAX+MIN))/(MAX-MIN)'
+HIERARCH ESO INS SLIT3 Y1OFFSET = 4750 / Left ref. position [Enc].              
+HIERARCH ESO INS SLIT3 Y1RESOL = 40. / Left encoder resolution [Enc/deg].       
+HIERARCH ESO INS SLIT3 Y1WIDMAX = 5.572 / Left max. slit width value [arcsec    
+HIERARCH ESO INS SLIT3 Y1WIDMIN = 0.062 / Left min. slit width value [arcsec    
+HIERARCH ESO INS SLIT3 Y2FRML= 'ENC=OFFSET+RESOL*acos((WID-(MAX+MIN))/(MAX-MIN)'
+HIERARCH ESO INS SLIT3 Y2OFFSET = 4560 / Right ref. position [Enc].             
+HIERARCH ESO INS SLIT3 Y2RESOL = 40. / Right encoder resolution [Enc/deg]       
+HIERARCH ESO INS SLIT3 Y2WIDMAX = 5.513 / Right max. slit width value [arcse    
+HIERARCH ESO INS SLIT3 Y2WIDMIN = 0.05 / Right min. slit width value [arcse     
+HIERARCH ESO INS SLIT3 Y1ENC = 11369 / Slit Vertical top motor absolute e       
+HIERARCH ESO INS SLIT3 Y2ENC = 11138 / Slit Vertical bottom motor absolut       
+HIERARCH ESO INS LAMP7 SWSIM = T / If T, function is software simulat           
+HIERARCH ESO INS SHUT2 ID = 'SPSH    ' / Shutter ID.                            
+HIERARCH ESO INS SHUT2 NAME = 'Sphere_Shutter' / Shutter name.                  
+HIERARCH ESO INS SHUT2 ST =  F / Shutter open.                                  
+HIERARCH ESO INS OPTI1 ID = '1       ' / General Optical device unique ID.      
+HIERARCH ESO INS OPTI1 NAME = 'OUT     ' / General Optical device common name   
+HIERARCH ESO INS OPTI1 NO =  1 / Slot number.                                   
+HIERARCH ESO INS OPTI1 TYPE = 'FREE    ' / General Optical device Element.      
+HIERARCH ESO INS SLIT1 NAME = 'FREE    ' / Slit common name.                    
+HIERARCH ESO INS SLIT1 NO =  1 / Slide position.                                
+HIERARCH ESO INS SLIT1 WID = 0. / Slit width [arcsec].                          
+HIERARCH ESO INS SLIT1 LEN = 0. / Slit length [arcsec].                         
+HIERARCH ESO INS DROT MODE = 'ELEV    ' / Instrument derotator mode.            
+HIERARCH ESO INS DROT RA = 181345.775569 / ~~:~~:~~.~ RA (J2000) pointing [d    
+HIERARCH ESO INS DROT DEC = -210334.187653 / -~~:~~:~~.~ DEC (J2000) pointing   
+HIERARCH ESO INS DROT POSANG = 0. / Position angle [deg].                       
+HIERARCH ESO INS DROT BEGIN = 321.6046 / Physical position at start [deg].      
+HIERARCH ESO INS DROT END = 321.652 / Physical position at end [deg].           
+HIERARCH ESO INS SLIT3 LEN = 11. / Slit length [arcsec].                        
+HIERARCH ESO INS SLIT3 X1FRML= 'ENC=OFFSET+RESOL*acos((LEN-(MAX+MIN))/(MAX-MIN)'
+HIERARCH ESO INS SLIT3 X1OFFSET = 2381 / Left ref. position [Enc].              
+HIERARCH ESO INS SLIT3 X1RESOL = 40. / Left encoder resolution [Enc/deg].       
+HIERARCH ESO INS SLIT3 X1LENMAX = 15.752 / Left max. slit length [arcsec].      
+HIERARCH ESO INS SLIT3 X1LENMIN = 0.087 / Left min. slit length [arcsec].       
+HIERARCH ESO INS SLIT3 X2FRML= 'ENC=OFFSET+RESOL*acos((LEN-(MAX+MIN))/(MAX-MIN)'
+HIERARCH ESO INS SLIT3 X2OFFSET = 2307 / Right ref. position [Enc].             
+HIERARCH ESO INS SLIT3 X2RESOL = 40. / Right encoder resolution [Enc/deg]       
+HIERARCH ESO INS SLIT3 X2LENMAX = 15.833 / Right max. slit length [arcsec].     
+HIERARCH ESO INS SLIT3 X2LENMIN = 0.064 / Right min. slit length [arcsec].      
+HIERARCH ESO INS SLIT3 X1ENC = 6701 / Slit Horizontal left motor absolut        
+HIERARCH ESO INS SLIT3 X2ENC = 6631 / Slit Horizontal right motor absolu        
+HIERARCH ESO INS FILT3 ID = 'BS4     ' / Filter unique id.                      
+HIERARCH ESO INS FILT3 NAME = 'SHP700  ' / Filter common name.                  
+HIERARCH ESO INS FILT3 NO =  4 / Filter wheel position index.                   
+HIERARCH ESO INS DET6 NAME = 'Red_ExpMeter' / Exposure meter name.              
+HIERARCH ESO INS DET6 CTMIN = 117233. / Minimum count during exposure.          
+HIERARCH ESO INS DET6 CTMAX = 260835. / Maximum count during exposure.          
+HIERARCH ESO INS DET6 CTTOT = 7321152. / Total counts during exposure.          
+HIERARCH ESO INS DET6 CTMEAN = 192661.9 / Average counts during exposure.       
+HIERARCH ESO INS DET6 CTRMS = 35900.22 / RMS of counts during exposure.         
+HIERARCH ESO INS DET6 TMMEAN = 0.48 / Normalised mean exposure time.            
+HIERARCH ESO INS DET6 UIT = 1. / User defined Integration time [sec             
+HIERARCH ESO INS DET6 OFFDRK = 0. / Average dark background counts.             
+HIERARCH ESO INS DET6 OFFSKY = 1. / Average sky background counts.              
+HIERARCH ESO INS DPOS NAME = 'OUT     ' / Instrument depolarizer slide posit    
+HIERARCH ESO INS DPOS NO =   1 / Depolarizer slide position.                    
+HIERARCH ESO INS SHUT6 ID = 'REXS    ' / Shutter ID.                            
+HIERARCH ESO INS SHUT6 NAME = 'Red_ExpMeterSh' / Shutter name.                  
+HIERARCH ESO INS SHUT6 ST =  T / Shutter open.                                  
+HIERARCH ESO INS DPOR ST =   F / Instrument depolarizer rotating.               
+HIERARCH ESO INS ADCS NAME = 'OUT     ' / ADC slide position.                   
+HIERARCH ESO INS ADCS NO =   1 / ADC slide position.                            
+HIERARCH ESO INS GRAT2 ID = 'CD#3    ' / Grating unique ID.                     
+HIERARCH ESO INS GRAT2 NAME = 'CD#3    ' / Grating common name.                 
+HIERARCH ESO INS GRAT2 FRML = 'ENC=Z+R*asin(WL*OR*GRV/(2*cos(ROT)))+TR*(T-T0)'  
+HIERARCH ESO INS GRAT2 ZORDER = 4444962 / Grating zero order position [Enc].    
+HIERARCH ESO INS GRAT2 RESOL = 22500. / Resolution in encoder steps.            
+HIERARCH ESO INS GRAT2 GROOVES = 0.0006 / Grating grooves / nm [gr/nm].         
+HIERARCH ESO INS GRAT2 ROT = 22.668 / Grating rot angle [deg].                  
+HIERARCH ESO INS GRAT2 TEMPRAMP = 26.25 / Temperature slope [Enc/C].            
+HIERARCH ESO INS GRAT2 TEMPREF = 12.4 / Temperature reference value.            
+HIERARCH ESO INS PIXSCALE = 0.182 / Pixel scale [arcsec].                       
+HIERARCH ESO INS GRAT2 X = 2048. / X pixel for central wavelength.              
+HIERARCH ESO INS GRAT2 Y = 2048. / Y pixel for central wavelength.              
+HIERARCH ESO INS GRAT2 NO =  1 / Grating wheel position index.                  
+HIERARCH ESO INS GRAT2 WLEN = 564. / Grating central wavelength [nm].           
+HIERARCH ESO INS GRAT2 ENC = 4682624 / Grating absolute encoder position.       
+HIERARCH ESO INS ADC1 MODE = 'OFF     ' / ADC mode.                             
+HIERARCH ESO INS ADC1 RA = 181345.775569 / ~~:~~:~~.~ RA (J2000) pointing [d    
+HIERARCH ESO INS ADC1 DEC = -210334.187653 / -~~:~~:~~.~ DEC (J2000) pointing   
+HIERARCH ESO INS ADC1 BEGIN = 0. / Position angle at start [deg].               
+HIERARCH ESO INS ADC1 END = 0. / Position angle at end [deg].                   
+HIERARCH ESO INS ADC2 MODE = 'OFF     ' / ADC mode.                             
+HIERARCH ESO INS ADC2 RA = 181345.775568 / ~~:~~:~~.~ RA (J2000) pointing [d    
+HIERARCH ESO INS ADC2 DEC = -210334.187654 / -~~:~~:~~.~ DEC (J2000) pointing   
+HIERARCH ESO INS ADC2 BEGIN = 0. / Position angle at start [deg].               
+HIERARCH ESO INS ADC2 END = 0. / Position angle at end [deg].                   
+HIERARCH ESO INS TILT2 POS = 0. / Science camera tilt [pix].                    
+HIERARCH ESO INS TILT2 FRML = 'ENC=OFFSET+RESOL*asin(2*POS-(MAX+MIN)/(MAX-MIN)' 
+HIERARCH ESO INS TILT2 OFFSET = 15876. / Offset in Formula.                     
+HIERARCH ESO INS TILT2 RESOL = -100. / Resolution in encoder steps.             
+HIERARCH ESO INS TILT2 POSMIN = -222. / Minimum camera tilt [pix].              
+HIERARCH ESO INS TILT2 POSMAX = 222. / Maximum camera tilt [pix].               
+HIERARCH ESO INS TILT2 TEMP = 9.8 / Temperature used to position the c          
+HIERARCH ESO INS TILT2 ENC = 15892 / Camera tilt absolute encoder posit         
+HIERARCH ESO INS SHUT7 ID = 'FPSH    ' / Shutter ID.                            
+HIERARCH ESO INS SHUT7 NAME = 'FibrProjShutter' / Shutter name.                 
+HIERARCH ESO INS SHUT7 ST =  F / Shutter open.                                  
+HIERARCH ESO INS FILT1 ID = 'FREE    ' / Filter unique id.                      
+HIERARCH ESO INS FILT1 NAME = 'FREE    ' / Filter common name.                  
+HIERARCH ESO INS FILT1 NO = 13 / Filter wheel position index.                   
+HIERARCH ESO INS TEMP1 ID = 'TMBC    ' / Temperature sensor ID.                 
+HIERARCH ESO INS TEMP1 NAME = 'Temp. blue camera' / Temperature sensor name.    
+HIERARCH ESO INS TEMP1 VAL = 10.4 / Temperature sensor numeric value [          
+HIERARCH ESO INS TEMP1 MIN = 10.4 / Minimum temperature [C].                    
+HIERARCH ESO INS TEMP1 MAX = 10.4 / Maximum temperature [C].                    
+HIERARCH ESO INS TEMP1 MEAN = 10.4 / Average temperature [C].                   
+HIERARCH ESO INS TEMP1 RMS = 0. / RMS of samples over exposure.                 
+HIERARCH ESO INS TEMP2 ID = 'TMRC    ' / Temperature sensor ID.                 
+HIERARCH ESO INS TEMP2 NAME = 'Temp. red camera' / Temperature sensor name.     
+HIERARCH ESO INS TEMP2 VAL = 9.8 / Temperature sensor numeric value [           
+HIERARCH ESO INS TEMP2 MIN = 9.8 / Minimum temperature [C].                     
+HIERARCH ESO INS TEMP2 MAX = 9.8 / Maximum temperature [C].                     
+HIERARCH ESO INS TEMP2 MEAN = 9.8 / Average temperature [C].                    
+HIERARCH ESO INS TEMP2 RMS = 0. / RMS of samples over exposure.                 
+HIERARCH ESO INS TEMP3 ID = 'TMT     ' / Temperature sensor ID.                 
+HIERARCH ESO INS TEMP3 NAME = 'Temp. table' / Temperature sensor name.          
+HIERARCH ESO INS TEMP3 VAL = 10.7 / Temperature sensor numeric value [          
+HIERARCH ESO INS TEMP3 MIN = 10.7 / Minimum temperature [C].                    
+HIERARCH ESO INS TEMP3 MAX = 10.7 / Maximum temperature [C].                    
+HIERARCH ESO INS TEMP3 MEAN = 10.7 / Average temperature [C].                   
+HIERARCH ESO INS TEMP3 RMS = 0. / RMS of samples over exposure.                 
+HIERARCH ESO INS TEMP4 ID = 'TMIA    ' / Temperature sensor ID.                 
+HIERARCH ESO INS TEMP4 NAME = 'Temp. inside air' / Temperature sensor name.     
+HIERARCH ESO INS TEMP4 VAL = 11. / Temperature sensor numeric value [           
+HIERARCH ESO INS TEMP4 MIN = 11. / Minimum temperature [C].                     
+HIERARCH ESO INS TEMP4 MAX = 11. / Maximum temperature [C].                     
+HIERARCH ESO INS TEMP4 MEAN = 11. / Average temperature [C].                    
+HIERARCH ESO INS TEMP4 RMS = 0. / RMS of samples over exposure.                 
+HIERARCH ESO INS SENS26 ID = 'BARO    ' / sensor ID.                            
+HIERARCH ESO INS SENS26 NAME = 'Barometer pressure' / sensor common name.       
+HIERARCH ESO INS SENS26 VAL = 741.7 / Sensor numeric value.                     
+HIERARCH ESO INS SENS26 MIN = 741.6 / Minimum sensor value.                     
+HIERARCH ESO INS SENS26 MAX = 741.8 / Maximum sensor value.                     
+HIERARCH ESO INS SENS26 MEAN = 741.7 / Average sensor value.                    
+HIERARCH ESO INS SENS26 RMS = 0.1 / RMS of samples over exposure.               
+HIERARCH ESO INS OPTI2 ID = 'Diaphr.27mm' / General Optical device unique ID.   
+HIERARCH ESO INS OPTI2 NAME = 'OVRSIZ  ' / General Optical device common name   
+HIERARCH ESO INS OPTI2 NO =  3 / Slot number.                                   
+HIERARCH ESO INS OPTI2 TYPE = 'SLIDE   ' / General Optical device Element.      
+HIERARCH ESO INS MIRR2 ID = 'DICHR#1 ' / Mirror unique ID.                      
+HIERARCH ESO INS MIRR2 NAME = 'DICHR#1 ' / Mirror common name.                  
+HIERARCH ESO INS MIRR2 NO =  3 / Mirror slide position.                         
+HIERARCH ESO INS SENSOR3 SWSIM = T / If T, function is software simulat         
+HIERARCH ESO INS SENSOR5 SWSIM = T / If T, function is software simulat         
+HIERARCH ESO INS SHUT8 ST =  F / Shutter open.                                  
+HIERARCH ESO INS SHUT9 ST =  F / Shutter open.                                  
+HIERARCH ESO INS SHUT10 ST = F / Shutter open.                                  
+HIERARCH ESO INS TEMP31 ID = 'IODT    ' / Temperature sensor ID.                
+HIERARCH ESO INS TEMP31 NAME = 'Iodine cell temp.' / Temperature sensor name.   
+HIERARCH ESO INS TEMP31 VAL = 11.1 / Temperature sensor numeric value [         
+HIERARCH ESO INS TEMP31 MIN = 11.1 / Minimum temperature [C].                   
+HIERARCH ESO INS TEMP31 MAX = 11.1 / Maximum temperature [C].                   
+HIERARCH ESO INS TEMP31 MEAN = 11.1 / Average temperature [C].                  
+HIERARCH ESO INS TEMP31 RMS = 0. / RMS of samples over exposure.                
+HIERARCH ESO DET ID = 'CCD FIERA - Rev: 238334' / Detector system Id            
+HIERARCH ESO DET NAME = 'ccdUvR - ccdUvr' / Name of detector system             
+HIERARCH ESO DET DATE = '1998-07-09' / Installation date                        
+HIERARCH ESO DET DID = 'ESO-VLT-DIC.CCDDCS,ESO-VLT-DIC.FCDDCS' / Diction        
+HIERARCH ESO DET BITS =     16 / Bits per pixel readout                         
+HIERARCH ESO DET RA = 273.440731543 / Apparent 18:13:45.7 RA at start           
+HIERARCH ESO DET DEC = -21.059496569 / Apparent -21:03:34.1 DEC at start        
+HIERARCH ESO DET CHIPS =     2 / # of chips in detector array                   
+HIERARCH ESO DET OUTPUTS =   2 / # of outputs                                   
+HIERARCH ESO DET OUTREF =    0 / reference output                               
+HIERARCH ESO DET WINDOWS =   1 / # of windows readout                           
+HIERARCH ESO DET SOFW MODE = 'Normal  ' / CCD sw operational mode               
+HIERARCH ESO DET EXP NO = 2441 / Unique exposure ID number                      
+HIERARCH ESO DET EXP TYPE = 'Normal  ' / Exposure type                          
+HIERARCH ESO DET EXP RDTTIME = 39.535 / image readout time                      
+HIERARCH ESO DET EXP XFERTIM = 39.489 / image transfer time                     
+HIERARCH ESO DET WIN1 ST =   T / If T, window enabled                           
+HIERARCH ESO DET WIN1 STRX = 1 / Lower left pixel in X                          
+HIERARCH ESO DET WIN1 STRY = 1 / Lower left pixel in Y                          
+HIERARCH ESO DET WIN1 NX = 4296 / # of pixels along X                           
+HIERARCH ESO DET WIN1 NY = 4096 / # of pixels along Y                           
+HIERARCH ESO DET WIN1 BINX = 1 / Binning factor along X                         
+HIERARCH ESO DET WIN1 BINY = 1 / Binning factor along Y                         
+HIERARCH ESO DET WIN1 NDIT = 1 / # of subintegrations                           
+HIERARCH ESO DET WIN1 UIT1 = 30. / user defined subintegration time             
+HIERARCH ESO DET WIN1 DIT1 = 29.998928 / actual subintegration time             
+HIERARCH ESO DET WIN1 DKTM = 30.7319 / Dark current time                        
+HIERARCH ESO DET READ MODE = 'normal  ' / Readout method                        
+HIERARCH ESO DET READ SPEED = '2pts/225kHz/lg' / Readout speed                  
+HIERARCH ESO DET READ CLOCK = '225kHz/2ports/low_gain' / Readout clock pattern  
+HIERARCH ESO DET READ NFRAM = 1 / Number of readouts buffered in sin            
+HIERARCH ESO DET FRAM ID =   1 / Image sequencial number                        
+HIERARCH ESO DET FRAM TYPE = 'Normal  ' / Type of frame                         
+HIERARCH ESO DET SHUT TYPE = 'Slit    ' / type of shutter                       
+HIERARCH ESO DET SHUT ID = 'ccdUvr shutter' / Shutter unique identifier         
+HIERARCH ESO DET SHUT TMOPEN = 0.099 / Time taken to open shutter               
+HIERARCH ESO DET SHUT TMCLOS = 0.097 / Time taken to close shutter              
+HIERARCH ESO DET TELE INT = 60. / Interval between two successive te            
+HIERARCH ESO DET TELE NO =   3 / # of sources active                            
+HIERARCH ESO DET TLM1 NAME = 'CCD T1  ' / Description of telemetry param.       
+HIERARCH ESO DET TLM1 ID = 'CCD Sensor1' / ID of telemetry sensor               
+HIERARCH ESO DET TLM1 START = 135. / Telemetry value at read start              
+HIERARCH ESO DET TLM1 END = 135. / Telemetry value at read completion           
+HIERARCH ESO DET TLM2 NAME = 'CCD T2  ' / Description of telemetry param.       
+HIERARCH ESO DET TLM2 ID = 'CCD Sensor2' / ID of telemetry sensor               
+HIERARCH ESO DET TLM2 START = 137.3 / Telemetry value at read start             
+HIERARCH ESO DET TLM2 END = 137.3 / Telemetry value at read completion          
+HIERARCH ESO DET TLM3 NAME = 'EBOX T  ' / Description of telemetry param.       
+HIERARCH ESO DET TLM3 ID = 'Box Temp' / ID of telemetry sensor                  
+HIERARCH ESO DET TLM3 START = 288.4 / Telemetry value at read start             
+HIERARCH ESO DET TLM3 END = 288.4 / Telemetry value at read completion          
+HIERARCH ESO DET CHIP1 INDEX = 1 / Chip index                                   
+HIERARCH ESO DET CHIP1 ID = 'CCD-20  ' / Detector chip identification           
+HIERARCH ESO DET CHIP1 NAME = 'MIT/LL, EEV' / Detector chip name                
+HIERARCH ESO DET CHIP1 DATE = '1998-07-09' / Date of installation [YYYY-MM-DD]  
+HIERARCH ESO DET CHIP1 X =   1 / X location in array                            
+HIERARCH ESO DET CHIP1 Y =   1 / Y location in array                            
+HIERARCH ESO DET CHIP1 NX = 2048 / # of pixels along X                          
+HIERARCH ESO DET CHIP1 NY = 4096 / # of pixels along Y                          
+HIERARCH ESO DET CHIP1 PSZX = 15. / Size of pixel in X                          
+HIERARCH ESO DET CHIP1 PSZY = 15. / Size of pixel in Y                          
+HIERARCH ESO DET CHIP1 XGAP = 0. / Gap between chips along x                    
+HIERARCH ESO DET CHIP1 YGAP = 0. / Gap between chips along y                    
+HIERARCH ESO DET OUT1 INDEX = 1 / Output index                                  
+HIERARCH ESO DET OUT1 ID = 'L       ' / Output ID as from manufacturer          
+HIERARCH ESO DET OUT1 NAME = 'L       ' / Description of output                 
+HIERARCH ESO DET OUT1 CHIP = 1 / Chip to which the output belongs               
+HIERARCH ESO DET OUT1 X =    1 / X location of output                           
+HIERARCH ESO DET OUT1 Y =    1 / Y location of output                           
+HIERARCH ESO DET OUT1 NX = 2048 / valid pixels along X                          
+HIERARCH ESO DET OUT1 NY = 4096 / valid pixels along Y                          
+HIERARCH ESO DET OUT1 CONAD = 1.41 / Conversion from ADUs to electrons          
+HIERARCH ESO DET OUT1 RON = 4. / [e-] Readout noise per output (ele             
+HIERARCH ESO DET OUT1 GAIN = 0.71 / Conversion from electrons to ADU            
+HIERARCH ESO PRO ANCESTOR = 'UVES.2017-05-08T08:45:04.517.fits'                 
+HIERARCH ESO PRO DID = 'PRO-1.15' / Data dictionary for PRO                     
+HIERARCH ESO PRO CATG = 'RED_SCIENCE_REDU' / Category of pipeline product frame 
+HIERARCH ESO PRO TYPE = 'REDUCED ' / Product type                               
+HIERARCH ESO PRO TECH = 'ECHELLE ' / Observation technique                      
+HIERARCH ESO PRO SCIENCE =   T / Scientific product if T                        
+HIERARCH ESO PRO REC1 ID = 'uves_obs_scired' / Pipeline recipe (unique) identifi
+HIERARCH ESO PRO REC1 DRS ID = 'cpl-7.0 ' / Data Reduction System identifier    
+HIERARCH ESO PRO REC1 PIPE ID = 'uves/5.8.2' / Pipeline (unique) identifier     
+HIERARCH ESO PRO REC1 RAW1 NAME = 'UVES.2017-05-08T08_45_04.517.fits' / File nam
+HIERARCH ESO PRO REC1 RAW1 CATG = 'SCIENCE_RED' / Category of raw frame         
+HIERARCH ESO PRO DATANCOM =  1 / Number of combined frames                      
+HIERARCH ESO PRO REC1 CAL1 NAME = 'ordertable_redl.fits' / File name of calibrat
+HIERARCH ESO PRO REC1 CAL1 CATG = 'ORDER_TABLE_REDL' / Category of calibration f
+HIERARCH ESO PRO REC1 CAL1 DATAMD5 = '20a7a984477a20355edc97358b25fe83' / MD5 si
+HIERARCH ESO PRO REC1 CAL2 NAME = 'ordertable_redu.fits' / File name of calibrat
+HIERARCH ESO PRO REC1 CAL2 CATG = 'ORDER_TABLE_REDU' / Category of calibration f
+HIERARCH ESO PRO REC1 CAL2 DATAMD5 = 'dfd4e6c1d45c8333d55dae543b089504' / MD5 si
+HIERARCH ESO PRO REC1 CAL3 NAME = 'linetable_redl.fits' / File name of calibrati
+HIERARCH ESO PRO REC1 CAL3 CATG = 'LINE_TABLE_REDL' / Category of calibration fr
+HIERARCH ESO PRO REC1 CAL3 DATAMD5 = '66da4ea86a2b8deb91678721c6f19f02' / MD5 si
+HIERARCH ESO PRO REC1 CAL4 NAME = 'linetable_redu.fits' / File name of calibrati
+HIERARCH ESO PRO REC1 CAL4 CATG = 'LINE_TABLE_REDU' / Category of calibration fr
+HIERARCH ESO PRO REC1 CAL4 DATAMD5 = '76a5591db5bac4785bca43b0c91d56e4' / MD5 si
+HIERARCH ESO PRO REC1 CAL5 NAME = 'masterbias_redl.fits' / File name of calibrat
+HIERARCH ESO PRO REC1 CAL5 CATG = 'MASTER_BIAS_REDL' / Category of calibration f
+HIERARCH ESO PRO REC1 CAL5 DATAMD5 = 'f097bce11588fb429bb5fedd9baeff00' / MD5 si
+HIERARCH ESO PRO REC1 CAL6 NAME = 'masterbias_redu.fits' / File name of calibrat
+HIERARCH ESO PRO REC1 CAL6 CATG = 'MASTER_BIAS_REDU' / Category of calibration f
+HIERARCH ESO PRO REC1 CAL6 DATAMD5 = '85062b3632882c17e3d473e49226dc8b' / MD5 si
+HIERARCH ESO PRO REC1 CAL7 NAME = 'masterflat_redl.fits' / File name of calibrat
+HIERARCH ESO PRO REC1 CAL7 CATG = 'MASTER_FLAT_REDL' / Category of calibration f
+HIERARCH ESO PRO REC1 CAL7 DATAMD5 = '66d20f6183d72d8d5c62a09ffb995ee3' / MD5 si
+HIERARCH ESO PRO REC1 CAL8 NAME = 'masterflat_redu.fits' / File name of calibrat
+HIERARCH ESO PRO REC1 CAL8 CATG = 'MASTER_FLAT_REDU' / Category of calibration f
+HIERARCH ESO PRO REC1 CAL8 DATAMD5 = 'c18a8e399b32cdaf630bd88775a2b9b8' / MD5 si
+HIERARCH ESO PRO REC1 CAL9 NAME = 'atmoexan.fits' / File name of calibration fra
+HIERARCH ESO PRO REC1 CAL9 CATG = 'EXTCOEFF_TABLE' / Category of calibration fra
+HIERARCH ESO PRO REC1 CAL9 DATAMD5 = 'cafc5e77cc338973e8d33cefcdc0afb2' / MD5 si
+HIERARCH ESO PRO REC1 PARAM1 NAME = 'debug   ' / Whether or not to save intermed
+HIERARCH ESO PRO REC1 PARAM1 VALUE = 'false   ' / Default: false                
+HIERARCH ESO PRO REC1 PARAM2 NAME = 'plotter ' / Any plots produced by the recip
+HIERARCH ESO PRO REC1 PARAM2 VALUE = 'no      ' / Default: 'no'                 
+HIERARCH ESO PRO REC1 PARAM3 NAME = 'process_chip' / For RED arm data process th
+HIERARCH ESO PRO REC1 PARAM3 VALUE = 'BOTH    ' / Default: 'both'               
+HIERARCH ESO PRO REC1 PARAM4 NAME = 'clean_traps' / Clean detector traps. If TRU
+HIERARCH ESO PRO REC1 PARAM4 VALUE = 'false   ' / Default: false                
+HIERARCH ESO PRO REC1 PARAM5 NAME = 'reduce.backsub.mmethod' / Background measur
+HIERARCH ESO PRO REC1 PARAM5 VALUE = 'median  ' / Default: 'median'             
+HIERARCH ESO PRO REC1 PARAM6 NAME = 'reduce.backsub.npoints' / This is the numbe
+HIERARCH ESO PRO REC1 PARAM6 VALUE = '40      ' / Default: 82                   
+HIERARCH ESO PRO REC1 PARAM7 NAME = 'reduce.backsub.radiusy' / The height (in pi
+HIERARCH ESO PRO REC1 PARAM7 VALUE = '2       ' / Default: 2                    
+HIERARCH ESO PRO REC1 PARAM8 NAME = 'reduce.backsub.sdegree' / Degree of interpo
+HIERARCH ESO PRO REC1 PARAM8 VALUE = '1       ' / Default: 1                    
+HIERARCH ESO PRO REC1 PARAM9 NAME = 'reduce.backsub.smoothx' / If spline interpo
+HIERARCH ESO PRO REC1 PARAM9 VALUE = '-1      ' / Default: -1                   
+HIERARCH ESO PRO REC1 PARAM10 NAME = 'reduce.backsub.smoothy' / If spline interp
+HIERARCH ESO PRO REC1 PARAM10 VALUE = '-1      ' / Default: -1                  
+HIERARCH ESO PRO REC1 PARAM11 NAME = 'reduce.extract.method' / Extraction method
+HIERARCH ESO PRO REC1 PARAM11 VALUE = 'average ' / Default: 'optimal'           
+HIERARCH ESO PRO REC1 PARAM12 NAME = 'reduce.extract.kappa' / In optimal extract
+HIERARCH ESO PRO REC1 PARAM12 VALUE = '6       ' / Default: 10                  
+HIERARCH ESO PRO REC1 PARAM13 NAME = 'reduce.extract.chunk' / In optimal extract
+HIERARCH ESO PRO REC1 PARAM13 VALUE = '32      ' / Default: 32                  
+HIERARCH ESO PRO REC1 PARAM14 NAME = 'reduce.extract.profile' / In optimal extra
+HIERARCH ESO PRO REC1 PARAM14 VALUE = 'auto    ' / Default: 'auto'              
+HIERARCH ESO PRO REC1 PARAM15 NAME = 'reduce.extract.skymethod' / In optimal ext
+HIERARCH ESO PRO REC1 PARAM15 VALUE = 'optimal ' / Default: 'optimal'           
+HIERARCH ESO PRO REC1 PARAM16 NAME = 'reduce.extract.oversample' / The oversampl
+HIERARCH ESO PRO REC1 PARAM16 VALUE = '-1      ' / Default: -1                  
+HIERARCH ESO PRO REC1 PARAM17 NAME = 'reduce.extract.best' / (optimal extraction
+HIERARCH ESO PRO REC1 PARAM17 VALUE = 'true    ' / Default: true                
+HIERARCH ESO PRO REC1 PARAM18 NAME = 'reduce.slitlength' / Extraction slit lengt
+HIERARCH ESO PRO REC1 PARAM18 VALUE = '-1      ' / Default: -1                  
+HIERARCH ESO PRO REC1 PARAM19 NAME = 'reduce.skysub' / Do sky-subtraction (only 
+HIERARCH ESO PRO REC1 PARAM19 VALUE = 'true    ' / Default: true                
+HIERARCH ESO PRO REC1 PARAM20 NAME = 'reduce.objoffset' / Offset (in pixels) of 
+HIERARCH ESO PRO REC1 PARAM20 VALUE = '0       ' / Default: 0                   
+HIERARCH ESO PRO REC1 PARAM21 NAME = 'reduce.objslit' / Object window size (in p
+HIERARCH ESO PRO REC1 PARAM21 VALUE = '-1      ' / Default: -1                  
+HIERARCH ESO PRO REC1 PARAM22 NAME = 'reduce.tiltcorr' / If enabled (recommended
+HIERARCH ESO PRO REC1 PARAM22 VALUE = 'true    ' / Default: true                
+HIERARCH ESO PRO REC1 PARAM23 NAME = 'reduce.ffmethod' / Flat-fielding method. I
+HIERARCH ESO PRO REC1 PARAM23 VALUE = 'pixel   ' / Default: 'extract'           
+HIERARCH ESO PRO REC1 PARAM24 NAME = 'reduce.rebin.wavestep' / The bin size (in 
+HIERARCH ESO PRO REC1 PARAM24 VALUE = '0.02    ' / Default: -1                  
+HIERARCH ESO PRO REC1 PARAM25 NAME = 'reduce.rebin.scale' / Whether or not to mu
+HIERARCH ESO PRO REC1 PARAM25 VALUE = 'false   ' / Default: false               
+HIERARCH ESO PRO REC1 PARAM26 NAME = 'reduce.merge' / Order merging method. If '
+HIERARCH ESO PRO REC1 PARAM26 VALUE = 'optimal ' / Default: 'optimal'           
+HIERARCH ESO PRO REC1 PARAM27 NAME = 'reduce.merge_delt1' / Order merging left h
+HIERARCH ESO PRO REC1 PARAM27 VALUE = '14      ' / Default: 0                   
+HIERARCH ESO PRO REC1 PARAM28 NAME = 'reduce.merge_delt2' / Order merging right 
+HIERARCH ESO PRO REC1 PARAM28 VALUE = '4       ' / Default: 0                   
+HIERARCH ESO PRO DATAMED = 1979.35609434813 / Median of pixel values            
+HIERARCH ESO PRO DATAAVG = 1975.7890863562 / Mean of pixel values               
+HIERARCH ESO PRO DATARMS = 502.579140695499 / Standard deviation of pixel values
+HIERARCH ESO PRO REC1 START = '2019-02-26T00:14:53'                             
+HIERARCH ESO PRO REC1 STOP = '2019-02-26T00:14:57'                              
+HIERARCH ESO ADA ABSROT START = -5.74742 / Abs rot angle at exp start           
+HIERARCH ESO ADA POSANG =   0. / Position angle at start                        
+HIERARCH ESO ADA GUID STATUS = 'ON      ' / Status of autoguider                
+HIERARCH ESO ADA GUID RA =  0. / 00:00:00.0 Guide star RA J2000                 
+HIERARCH ESO ADA GUID DEC = 0. / 00:00:00.0 Guide star DEC J2000                
+HIERARCH ESO ADA ABSROT PPOS = 'POS     ' / sign of probe position              
+HIERARCH ESO ADA ABSROT END = -5.45326 / Abs rot angle at exp end               
+HIERARCH ESO OCS SIMCAL =    0 / Simultaneous Calibration flag                  
+HIERARCH ESO BNOISE =    0.899 / Master bias RMS on frame                       
+HIERARCH ESO QC DID = 'UVES-1.14' / ESO QC DID                                  
+HIERARCH ESO QC TEST1 ID = 'Science-Reduction-Test-Results' / Name of QC test   
+HIERARCH ESO QC ORD1 OBJ SN = 381.0813 / Av. S/N at order center                
+HIERARCH ESO QC ORD1 OBJ POS = 26.6599 / Av. OBJ POS at order center            
+HIERARCH ESO QC ORD1 OBJ FWHM = 6.6176 / Av. FWHM on order                      
+HIERARCH ESO QC ORD1 OBJ RPLPAR = -1. / Av. relative ripple amplitude           
+HIERARCH ESO QC ORD2 OBJ SN = 366.0698 / Av. S/N at order center                
+HIERARCH ESO QC ORD2 OBJ POS = 26.8159 / Av. OBJ POS at order center            
+HIERARCH ESO QC ORD2 OBJ FWHM = 3.5568 / Av. FWHM on order                      
+HIERARCH ESO QC ORD2 OBJ RPLPAR = -1. / Av. relative ripple amplitude           
+HIERARCH ESO QC ORD3 OBJ SN = 368.5725 / Av. S/N at order center                
+HIERARCH ESO QC ORD3 OBJ POS = 26.9681 / Av. OBJ POS at order center            
+HIERARCH ESO QC ORD3 OBJ FWHM = 4.3832 / Av. FWHM on order                      
+HIERARCH ESO QC ORD3 OBJ RPLPAR = -1. / Av. relative ripple amplitude           
+HIERARCH ESO QC ORD4 OBJ SN = 364.6367 / Av. S/N at order center                
+HIERARCH ESO QC ORD4 OBJ POS = 27.015 / Av. OBJ POS at order center             
+HIERARCH ESO QC ORD4 OBJ FWHM = 6.3605 / Av. FWHM on order                      
+HIERARCH ESO QC ORD4 OBJ RPLPAR = -1. / Av. relative ripple amplitude           
+HIERARCH ESO QC ORD5 OBJ SN = 369.984 / Av. S/N at order center                 
+HIERARCH ESO QC ORD5 OBJ POS = 26.4518 / Av. OBJ POS at order center            
+HIERARCH ESO QC ORD5 OBJ FWHM = 4.7991 / Av. FWHM on order                      
+HIERARCH ESO QC ORD5 OBJ RPLPAR = -1. / Av. relative ripple amplitude           
+HIERARCH ESO QC ORD6 OBJ SN = 373.3338 / Av. S/N at order center                
+HIERARCH ESO QC ORD6 OBJ POS = 27.5975 / Av. OBJ POS at order center            
+HIERARCH ESO QC ORD6 OBJ FWHM = 0. / Av. FWHM on order                          
+HIERARCH ESO QC ORD6 OBJ RPLPAR = -1. / Av. relative ripple amplitude           
+HIERARCH ESO QC ORD7 OBJ SN = 378.8468 / Av. S/N at order center                
+HIERARCH ESO QC ORD7 OBJ POS = 26.3048 / Av. OBJ POS at order center            
+HIERARCH ESO QC ORD7 OBJ FWHM = 5.6224 / Av. FWHM on order                      
+HIERARCH ESO QC ORD7 OBJ RPLPAR = -1. / Av. relative ripple amplitude           
+HIERARCH ESO QC ORD8 OBJ SN = 384.2677 / Av. S/N at order center                
+HIERARCH ESO QC ORD8 OBJ POS = 26.804 / Av. OBJ POS at order center             
+HIERARCH ESO QC ORD8 OBJ FWHM = 3.5517 / Av. FWHM on order                      
+HIERARCH ESO QC ORD8 OBJ RPLPAR = -1. / Av. relative ripple amplitude           
+HIERARCH ESO QC ORD9 OBJ SN = 382.6784 / Av. S/N at order center                
+HIERARCH ESO QC ORD9 OBJ POS = 26.1343 / Av. OBJ POS at order center            
+HIERARCH ESO QC ORD9 OBJ FWHM = 5.2126 / Av. FWHM on order                      
+HIERARCH ESO QC ORD9 OBJ RPLPAR = -1. / Av. relative ripple amplitude           
+HIERARCH ESO QC ORD10 OBJ SN = 382.5381 / Av. S/N at order center               
+HIERARCH ESO QC ORD10 OBJ POS = 25.9914 / Av. OBJ POS at order center           
+HIERARCH ESO QC ORD10 OBJ FWHM = 5.3778 / Av. FWHM on order                     
+HIERARCH ESO QC ORD10 OBJ RPLPAR = -1. / Av. relative ripple amplitude          
+HIERARCH ESO QC ORD11 OBJ SN = 375.5215 / Av. S/N at order center               
+HIERARCH ESO QC ORD11 OBJ POS = 26.5347 / Av. OBJ POS at order center           
+HIERARCH ESO QC ORD11 OBJ FWHM = 5.1643 / Av. FWHM on order                     
+HIERARCH ESO QC ORD11 OBJ RPLPAR = -1. / Av. relative ripple amplitude          
+HIERARCH ESO QC ORD12 OBJ SN = 372.221 / Av. S/N at order center                
+HIERARCH ESO QC ORD12 OBJ POS = 27.3206 / Av. OBJ POS at order center           
+HIERARCH ESO QC ORD12 OBJ FWHM = 6.5546 / Av. FWHM on order                     
+HIERARCH ESO QC ORD12 OBJ RPLPAR = -1. / Av. relative ripple amplitude          
+HIERARCH ESO QC ORD13 OBJ SN = 369.573 / Av. S/N at order center                
+HIERARCH ESO QC ORD13 OBJ POS = 26.2596 / Av. OBJ POS at order center           
+HIERARCH ESO QC ORD13 OBJ FWHM = 5.4798 / Av. FWHM on order                     
+HIERARCH ESO QC ORD13 OBJ RPLPAR = -1. / Av. relative ripple amplitude          
+HIERARCH ESO QC ORD14 OBJ SN = 371.2485 / Av. S/N at order center               
+HIERARCH ESO QC ORD14 OBJ POS = 26.4668 / Av. OBJ POS at order center           
+HIERARCH ESO QC ORD14 OBJ FWHM = 5.3206 / Av. FWHM on order                     
+HIERARCH ESO QC ORD14 OBJ RPLPAR = -1. / Av. relative ripple amplitude          
+HIERARCH ESO QC ORD15 OBJ SN = 374.7217 / Av. S/N at order center               
+HIERARCH ESO QC ORD15 OBJ POS = 26.2792 / Av. OBJ POS at order center           
+HIERARCH ESO QC ORD15 OBJ FWHM = 6.5842 / Av. FWHM on order                     
+HIERARCH ESO QC ORD15 OBJ RPLPAR = -1. / Av. relative ripple amplitude          
+HIERARCH ESO QC ORD16 OBJ SN = 425.6938 / Av. S/N at order center               
+HIERARCH ESO QC ORD16 OBJ POS = 26.5941 / Av. OBJ POS at order center           
+HIERARCH ESO QC ORD16 OBJ FWHM = 2.8026 / Av. FWHM on order                     
+HIERARCH ESO QC ORD16 OBJ RPLPAR = -1. / Av. relative ripple amplitude          
+HIERARCH ESO QC EX NORD =   16 / No. of orders extracted                        
+HIERARCH ESO QC EX XSIZE = 4096 / Input image width (pixels)                    
+HIERARCH ESO QC EX YSIZE =  58 / Extraction slit (pixels)                       
+HIERARCH ESO QC VRAD BARYCOR = 21.108375 / Barycentric radial velocity correctio
+HIERARCH ESO QC VRAD HELICOR = 21.119663 / Heliocentric radial velocity correcti
+CHECKSUM= 'IAiTL2ZSI8fSI8ZS'   / HDU checksum updated 2019-02-26T05:14:58       
+DATASUM = '3184783064'         / data unit checksum updated 2019-02-26T05:14:58 
+APNUM1  = '1 1     '                                                            
+DC-FLAG =                    0                                                  
+WCSDIM  =                    1                                                  
+LTM1_1  =                   1.                                                  
+WAT0_001= 'system=equispec'                                                     
+WAT1_001= 'wtype=linear label=Wavelength units=Angstroms'                       
+NCOMBINE=                   10                                                  
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                

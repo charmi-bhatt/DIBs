@@ -42,7 +42,14 @@ T_err = [2.80977672, 3.58171433, 3.84510665, 9.47334493, 4.39868936, 4.20614639,
 sigma = [0.18496609, 0.20292189, 0.18936606, 0.19319891, 0.22004922, 0.16349391, 0.17929137, 0.19690720, 0.20881159, 0.22038457, 0.24982774, 0.18963846]
 sigma_err = [0.00313293, 0.00300996, 0.00331638, 0.00722704, 0.00379580, 0.00486778, 0.00315146, 0.00236154, 0.00333481, 0.00270967, 0.00283842, 0.00486903]
 
+#correct resolution
+T = [77.6051193, 84.3844641, 87.2852205, 93.3360293, 83.8822524, 79.5465432, 87.9420139, 80.2861379, 86.0165888, 79.6913374, 86.5009653, 79.6918109]
+T_err = [3.62878037, 4.00679428, 4.65412651, 10.3003515, 4.51965334, 5.77578669, 4.49636979, 3.18979000, 4.47527695, 3.43480148, 4.11830152, 5.19860979]
 
+sigma = [0.17978137, 0.19617752, 0.18346550, 0.18017502, 0.21097759, 0.15886251, 0.17259367, 0.19082668, 0.20134184, 0.21524517, 0.23758045, 0.18463089]
+sigma_err = [0.00644892, 0.00562462, 0.00650875, 0.01460012, 0.00750076, 0.01054084, 0.00601209, 0.00418686, 0.00649303, 0.00516799, 0.00504381, 0.01033366]
+
+plt.plot
 
 # sigmas = np.array([sigma, sigma_err]).transpose()
 # # print(sigmas)
@@ -65,17 +72,19 @@ sightlines, T, T_err, sigma, sigma_err = zip(*data)
 
 
 x = np.linspace(1,12, 12)
-plt.errorbar(x = x, y = T, yerr = T_err, fmt='o', color='black',
-              ecolor='lightgray', elinewidth=3, capsize=0 )
+# plt.errorbar(x = x, y = T, yerr = T_err, fmt='o', color='black',
+#               ecolor='lightgray', elinewidth=3, capsize=0 )
 
 
-plt.xticks(x, sightlines, rotation = 55, size = 9)
-#plt.xticks([])  
-plt.ylabel(' Rotational Temperature (K)', labelpad =15 , size = 14)
-plt.xlabel('12 single-cloud sightlines', labelpad= 25, size = 14)
+# plt.xticks(x, sightlines, rotation = 55, size = 9)
+# #plt.xticks([])  
+# plt.ylabel(' Rotational Temperature (K)', labelpad =15 , size = 14)
+# plt.xlabel('12 single-cloud sightlines', labelpad= 25, size = 14)
 
-plt.show()
-
+# #plt.show()
+# #plt.savefig('Temp_scatter.pdf', format = 'pdf', bbox_inches = 'tight')
+# plt.savefig("Temp_scatter.pdf", format="pdf", bbox_inches="tight")
+    
 plt.errorbar(x = x, y = sigma, yerr = sigma_err, fmt='o', color='black',
               ecolor='lightgray', elinewidth=3, capsize=0 )
 
@@ -85,9 +94,11 @@ plt.xticks(x, sightlines, rotation = 55, size = 9)
 plt.ylabel('Intrinsic linewidth (cm${-1}$)', labelpad =15 , size = 14)
 plt.xlabel('12 single-cloud sightlines', labelpad= 25, size = 14)
 
-plt.show()
+#plt.show()
+plt.savefig("linewidth_scatter.pdf", format="pdf", bbox_inches="tight")
+
 #plt.scatter(Ts[:,0], sigmas[:,0])
-plt.show()
+#plt.show()
 
 '''As subplots'''
 # import matplotlib.pyplot as plt
