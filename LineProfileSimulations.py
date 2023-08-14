@@ -513,9 +513,9 @@ for sightline in sightlines:
     stddev_array = np.concatenate((stddev_array, one_sl_stddev))
   
 
-# result1 = fit_model(B = 0.01, delta_B = -0.1, zeta = -0.312, T = 10, sigma = 0.18 , origin =  0.014)
-# result2 = fit_model(B = 0.005, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
-# result3 = fit_model(B = 0.0001, delta_B = -0.1, zeta = -0.312, T = 180, sigma = 0.18 , origin =  0.014)
+result1 = fit_model(B = 0.01, delta_B = -0.1, zeta = -0.312, T = 10, sigma = 0.18 , origin =  0.014)
+result2 = fit_model(B = 0.005, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
+result3 = fit_model(B = 0.0001, delta_B = -0.1, zeta = -0.312, T = 180, sigma = 0.18 , origin =  0.014)
 
 # results_list = [result1, result2, result3] #, result4, result5]
 # fit_report_filename = str(sightline) + '_3_init_conditions_Cami_2004_'  + str(method) + '.csv'

@@ -92,8 +92,17 @@ def allowed_perperndicular_transitions(Jmax):
         
     return combinations
 
+def count_calls(func):
+    def wrapper(*args, **kwargs):
+        wrapper.call_count += 1
+        print(f"Function {func.__name__} has been called {wrapper.call_count} times.")
+        return func(*args, **kwargs)
+    wrapper.call_count = 0
+    return wrapper
+
 startfull = timeit.default_timer()
 
+@count_calls
 def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
 
     start1 = timeit.default_timer()
@@ -102,8 +111,9 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     and calculates spectra for it. It returns linelist and model data (i.e profile after convolution)
     '''
     
+   
 
-    combinations  = allowed_perperndicular_transitions(Jmax)
+
     # rotational constants in cm-1
     ground_B = B
     ground_C = ground_B / 2
@@ -121,12 +131,10 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     delta_J = linelist['excited_J'] - linelist['ground_J']
     delta_K = linelist['excited_K'] - linelist['ground_K']
 
-    end1 = timeit.default_timer()
-    # print('>>>> Time taken to import parameters ' + str(end1 - start1) + '  sec')
-    # print('==========')
+    
     '''Calculating Linelist'''
 
-    start2 = timeit.default_timer()
+    
     ground_Es = []
     for J, K in zip(ground_Js, ground_Ks):
         ground_E = ground_B * J * (J + 1) + (ground_C - ground_B) * (K ** 2)
@@ -154,58 +162,45 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
 
     linelist['wavenos'] = wavenos
     
-    end2 = timeit.default_timer()
-    # print('>>>> Time taken to calculate wavenos  ' + str(end2 - start2) + '  sec')
-    # print('==========')
-
-    start3 = timeit.default_timer()
-
-    HL_factors = []
-
-    for J, K, delta_J, delta_K in zip(ground_Js, ground_Ks, delta_J, delta_K):
-        if delta_J == -1 and delta_K == -1:
-            HL_factor = ((J - 1 + K) * (J + K)) / (J * ((2 * J) + 1))
-        elif delta_J == -1 and delta_K == 1:
-            HL_factor = ((J - 1 - K) * (J - K)) / (J * ((2 * J) + 1))
-        elif delta_J == 0 and delta_K == -1:
-            HL_factor = (J + 1 - K) * (J + K) / (J * (J + 1))
-        elif delta_J == 0 and delta_K == 1:
-            HL_factor = (J + 1 + K) * (J - K) / (J * (J + 1))
-        elif delta_J == 1 and delta_K == -1:
-            HL_factor = (J + 2 - K) * (J + 1 - K) / ((J + 1) * ((2 * J) + 1))
-        elif delta_J == 1 and delta_K == 1:
-            HL_factor = (J + 2 + K) * (J + 1 + K) / ((J + 1) * ((2 * J) + 1))
-
-        HL_factors.append(HL_factor)
-
-    linelist['HL_factors'] = HL_factors
-
-    end3 = timeit.default_timer()
-    # print('>>>> Time taken to calculate HL factors' + str(end3 - start3) + '  sec')
-    # print('==========')
     
-    startbd = timeit.default_timer()
+    #Compute HL_factors directly in a list comprehension
+    HL_factors = [((J - 1 + K) * (J + K)) / (J * ((2 * J) + 1)) if (delta_J == -1 and delta_K == -1) else
+                  ((J - 1 - K) * (J - K)) / (J * ((2 * J) + 1)) if (delta_J == -1 and delta_K == 1) else
+                  (J + 1 - K) * (J + K) / (J * (J + 1)) if (delta_J == 0 and delta_K == -1) else
+                  (J + 1 + K) * (J - K) / (J * (J + 1)) if (delta_J == 0 and delta_K == 1) else
+                  (J + 2 - K) * (J + 1 - K) / ((J + 1) * ((2 * J) + 1)) if (delta_J == 1 and delta_K == -1) else
+                  (J + 2 + K) * (J + 1 + K) / ((J + 1) * ((2 * J) + 1)) if (delta_J == 1 and delta_K == 1) else
+                  None for J, K, delta_J, delta_K in zip(ground_Js, ground_Ks, delta_J, delta_K)]
+    
+    linelist['HL_factors'] = HL_factors
+    
 
+    
     BD_factors = []
 
     h = const.h.cgs.value
     c = const.c.to('cm/s').value
     k = const.k_B.cgs.value
 
-    for J, K, E in zip(ground_Js, ground_Ks, ground_Es):
-        if K == 0:
-            boltzmann_equation = (2 * ((2 * J) + 1)) * (np.exp((-h * c * E) / (k * T)))
-        else:
-            boltzmann_equation = (1 * ((2 * J) + 1)) * (np.exp((-h * c * E) / (k * T)))
-
-        BD_factors.append(boltzmann_equation)
+    ground_Js_np = np.array(ground_Js)
+    ground_Ks_np = np.array(ground_Ks)
+    ground_Es_np = np.array(ground_Es)
+    
+    # Calculation of static part
+    static_part = (-h * c) / (k * T)
+    
+    # For the condition K == 0, the equation becomes twice the general equation
+    # we can pre-calculate that part
+    factor = (2 * ground_Js_np + 1) * np.exp(static_part * ground_Es_np)
+    
+    # Wherever ground_Ks == 0, double the result
+    boltzmann_equation = np.where(ground_Ks_np == 0, 2 * factor, factor)
+    
+    # Convert the numpy array back to list if necessary
+    BD_factors = boltzmann_equation.tolist()
 
     linelist['BD_factors'] = BD_factors
-    endbd = timeit.default_timer()
-    # print('>>>> Time taken to calculate BD factors' + str(endbd - startbd) + '  sec')
-    # print('==========')
-
-    starti = timeit.default_timer()
+    
 
     intensities = []
     for i in range(len(linelist.index)):
@@ -214,15 +209,8 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
 
     linelist['intensities'] = intensities
     
-    endi = timeit.default_timer()
-    # print('>>>> Time taken to calculate intenisties' + str(endi - starti) + '  sec')
-    # print('==========')
-
-    # endl = timeit.default_timer()
-    # print('>>>> linelist calculation takes   ' + str(endl - startl) + '  sec')
-
+   
     '''Smoothening the linelist'''
-    start4 = timeit.default_timer() 
     
     smooth_wavenos = np.linspace(np.min(linelist['wavenos']) - 1, np.max(linelist['wavenos']) + 1, 1000)  # grid_size
 
@@ -266,6 +254,14 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     endfull = timeit.default_timer()
     print('>>>> Time taken for this profile  ' + str(endfull - startfull) + '  sec')
     print('=====')
+    
+    print('B = ' , B)
+    print('delta_B = ' , delta_B)
+    print('zeta = ' , zeta)
+    print('T = ', T)
+    print('sigma = ', sigma)
+    print('origin = ' , origin) 
+    
     return linelist, model_data
 
 
@@ -311,11 +307,11 @@ def obs_curve_to_fit(sightline):
         the triple peak for fitting and calculates std dev for each sightline '''
     
         file = filename.format(sightline)
-        # Obs_data = pd.read_csv(spec_dir / file,
-        #                         delim_whitespace=(True))
-        
         Obs_data = pd.read_csv(spec_dir / file,
-                                sep = ',')
+                                delim_whitespace=(True))
+        
+        # Obs_data = pd.read_csv(spec_dir / file,
+        #                         sep = ',')
 
         '''interpolating over common grid'''
         
@@ -334,7 +330,7 @@ def obs_curve_to_fit(sightline):
         
        
         
-        Obs_data_95 = Obs_data [(Obs_data['Flux'] <=0.95)]
+        #Obs_data_95 = Obs_data [(Obs_data['Flux'] <=0.95)]
        
 
         Obs_data_continuum = Obs_data [(Obs_data['Wavelength'] >=2) & (Obs_data['Wavelength']<= 5)]
@@ -343,7 +339,6 @@ def obs_curve_to_fit(sightline):
        
         return Obs_data, Obs_y_data_to_fit, std_dev
     
-
 
 def get_multi_spectra( **params_list):
     """
@@ -473,9 +468,9 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
     last_origin_index = first_origin_index +len(sightlines) 
  
     params = Parameters()
-    params.add('B', value = B, min = 0.0005, max = 0.05)
-    params.add('delta_B', value = delta_B, min = -1, max =0)
-    params.add('zeta', value = zeta, min = -1, max = 1)
+    params.add('B', value = B, min = 0.0005, max = 0.05) #, vary = False)
+    params.add('delta_B', value = delta_B, min = -1, max =0) #, vary = False)
+    params.add('zeta', value = zeta, min = -1, max = 1) #, vary = False)
     
     for i, param_value in enumerate(params_list[first_T_index:last_T_index]):
         params.add(f'T{i+1}', value=param_value, min = 2.7, max = 500)
@@ -488,7 +483,7 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
         
    
     result = mod.fit(flux_list, params, xx=wave_list, weights = 1/stddev_array , method = method) #, fit_kws={'ftol': 1e-2, 'xtol': 1e-2} )
-    print(result.fit_report())
+    
     
     # def plot_best_fit(result, x_equal_spacing, y_obs_data):
     #     plt.figure()
@@ -506,35 +501,43 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
 
 
 
-'''Inputs'''    
+
+############################################################################################
+############################################################################################
+
+#Inputs
+
+############################################################################################
+############################################################################################
+
+
+
 Jmax = 300
+combinations  = allowed_perperndicular_transitions(Jmax)
+
 
 #Cami 2004
-# spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Research/Cami_2004_data/heliocentric/6614/")
-# #sightlines = ['144217', '144470',  '145502', '147165', '149757', '179406', '184915'] 
-# sightlines = ['144217']
-# filename = 'hd{}_dib6614.txt'
+spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Research/Cami_2004_data/heliocentric/6614/")
+sightlines = ['144217', '144470',  '145502', '147165', '149757', '179406', '184915'] 
+filename = 'hd{}_dib6614.txt'
 method = 'leastsq'
 
 #EDIBLES data
-spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
-filename = '6614_HD{}.txt'
-sightlines = ['23180', '24398', '144470', '147165' , '147683', '149757', '166937', '170740', '184915', '185418', '185859', '203532']
+# spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
+# filename = '6614_HD{}.txt'
+# sightlines = ['23180', '24398', '144470', '147165' , '147683', '149757', '166937', '170740', '184915', '185418', '185859', '203532']
 
-#sightlines = ['166937']
 
-# lambda_start = 6613.5453435174495 #-1.134 #
-# lambda_end =  6614.490245405555 #1.039609311008462 #
 
 lambda_start = 6612.5453435174495 #-1.134 #
 lambda_end =  6615 #1.039609311008462 #
 
 
-common_grid_for_all = make_grid(lambda_start, lambda_end, resolution=107000, oversample=2)
-
+common_grid_for_all = make_grid(lambda_start, lambda_end, resolution=220000, oversample=2)
 common_grid_for_all = (1 / common_grid_for_all) * 1e8
 common_grid_for_all = common_grid_for_all - 15119.4
 common_grid_for_all = common_grid_for_all[::-1]
+
 
 common_grid_for_all = common_grid_for_all[(common_grid_for_all > -1.14) & (common_grid_for_all < 1.07)]
 print(common_grid_for_all.shape)
@@ -552,11 +555,20 @@ for sightline in sightlines:
     one_sl_stddev = [std_dev] * len(common_grid_for_all)
     stddev_array = np.concatenate((stddev_array, one_sl_stddev))
   
-#plt.plot(wave_list, flux_list)
+plt.plot(wave_list, flux_list)
 
-result1 = fit_model(B = 0.004, delta_B = -0.1, zeta = -0.312, T = 40, sigma = 0.18 , origin =  0.014)
-# result2 = fit_model(B = 0.005, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
-# result3 = fit_model(B = 0.0001, delta_B = -0.1, zeta = -0.312, T = 180, sigma = 0.18 , origin =  0.014)
+#result1 = fit_model(B = 0.0026, delta_B = -0.21, zeta = -0.54, T = 90, sigma = 0.18 , origin =  0.014)
+#result2 = fit_model(B = 0.004, delta_B = -0.1, zeta = -0.312, T = 40, sigma = 0.18 , origin =  0.014)
+result3 = fit_model(B = 0.009, delta_B = -0.1, zeta = -0.312, T = 25, sigma = 0.18 , origin =  0.014)
+
+
+report = result3.fit_report()
+print(report)
+
+with open("Alto_fit_report_Cami_3.txt", "w") as f:
+    f.write(report)
+    
+    
 
 # results_list = [result1, result2, result3] #, result4, result5]
 # fit_report_filename = str(sightline) + '_3_init_conditions_Cami_2004_'  + str(method) + '.csv'
@@ -564,13 +576,112 @@ result1 = fit_model(B = 0.004, delta_B = -0.1, zeta = -0.312, T = 40, sigma = 0.
 
 
 
-# for sightline in sightlines: 
-#     Obs_data, Obs_y_data_to_fit, std_dev, Obs_data_95 = obs_curve_to_fit(sightline)
-#     plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'], color = 'black' ) #, label = 'HD ' + str(sightline) , color = 'black')
-#     plt.plot(common_grid_for_all , Obs_y_data_to_fit, color = 'red' ) #, label = 'HD ' + str(sightline) , color = 'black')
-#     plt.plot(Obs_data_95['Wavelength'] , Obs_data_95['Flux'], color = 'green' ) #, label = 'HD ' + str(sightline) , color = 'black')
+'''PLotting'''
 
-#     plt.show()
+def equivalent_width(wavelength, flux, continuum_level):
+    """
+    Calculate the equivalent width of a spectral line.
+
+    Parameters:
+    - wavelength: Array of wavelength values.
+    - flux: Array of flux values corresponding to the wavelengths.
+    - continuum_level: The continuum level to subtract from the flux.
+
+    Returns:
+    - Equivalent width of the spectral line.
+    """
+
+    # Subtract the continuum
+    line_flux = continuum_level - flux
+
+    # Integrate using the trapezoidal rule
+    area = np.trapz(wavelength, line_flux)
+    plt.plot(wavelength, flux)
+    plt.show()
+    #area = np.trapz(line_flux, wavelength)
+
+    #area= area_under_curve(wavelength, line_flux)
+    #print(area)
+    # Calculate the equivalent width
+    EW = area / continuum_level
+    #print(EW)
+    return EW
+
+
+    
+
+    
+# B = 0.00263686
+# delta_B = -0.07094847
+# zeta = -0.30450211
+# Ts = [77.6051193, 84.3844641, 87.2852205, 93.3360293, 83.8822524, 79.5465432, 87.9420139, 80.2861379, 86.0165888, 79.6913374, 86.5009653, 79.6918109]
+# sigmas = [0.17978137, 0.19617752, 0.18346550, 0.18017502, 0.21097759, 0.15886251, 0.17259367, 0.19082668, 0.20134184, 0.21524517, 0.23758045, 0.18463089]
+# origins = [0.01890060, -0.01492546, 0.00137921, -0.01375697, 0.01816983, -0.00341084, 0.06238340, 0.01488341, 0.11077462, 0.06937389, 0.03062378, 0.06949553]
+
+# EWs = []
+# for T, sigma, origin, sightline in zip(Ts, sigmas, origins, sightlines):
+#      linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+#      Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
+
+#      y_model = np.interp(Obs_data['Wavelength'] , model_data[:,0], model_data[:,1]   )
+
+#      residual_y = Obs_data['Flux'] - y_model
+#      residual_data = np.array([Obs_data['Wavelength'], residual_y]).transpose()
+#      #residual_data = residual_data [(residual_data[:,0] >= -3.5) & (residual_data[:,0] <= -0.5)]
+     
+#      # wavelength = residual_data[:,0] #Obs_data['Wavelength']
+#      # flux = residual_data[:,1] #residual_y
+#      continuum_level = 1.0
+    
+#      # print('Residuals:')
+#      # print('area under curve is  ' + str(area_under_curve(wavelength, flux)))  
+#      # print('EW is  ' + str(equivalent_width(wavelength, flux, continuum_level)))  
+     
+
+     
+     
+#      wavelength = Obs_data['Wavelength']
+#      flux = y_model
+       
+#      print('Model:')
+#      print('area under curve is  ' + str(area_under_curve(wavelength, flux)))  
+#      print('EW is  ' + str(equivalent_width(wavelength, flux, continuum_level)))  
+     
+#      # wavelength = Obs_data['Wavelength']
+#      # flux = Obs_data['Flux']
+     
+#      # print('Full:')
+#      # print('area under curve is  ' + str(area_under_curve(wavelength, flux)))  
+#      # print('EW is  ' + str(equivalent_width(wavelength, flux, continuum_level)))  
+     
+
+#      # plt.plot(wavelength, flux, label = sightline)
+#      # plt.legend()
+#      # plt.show()
+#      EW = equivalent_width(wavelength, flux, continuum_level)
+#      EWs.append(EW) 
+     
+# print(EWs)
+
+# model_EWs = [-0.17857261439020172, -0.18579811631813803, -0.18340336176104957, -0.18435501375533628, -0.1892866739697753, -0.17325809758390145, -0.18045266239977248, -0.18272507314093656, -0.18776160186797575, -0.18839385536044073, -0.1962749895405297, -0.1808112875277313]
+# residual_EWs = [-0.007017051110805382, -0.008246868460265493, -0.059847325821851254, -0.05190883401427335, -0.05531269723080303, -0.017223112870620734, -0.021397158338242028, -0.027349956321356138, -0.01841273588394792, -0.029436113404436706, -0.023259871166877052, -0.012111798172947844]
+
+# import numpy as np
+
+# def calculate_pearson_correlation(x, y):
+#     if len(x) != len(y):
+#         raise ValueError("Both lists should have the same length")
+
+#     correlation = np.corrcoef(x, y)[0, 1]
+#     return correlation
+
+# T = [77.6051193, 84.3844641, 87.2852205, 93.3360293, 83.8822524, 79.5465432, 87.9420139, 80.2861379, 86.0165888, 79.6913374, 86.5009653, 79.6918109]
+
+# print("Correlation coefficient:", calculate_pearson_correlation(model_EWs, residual_EWs))
+# print("Correlation coefficient:", calculate_pearson_correlation(model_EWs, T))
+# print("Correlation coefficient:", calculate_pearson_correlation(residual_EWs, T))
+
+
 
 # B = 0.00263686
 # delta_B = -0.07094847
@@ -580,16 +691,6 @@ result1 = fit_model(B = 0.004, delta_B = -0.1, zeta = -0.312, T = 40, sigma = 0.
 # origins = [0.01890060, -0.01492546, 0.00137921, -0.01375697, 0.01816983, -0.00341084, 0.06238340, 0.01488341, 0.11077462, 0.06937389, 0.03062378, 0.06949553]
 
 # offset = np.arange(0, 12, 0.06)
-
-# B = 0.00247690
-# delta_B = -0.06864414
-# zeta = -0.31136112
-
-# Ts = [84.8194157, 95.5401280, 97.2287829, 116.540106, 99.2097303, 86.6632524, 98.4034623, 89.0236501, 97.3496743, 87.8768841, 103.793851, 86.2283890]
-
-# sigmas = [0.18496609, 0.20292189, 0.18936606, 0.19319891, 0.22004922, 0.16349391, 0.17929137, 0.19690720, 0.20881159, 0.22038457, 0.24982774, 0.18963846]
-
-# origins = [0.02918830, -0.00869084, 0.01065963, -0.00253786, 0.02965486, -0.00276476, 0.06965812, 0.02549114, 0.12524227, 0.07957677, 0.04544019, 0.08117755]
 
 # plt.figure(figsize = (15,30))
 # for T, sigma, origin, offset, sightline in zip(Ts, sigmas, origins, offset, sightlines):
@@ -638,7 +739,6 @@ result1 = fit_model(B = 0.004, delta_B = -0.1, zeta = -0.312, T = 40, sigma = 0.
     
 
 
-'''PLotting'''
 
 #reviewing 3 init conditions one slightline at a time fit results
 # for sightline in sightlines: 
