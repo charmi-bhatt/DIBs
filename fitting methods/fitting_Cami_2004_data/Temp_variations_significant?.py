@@ -22,53 +22,25 @@ from lmfit import Parameters
 
 sightlines = ['HD 23180', 'HD 24398', 'HD 144470', 'HD 147165' , 'HD 147683', 'HD 149757', 'HD 166937', 'HD 170740', 'HD 184915', 'HD 185418', 'HD 185859', 'HD 203532']
 
-T = [84.45, 95.03, 98.26, 115.26, 97.56, 84.71, 98.41, 88.62, 95.90, 87.57, 102.36, 86.49]
-T_err = [6.82, 8.72, 9.76, 22.16, 10.30, 9.688, 9.39, 6.69, 9.31, 7.14, 10.59, 9.59]
-#less uncertainities 
-T = [85.1980671, 95.9170194, 97.7526553, 117.357633, 99.4837311, 86.7969455, 98.8252733, 89.3671108, 97.6353221, 88.2069174, 104.179082, 86.5815310]
-T_err = [3.53219285, 4.47563910, 4.81673463, 11.8238856, 5.46520419, 5.18071752, 4.73214286, 3.39864225, 4.90728158, 3.65064980, 5.58826545, 4.90358469]
-
-
-
-sigma = [0.185, 0.202, 0.1905, 0.1941, 0.2193, 0.1630, 0.1796, 0.1972, 0.2078, 0.220, 0.2489, 0.1900]
-sigma_err= [0.008, 0.0076, 0.0085, 0.0181, 0.0095, 0.0123, 0.008, 0.006, 0.0084, 0.0069, 0.0071, 0.0123]
-#less uncertainities 
-sigma = [0.18528460, 0.20311258, 0.18971569, 0.19368843, 0.22016402, 0.16365104, 0.17955888, 0.19714333, 0.20891494, 0.22057438, 0.24994232, 0.18989476]
-sigma_err = [0.00394647, 0.00372946, 0.00410970, 0.00890177, 0.00468315, 0.00599772, 0.00390652, 0.00294027, 0.00412508, 0.00335768, 0.00351795, 0.00600206]
-
-#with 150 datapoints
-T = [84.8194157, 95.5401280, 97.2287829, 116.540106, 99.2097303, 86.6632524, 98.4034623, 89.0236501, 97.3496743, 87.8768841, 103.793851, 86.2283890]
-T_err = [2.80977672, 3.58171433, 3.84510665, 9.47334493, 4.39868936, 4.20614639, 3.78239428, 2.71146630, 3.94014863, 2.92062984, 4.46897005, 3.95544354]
-sigma = [0.18496609, 0.20292189, 0.18936606, 0.19319891, 0.22004922, 0.16349391, 0.17929137, 0.19690720, 0.20881159, 0.22038457, 0.24982774, 0.18963846]
-sigma_err = [0.00313293, 0.00300996, 0.00331638, 0.00722704, 0.00379580, 0.00486778, 0.00315146, 0.00236154, 0.00333481, 0.00270967, 0.00283842, 0.00486903]
 
 #correct resolution
-T = [77.6051193, 84.3844641, 87.2852205, 93.3360293, 83.8822524, 79.5465432, 87.9420139, 80.2861379, 86.0165888, 79.6913374, 86.5009653, 79.6918109]
-T_err = [3.62878037, 4.00679428, 4.65412651, 10.3003515, 4.51965334, 5.77578669, 4.49636979, 3.18979000, 4.47527695, 3.43480148, 4.11830152, 5.19860979]
+T = [79.1337551, 86.3583384, 88.8431642, 95.5643204, 86.0534748, 80.1042636, 89.7854061, 81.9806263, 89.0445017, 81.2361554, 89.3558085, 80.9561796]
+T_err = [4.03812055, 4.56756582, 5.19026988, 11.4404767, 5.16960670, 6.11313758, 5.08189642, 3.65708860, 5.29523978, 3.89533336, 4.85655344, 5.71090004]
+sigma = [0.18055114, 0.19760700, 0.18423023, 0.18244127, 0.21244470, 0.15821120, 0.17367824, 0.19180354, 0.20377079, 0.21578868, 0.24029108, 0.18563300]
+sigma_err = [0.00652811, 0.00578140, 0.00663215, 0.01480600, 0.00769938, 0.01058803, 0.00625162, 0.00443305, 0.00678099, 0.00530496, 0.00524340, 0.01050214]
 
-sigma = [0.17978137, 0.19617752, 0.18346550, 0.18017502, 0.21097759, 0.15886251, 0.17259367, 0.19082668, 0.20134184, 0.21524517, 0.23758045, 0.18463089]
-sigma_err = [0.00644892, 0.00562462, 0.00650875, 0.01460012, 0.00750076, 0.01054084, 0.00601209, 0.00418686, 0.00649303, 0.00516799, 0.00504381, 0.01033366]
+PR_sep = [1.27, 1.34, 1.39, 1.38, 1.3, 1.36, 1.46, 1.33, 1.37, 1.27, 1.27, 1.29]
+PR_sep_unc = [0.09, 0.05, 0.06, 0.06, 0.09, 0.05, 0.07, 0.03, 0.05, 0.03, 0.05, 0.07]
 
-plt.plot
 
-# sigmas = np.array([sigma, sigma_err]).transpose()
-# # print(sigmas)
-# sigmas = sigmas[sigmas[:, 0].argsort()]
-# # print(sigmas)
 
-# Ts = np.array([T, T_err, sightlines]).transpose()
-# print(Ts)
-# # print(sigmas)
-# Ts = Ts[Ts[:, 0].argsort()]
-# print(Ts)
-
-data = list(zip(sightlines, T, T_err, sigma, sigma_err))
+data = list(zip(sightlines, T, T_err, sigma, sigma_err, PR_sep, PR_sep_unc))
 print(data)
 # sort the data by increasing T value
 data.sort(key=lambda x: x[1])
 
 # unzip the sorted data
-sightlines, T, T_err, sigma, sigma_err = zip(*data)
+sightlines, T, T_err, sigma, sigma_err, PR_sep, PR_sep_unc = zip(*data)
 
 
 x = np.linspace(1,12, 12)
@@ -82,23 +54,34 @@ x = np.linspace(1,12, 12)
 # plt.xlabel('12 single-cloud sightlines', labelpad= 25, size = 14)
 
 # #plt.show()
-# #plt.savefig('Temp_scatter.pdf', format = 'pdf', bbox_inches = 'tight')
 # plt.savefig("Temp_scatter.pdf", format="pdf", bbox_inches="tight")
-    
-plt.errorbar(x = x, y = sigma, yerr = sigma_err, fmt='o', color='black',
+ 
+'''Sigma'''   
+# plt.errorbar(x = x, y = sigma, yerr = sigma_err, fmt='o', color='black',
+#               ecolor='lightgray', elinewidth=3, capsize=0 )
+
+
+# plt.xticks(x, sightlines, rotation = 55, size = 9)
+# #plt.xticks([])  
+# plt.ylabel('Intrinsic linewidth (cm${-1}$)', labelpad =15 , size = 14)
+# plt.xlabel('12 single-cloud sightlines', labelpad= 25, size = 14)
+
+# #plt.show()
+# plt.savefig("linewidth_scatter.pdf", format="pdf", bbox_inches="tight")
+
+
+plt.errorbar(x = T, y = PR_sep, xerr = T_err, yerr = PR_sep_unc, fmt='o', color='black',
               ecolor='lightgray', elinewidth=3, capsize=0 )
 
 
-plt.xticks(x, sightlines, rotation = 55, size = 9)
+#plt.xticks(x, sightlines, rotation = 55, size = 9)
 #plt.xticks([])  
-plt.ylabel('Intrinsic linewidth (cm${-1}$)', labelpad =15 , size = 14)
-plt.xlabel('12 single-cloud sightlines', labelpad= 25, size = 14)
+plt.ylabel('PR peak separation (cm${-1}$)', labelpad =15 , size = 14)
+plt.xlabel('Rotational Temperature (K)', labelpad= 25, size = 14)
 
 #plt.show()
-plt.savefig("linewidth_scatter.pdf", format="pdf", bbox_inches="tight")
+plt.savefig("T_vs_PR_sep.pdf", format="pdf", bbox_inches="tight")
 
-#plt.scatter(Ts[:,0], sigmas[:,0])
-#plt.show()
 
 '''As subplots'''
 # import matplotlib.pyplot as plt

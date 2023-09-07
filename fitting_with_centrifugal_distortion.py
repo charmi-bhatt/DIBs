@@ -103,7 +103,7 @@ def count_calls(func):
 startfull = timeit.default_timer()
 
 @count_calls
-def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
+def get_rotational_spectrum(B, delta_B, zeta, Dj, Djk, Dk, T, sigma, origin):
 
     start1 = timeit.default_timer()
 
@@ -146,10 +146,10 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     for J, K, del_K in zip(excited_Js, excited_Ks, delta_K):
         if del_K == -1:
             excited_E = excited_B * J * (J + 1) + (excited_C - excited_B) * (K ** 2) - (
-                (-2 * excited_C * zeta)) * K + excited_C ** 2
+                (-2 * excited_C * zeta)) * K + excited_C ** 2   - (Dj * (J**2) * ((J+1)**2)) - (Djk * J * (J+1) * (K**2)) - (Dk*(K**4))
         elif del_K == 1:
             excited_E = excited_B * J * (J + 1) + (excited_C - excited_B) * (K ** 2) + (
-                (-2 * excited_C * zeta)) * K + excited_C ** 2
+                (-2 * excited_C * zeta)) * K + excited_C ** 2  - (Dj * (J**2) * ((J+1)**2)) - (Djk * J * (J+1) * (K**2)) - (Dk*(K**4))
 
         excited_Es.append(excited_E)
 
@@ -261,6 +261,10 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     print('T = ', T)
     print('sigma = ', sigma)
     print('origin = ' , origin) 
+    print('Dj = ' , Dj)
+    print('Djk = ' , Djk)
+    print('Dk = ' , Dk)
+    
     
     return linelist, model_data
 
@@ -362,13 +366,18 @@ def get_multi_spectra( **params_list):
     
    
     print('---------')
+    #print(params_list)
+    
     
     B = params_list['B']
     delta_B = params_list['delta_B']
     zeta = params_list['zeta']
+    Dj = params_list['Dj']
+    Djk = params_list['Djk']
+    Dk = params_list['Dk']
     
    
-    first_T_index = 3
+    first_T_index = 6
     last_T_index = first_T_index + len(sightlines) 
  
     first_sigma_index = last_T_index  
@@ -389,7 +398,7 @@ def get_multi_spectra( **params_list):
     
     for T, sigma, origin, sightline in zip(T_values, sigma_values, origin_values, sightlines):
         
-        linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+        linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, Dj, Djk, Dk, T, sigma, origin)
         
         one_sl_y_model_data  = np.interp(common_grid_for_all, model_data[:, 0], model_data[:, 1])
         
@@ -400,50 +409,50 @@ def get_multi_spectra( **params_list):
     # plt.show()
     return all_y_model_data
 
-def write_results_to_csv(results_list, filename):
-    with open(filename, 'w', newline='') as csvfile:
-        fieldnames = ['result_name', 'B_init', 'delta_B_init', 'zeta_init' , 'T1_init', 'sigma1_init' ,'origin1_init' ,  'B',   'delta_B', 'zeta', 'T1','sigma1', 'origin1', 'chi2', 'redchi', 'func_evals', 'B_unc', 'delta_B_unc', 'zeta_unc', 'T1_unc',  'sigma1_unc', 'origin1_unc']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
+# def write_results_to_csv(results_list, filename):
+#     with open(filename, 'w', newline='') as csvfile:
+#         fieldnames = ['result_name', 'B_init', 'delta_B_init', 'zeta_init' , 'T1_init', 'sigma1_init' ,'origin1_init' ,  'B',   'delta_B', 'zeta', 'T1','sigma1', 'origin1', 'chi2', 'redchi', 'func_evals', 'B_unc', 'delta_B_unc', 'zeta_unc', 'T1_unc',  'sigma1_unc', 'origin1_unc']
+#         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+#         writer.writeheader()
 
-        for i, result in enumerate(results_list):
-            result_name = f'result{i+1}'
-            params = result.params
-            row = {
-                'result_name': result_name,
-                'B_init': params['B'].init_value,
-                'delta_B_init': params['delta_B'].init_value,
-                'zeta_init': params['zeta'].init_value,
-                'T1_init': params['T1'].init_value,
-                'sigma1_init': params['sigma1'].init_value,
-                'origin1_init': params['origin1'].init_value,
-                'B': params['B'].value,
-                'delta_B': params['delta_B'].value,
-                'zeta': params['zeta'].value,
-                'T1': params['T1'].value,
-                'sigma1': params['sigma1'].value,
-                'origin1': params['origin1'].value,
-                'chi2': result.chisqr,
-                'redchi': result.redchi,
-                'func_evals': result.nfev,
-                'B_unc': params['B'].stderr,
-                'delta_B_unc': params['delta_B'].stderr,
-                'zeta_unc': params['zeta'].stderr,
-                'T1_unc': params['T1'].stderr,
-                'sigma1_unc': params['sigma1'].stderr,
-                'origin1_unc': params['origin1'].stderr,
+#         for i, result in enumerate(results_list):
+#             result_name = f'result{i+1}'
+#             params = result.params
+#             row = {
+#                 'result_name': result_name,
+#                 'B_init': params['B'].init_value,
+#                 'delta_B_init': params['delta_B'].init_value,
+#                 'zeta_init': params['zeta'].init_value,
+#                 'T1_init': params['T1'].init_value,
+#                 'sigma1_init': params['sigma1'].init_value,
+#                 'origin1_init': params['origin1'].init_value,
+#                 'B': params['B'].value,
+#                 'delta_B': params['delta_B'].value,
+#                 'zeta': params['zeta'].value,
+#                 'T1': params['T1'].value,
+#                 'sigma1': params['sigma1'].value,
+#                 'origin1': params['origin1'].value,
+#                 'chi2': result.chisqr,
+#                 'redchi': result.redchi,
+#                 'func_evals': result.nfev,
+#                 'B_unc': params['B'].stderr,
+#                 'delta_B_unc': params['delta_B'].stderr,
+#                 'zeta_unc': params['zeta'].stderr,
+#                 'T1_unc': params['T1'].stderr,
+#                 'sigma1_unc': params['sigma1'].stderr,
+#                 'origin1_unc': params['origin1'].stderr,
 
-            }
-            writer.writerow(row)
+#             }
+#             writer.writerow(row)
 
 
 
-def fit_model(B, delta_B, zeta, T, sigma, origin):
+def fit_model(B, delta_B, zeta, Dj, Djk, Dk, T, sigma, origin):
     mod = Model(get_multi_spectra) 
     
     
     
-    params_list = [B, delta_B, zeta]
+    params_list = [B, delta_B, zeta, Dj, Djk, Dk]
     
     T_list = [T] * len(sightlines)
     sigma_list = [sigma] * len(sightlines)
@@ -458,7 +467,7 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
     
     
     
-    first_T_index = 3
+    first_T_index = 6
     last_T_index = first_T_index + len(sightlines) 
  
     first_sigma_index = last_T_index  
@@ -471,6 +480,11 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
     params.add('B', value = B, min = 0.0005, max = 0.05) #, vary = False)
     params.add('delta_B', value = delta_B, min = -1, max =0) #, vary = False)
     params.add('zeta', value = zeta, min = -1, max = 1) #, vary = False)
+    params.add('Dj', value = Dj, min = 1e-6, max = 1e-13) #, vary = False)
+    params.add('Djk', value = Djk, min = 1e-6, max = 1e-13) #, vary = False)
+    params.add('Dk', value = Dk, min = 1e-6, max = 1e-13) #, vary = False)
+
+
     
     for i, param_value in enumerate(params_list[first_T_index:last_T_index]):
         params.add(f'T{i+1}', value=param_value, min = 2.7, max = 500)
@@ -526,20 +540,20 @@ method = 'leastsq'
 spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
 filename = '6614_HD{}.txt'
 sightlines = ['23180', '24398', '144470', '147165' , '147683', '149757', '166937', '170740', '184915', '185418', '185859', '203532']
-#sightlines = ['185418']
+sightlines = ['166937']
 
 
-lambda_start = 6612.5453435174495 #-1.134 #
-lambda_end =  6615 #1.039609311008462 #
+lambda_start = 6612.90453435174495 #-1.134 #
+lambda_end =  6616 #1.039609311008462 #
 
 
-common_grid_for_all = make_grid(lambda_start, lambda_end, resolution=220000, oversample=2)
+common_grid_for_all = make_grid(lambda_start, lambda_end, resolution=107000, oversample=2)
 common_grid_for_all = (1 / common_grid_for_all) * 1e8
 common_grid_for_all = common_grid_for_all - 15119.4
 common_grid_for_all = common_grid_for_all[::-1]
 
 
-common_grid_for_all = common_grid_for_all[(common_grid_for_all > -1.14) & (common_grid_for_all < 1.07)]
+#common_grid_for_all = common_grid_for_all[(common_grid_for_all > -1.14) & (common_grid_for_all < 1.07)]
 print(common_grid_for_all.shape)
 
 flux_list = np.array([])
@@ -555,211 +569,113 @@ for sightline in sightlines:
     one_sl_stddev = [std_dev] * len(common_grid_for_all)
     stddev_array = np.concatenate((stddev_array, one_sl_stddev))
   
-plt.plot(wave_list, flux_list)
-# plt.show()
+#plt.plot(wave_list, flux_list)
 
-# result1 = fit_model(B = 0.01, delta_B = -0.1, zeta = -0.312, T = 10, sigma = 0.18 , origin =  0.014)
-# result2 = fit_model(B = 0.005, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
-# result3 = fit_model(B = 0.0001, delta_B = -0.1, zeta = -0.312, T = 180, sigma = 0.18 , origin =  0.014)
+#result1 = fit_model(B = 0.009, delta_B = -0.76, zeta = 1, Dj = 3.8e-11, Djk= 2.73e-13, Dk = 5.59e-10,  T = 81, sigma = 0.23 , origin =  0.204)
+#result2 = fit_model(B = 0.004, delta_B = -0.1, zeta = -0.312, T = 40, sigma = 0.18 , origin =  0.014)
+#result3 = fit_model(B = 0.009, delta_B = -0.1, zeta = -0.312, T = 25, sigma = 0.18 , origin =  0.014)
 
-# report = result3.fit_report()
+
+# report = result1.fit_report()
 # print(report)
 
 # with open("Alto_fit_report_Cami_3.txt", "w") as f:
 #     f.write(report)
     
-
+    
 
 # results_list = [result1, result2, result3] #, result4, result5]
-# fit_report_filename = str(sightline) + '_Correct_res_3_init_conditions.csv'
+# fit_report_filename = str(sightline) + '_3_init_conditions_Cami_2004_'  + str(method) + '.csv'
 # write_results_to_csv(results_list,fit_report_filename  )
 
+excited_Djs = (6.1e-9, 6.1e-10, 6.1e-11, 6.1e-12)
+origin = 0
 
+# T = 8.9
+# B = 0.01913
+# delta_B = -0.85
+# zeta = -0.46
+# sigma = 0.1358
+# conditions = 'condition a'
 
+# T = 20.2
+# B = 0.00947
+# delta_B = -0.42
+# zeta = -0.43
+# sigma = 0.1571
+# conditions = 'condition b'
 
+# T = 61.2
+# B = 0.00336
+# delta_B = -0.17
+# zeta = -0.49
+# sigma = 0.1953
+# conditions = 'condition c'
 
-############################################################################################
-############################################################################################
+T = 101.3
+B = 0.00286
+delta_B = -0.21
+zeta = -0.54
+sigma = 0.1995
+conditions = 'condition d'
 
-#Altogether Fits Plotting
-
-############################################################################################
-############################################################################################
-
-'''EDIBLES'''
-B = 0.00260337
-delta_B = -0.07003020
-zeta = -0.30513462
-Ts = [79.1337551, 86.3583384, 88.8431642, 95.5643204, 86.0534748, 80.1042636, 89.7854061, 81.9806263, 89.0445017, 81.2361554, 89.3558085, 80.9561796]
-sigmas = [0.18055114, 0.19760700, 0.18423023, 0.18244127, 0.21244470, 0.15821120, 0.17367824, 0.19180354, 0.20377079, 0.21578868, 0.24029108, 0.18563300]
-origins = [0.02073839, -0.01342350, 0.00257408, -0.01106586, 0.02076492, -0.00374113, 0.06300594, 0.01604905, 0.11597056, 0.07103430, 0.03415804, 0.07097977]
-PR_sep = [1.27, 1.34, 1.39, 1.38, 1.3, 1.36, 1.46, 1.33, 1.37, 1.27, 1.27, 1.29]
-PR_sep_unc = [0.09, 0.05, 0.06, 0.06, 0.09, 0.05, 0.07, 0.03, 0.05, 0.03, 0.05, 0.07]
-
-
-# Alto_fits_results = np.array([PR_sep,PR_sep_unc, Ts, sigmas, origins, sightlines]).T
-# sorted_indices = np.lexsort((Alto_fits_results[:, 1], Alto_fits_results[:, 0]))
-
-# Alto_fits_results = Alto_fits_results[sorted_indices].astype(float)
-
-# #Alto_fits_results = Alto_fits_results[:2]
-
-# plt.figure(figsize = (15,35))
-# start = 0
-# spacing = 0.07
-# count = 12
-
-# offset = np.arange(start, start + spacing * count, spacing)
-
-# print(offset)
-# for i, offset in enumerate(offset):  
-#     T = Alto_fits_results[:,2][i]
-#     sigma = Alto_fits_results[:,3][i]
-#     origin = Alto_fits_results[:,4][i]
-#     sightline = int(Alto_fits_results[:,5][i])
-
-#     Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
-#     plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset, color = 'black') #, label = 'HD ' + str(sightline) , color = 'black')
-
-
-#     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-#     plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'crimson', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
-
-#     plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
-#     plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
-#     plt.tick_params(axis='both', which='major', labelsize=22)
-#     plt.title(f"B = {B:.4f} cm$^{{-1}}$  $\Delta$B = {delta_B:.2f}%  $\zeta$ = {zeta:.2f} cm$^{{-1}}$", fontsize=22)
+plt.figure(figsize = (15,8))
+for Dj in excited_Djs:
+    Djk = Dj
+    Dk = Dj 
     
-#     xy = (Obs_data['Wavelength'][120] , Obs_data['Flux'][120] - offset)
-#     plt.annotate('HD' + str(sightline), xy = xy , xytext = (3, Obs_data['Flux'][25] - offset + 0.0095), fontsize = 17 )
-#     plt.annotate('T = {:.2f}'.format(T) + ' K', xy = xy , xytext = (-4.7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
-#     plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = xy , xytext = (-3.5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
-    
-#     plt.axvline(x = -0.70, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.axvline(x = -0.54, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.axvline(x = 0.74, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.axvline(x = 0.87, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-    
-#     plt.xlim(-5,4.5)
-    
-# plt.savefig("Alto_fits_EDIBLES_6614.pdf", format = 'pdf', bbox_inches="tight")
-
-'''Cami 2004'''
-# B = 0.00252688
-# delta_B = -0.02816744
-# zeta = -0.33395654
-# Ts = [101.080285, 96.1085760, 100.637741, 102.787284, 102.310020, 87.7427099, 94.6884889]
-# sigmas = [0.19084834, 0.17532329, 0.18244590, 0.18657923, 0.19612793, 0.19852667, 0.21209539]
-# origins = [0.02652663, -0.02126270, -0.07778282, -0.05086524, 0.05448191, 0.06379547, 0.01083778]
-# PR_sep = [1.527, 1.518, 1.507, 1.481, 1.386, 1.356, 1.330]
-
-# Alto_fits_results = np.array([PR_sep, Ts, sigmas, origins, sightlines]).T
-# sorted_indices = ( Alto_fits_results[:, 0].argsort())
-# Alto_fits_results = Alto_fits_results[sorted_indices].astype(float)
-
-# #Alto_fits_results = Alto_fits_results[:2]
-
-# start = 0
-# spacing = 0.07
-# count = 7
-
-# offset = np.arange(start, start + spacing * count, spacing)
-
-# plt.figure(figsize = (15,35))
-# for i, offset in enumerate(offset):  
-#     T = Alto_fits_results[:,1][i]
-#     sigma = Alto_fits_results[:,2][i]
-#     origin = Alto_fits_results[:,3][i]
-#     sightline = int(Alto_fits_results[:,4][i])
-
-#     Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
-#     print(len(Obs_data['Wavelength']))
-#     plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset, color = 'black') #, label = 'HD ' + str(sightline) , color = 'black')
-
-
-#     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-#     plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'crimson', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
-
-#     plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
-#     plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
-#     plt.tick_params(axis='both', which='major', labelsize=22)
-#     plt.title(f"B = {B:.4f} cm$^{{-1}}$  $\Delta$B = {delta_B:.2f}%  $\zeta$ = {zeta:.2f} cm$^{{-1}}$", fontsize=22)
-    
-#     xy = (Obs_data['Wavelength'][300] , Obs_data['Flux'][300] - offset)
-   
-#     plt.annotate('HD' + str(sightline), xy = xy , xytext = (2.5, model_data[:,1][5] - offset + 0.006), fontsize = 17 )
-#     plt.annotate('T = {:.2f}'.format(T) + 'K', xy = xy , xytext = (-4.7, model_data[:,1][5] - offset + 0.005), fontsize = 17 )
-#     plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + 'cm$^{-1}$', xy = xy , xytext = (-3, model_data[:,1][5] - offset + 0.005), fontsize = 17)
-    
-#     plt.axvline(x = -0.70, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.axvline(x = -0.54, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.axvline(x = 0.74, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.axvline(x = 0.87, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.xlim(-5,4.5)
-    
-# plt.savefig("Alto_fits_Cami_2004_6614.pdf", format = 'pdf', bbox_inches="tight")
-
-############################################################################################
-############################################################################################
-
-#One sightline at a time
-
-
-############################################################################################
-############################################################################################
-
-# results = pd.read_excel("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fit results at correct resolution/min_redchi_data.xlsx")
-
-# for i in range(len(results)):
-    
-#     print(i)
-#     plt.figure(figsize = (12, 8))
-    
-#     B = results['B'][i]
-#     delta_B = results['delta_B'][i]
-#     zeta = results['zeta'][i]
-#     T = results['T1'][i]
-#     sigma = results['sigma1'][i]
-#     origin = results['origin1'][i]
-#     sightline = results['sightlines'][i]  
-#     redchi = results['redchi'][i]
-    
-#     print('B = ' , B)
-#     print('delta_B = ' , delta_B)
-#     print('zeta = ' , zeta)
-#     print('T = ', T)
-#     print('sigma = ', sigma)
-#     print('origin = ' , origin) 
-    
-#     Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
-#     plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'], color = 'black', label = 'HD' +str(sightline)) #, label = 'HD ' + str(sightline) , color = 'black')
-
-#     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-#     plt.plot(model_data[:,0], model_data[:,1], label = f"B = {B:.4f} cm$^{{-1}}$  $\Delta B =$ {delta_B:.2f}%  $\zeta^{{\prime}}  = ${zeta:.2f} cm$^{{-1}}$  \n T = {T:.2f} K $\sigma =$ {sigma:.3f} cm$^{{-1}}$ $\chi^2 = {redchi:.2f}$") # , color = '#1f77b4', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
-    
-#     #plt.title(f"B = {B:.4f} cm$^{{-1}}$  $\Delta B =$ {delta_B:.2f}%  $\zeta^{{\prime}}  = ${zeta:.2f} cm$^{{-1}}$  T = {T:.2f} K $\sigma =$ {sigma:.3f} cm$^{{-1}}$ $\chi^2 = {redchi:.2f}$", fontsize=22, pad = 10)
-    
-#     plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
-#     plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
-#     plt.legend(loc = 'lower right')
-#     plt.xlim(-4, 4)
-#     save_as_name  = str(sightline) + 'one_sl_fit_EDIBLES.pdf'
-#     plt.savefig(save_as_name, format = 'pdf', bbox_inches="tight")
-
-#     plt.show()
-    
+    linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, Dj, Djk, Dk, T, sigma, origin)
+    plt.plot(model_data[:,0], model_data[:,1], label = 'Dj = {}'.format(Dj))
+    plt.title(conditions)
+    plt.legend()
+    plt.xlim(-8,4)
 
 
 
+# excited_Djk = 7.1e-11
+# excited_Dk = 8.1e-11
 
 
-############################################################################################
-############################################################################################
+'''PLotting Fit results'''
 
-#Equi width calculation
+B =  0.004033427632980981
+delta_B =  -1.7628121184998236e-10
+zeta =  1.0
+T =  161.2740776996677
+sigma =  0.0701630138480724
+origin =  0.20494356310974915
+Dj =  3.8964193084658204e-11
+Djk =  2.732131957847169e-13
+Dk =  5.599430860897649e-10
 
-############################################################################################
-############################################################################################
+
+B =  0.008484599131850104
+delta_B =  -0.9999999975918339
+zeta =  -0.38760653882677776
+T =  29.31357280123493
+sigma =  0.2999888481708151
+origin =  0.29735436071658916
+Dj =  1.0194640278859249e-13
+Djk =  2.418859246810136e-08
+Dk =  1.864413178448463e-09
+
+B=        0.00424100 
+delta_B= -0.16478557 
+zeta=    0.99597565 
+Dj=      1.0000e-13 
+Djk=     1.0000e-13 
+Dk=      5.2981e-10 
+T=      121.638132 
+sigma=   0.30000000 
+origin= 0.26407052 
+# linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, Dj, Djk, Dk, T, sigma, origin)
+# plt.plot(model_data[:,0], model_data[:,1], label = 'Dj = {}'.format(Dj))
+# plt.legend(loc = 'upper right')
+# plt.xlim(-5,5)
+
+# Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
+# plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'], color = 'black' ) #, label = 'HD ' + str(sightline) , color = 'black')
+
 
 
 def equivalent_width(wavelength, flux, continuum_level):
@@ -780,59 +696,16 @@ def equivalent_width(wavelength, flux, continuum_level):
 
     # Integrate using the trapezoidal rule
     area = np.trapz(wavelength, line_flux)
-   
-    
+    plt.plot(wavelength, flux)
+    plt.show()
+    #area = np.trapz(line_flux, wavelength)
+
+    #area= area_under_curve(wavelength, line_flux)
+    #print(area)
     # Calculate the equivalent width
     EW = area / continuum_level
-   
+    #print(EW)
     return EW
-
-EWs = []
-for T, sigma, origin, sightline in zip(Ts, sigmas, origins, sightlines):
-        linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-        Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
-  
-        y_model = np.interp(Obs_data['Wavelength'] , model_data[:,0], model_data[:,1])
-  
-        residual_y = Obs_data['Flux'] - y_model
-        residual_data = np.array([Obs_data['Wavelength'], residual_y]).transpose()
-        #residual_data = residual_data [(residual_data[:,0] >= -3.5) & (residual_data[:,0] <= -0.5)]
-       
-        wavelength = residual_data[:,0] #Obs_data['Wavelength']
-        flux = residual_data[:,1] #residual_y
-        continuum_level = 1.0
-      
-        print('Residuals:')
-        EW = equivalent_width(wavelength, flux, continuum_level)
-        print('EW is  ' , EW)  
-        EWs.append(EW) 
-
-
-print(EWs)
-     
-
-############################################################################################
-############################################################################################
-
-#Correlation calculation
-
-############################################################################################
-############################################################################################
-
-
-
-
-def calculate_pearson_correlation(x, y):
-    if len(x) != len(y):
-        raise ValueError("Both lists should have the same length")
-
-    correlation = np.corrcoef(x, y)[0, 1]
-    return correlation
-
-
-# print("Correlation coefficient:", calculate_pearson_correlation(Ts, PR_sep))
-# print("Correlation coefficient:", calculate_pearson_correlation(sigmas, PR_sep))
-# print("Correlation coefficient:", calculate_pearson_correlation(sigmas, Ts))
 
 
     
@@ -1226,5 +1099,3 @@ def calculate_pearson_correlation(x, y):
 #     print(resolution_R)
 #     plt.show()
 
-
-#Default blue = ##1f77b4
