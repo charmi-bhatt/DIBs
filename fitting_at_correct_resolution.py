@@ -1,4 +1,3 @@
-
 import pandas as pd
 import numpy as np
 import pandas as pd
@@ -255,13 +254,19 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     print('>>>> Time taken for this profile  ' + str(endfull - startfull) + '  sec')
     print('=====')
     
-    print('B = ' , B)
+    print('B = ' , ground_B)
+    print('C =' , ground_C)
+    print('excited_B = '  , excited_B)
+    print( 'excited_C =', excited_C)
     print('delta_B = ' , delta_B)
     print('zeta = ' , zeta)
     print('T = ', T)
     print('sigma = ', sigma)
     print('origin = ' , origin) 
+    print('Jmax = ',  max(combinations['excited_J']))
+   
     
+
     return linelist, model_data
 
 
@@ -293,7 +298,7 @@ def make_grid(lambda_start, lambda_end, resolution=None, oversample=None):
     #print('f = ', f)
     factor = f ** np.arange(n_points)
     #print('factor = ' , factor)
-    wave = np.full(int(n_points), lambda_start, dtype=np.float)
+    wave = np.full(int(n_points), lambda_start, dtype=np.float64)
     #print('wave = ' , wave)
     grid = wave * factor
     #print('grid = ', grid)
@@ -318,7 +323,7 @@ def obs_curve_to_fit(sightline):
         Obs_data['Wavelength'] = (1 / Obs_data['Wavelength']) * 1e8
         Obs_data = Obs_data.iloc[::-1].reset_index(
             drop=True)
-        # shifting to 6614 and scaling flux between 0.9 and 1
+        # shifting to 0 and scaling flux between 0.9 and 1
         min_index = np.argmin(Obs_data['Flux'])
         Obs_data['Wavelength'] = Obs_data['Wavelength'] - Obs_data['Wavelength'][min_index] #+ 6614
         
@@ -512,9 +517,39 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
 
 
 
-Jmax = 300
-combinations  = allowed_perperndicular_transitions(Jmax)
 
+
+#checking effect of Jmax
+B = 0.0013337 # 0.0026 
+delta_B = -0.037003020 # -0.07 
+zeta = -0.30513462
+T = 160 #95 #
+sigma = 0.2
+origin = 0
+# Jmax = [1000, 800, 300]#, 400, 500, 600, 700]
+
+# plt.figure(figsize=(30,8))
+
+# colors = [ 'red', 'green', 'blue']
+# plt.figure(figsize=(30,8))
+# for idx, J in enumerate(Jmax): 
+    
+#     combinations = allowed_perperndicular_transitions(J)
+#     linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+
+#     P_branch = linelist[(linelist['delta_J'] == 1)]
+#     plt.stem(P_branch['wavenos'], P_branch['intensities'], label=str(J), linefmt=colors[idx]) #, markerfmt='o'+colors[idx])    
+#     plt.legend() 
+#     plt.title('R Branch')  
+#     #plt.plot(model_data[:,0], model_data[:,1], label = J)
+#     #plt.plot(linelist['wavenos'], linelist['intensities'])
+
+# plt.show()
+
+
+
+Jmax = 300
+combinations  = allowed_perperndicular_transitions(Jmax) 
 
 #Cami 2004
 # spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Research/Cami_2004_data/heliocentric/6614/")
@@ -529,8 +564,8 @@ sightlines = ['23180', '24398', '144470', '147165' , '147683', '149757', '166937
 #sightlines = ['185418']
 
 
-lambda_start = 6612.5453435174495 #-1.134 #
-lambda_end =  6615 #1.039609311008462 #
+lambda_start = 6611 #6612.5453435174495 #-1.134 #
+lambda_end = 6616 # 6615 #1.039609311008462 #
 
 
 common_grid_for_all = make_grid(lambda_start, lambda_end, resolution=220000, oversample=2)
@@ -539,7 +574,7 @@ common_grid_for_all = common_grid_for_all - 15119.4
 common_grid_for_all = common_grid_for_all[::-1]
 
 
-common_grid_for_all = common_grid_for_all[(common_grid_for_all > -1.14) & (common_grid_for_all < 1.07)]
+common_grid_for_all = common_grid_for_all[(common_grid_for_all > -1.14) & (common_grid_for_all < 1.6)]
 print(common_grid_for_all.shape)
 
 flux_list = np.array([])
@@ -556,24 +591,26 @@ for sightline in sightlines:
     stddev_array = np.concatenate((stddev_array, one_sl_stddev))
   
 plt.plot(wave_list, flux_list)
-# plt.show()
+#plt.show()
 
 # result1 = fit_model(B = 0.01, delta_B = -0.1, zeta = -0.312, T = 10, sigma = 0.18 , origin =  0.014)
-# result2 = fit_model(B = 0.005, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
+# result2 = fit_model(B = 0.002, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
 # result3 = fit_model(B = 0.0001, delta_B = -0.1, zeta = -0.312, T = 180, sigma = 0.18 , origin =  0.014)
 
-# report = result3.fit_report()
+# report = result2.fit_report()
 # print(report)
+linelist, model = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+
+workdir = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/"
+save_fit_result_as = 'fit_report_Jmax_1000_B_init{:.4f}.txt'.format(B)
+np.savetxt(save_fit_result_as, linelist)
 
 # with open("Alto_fit_report_Cami_3.txt", "w") as f:
 #     f.write(report)
-    
-
 
 # results_list = [result1, result2, result3] #, result4, result5]
 # fit_report_filename = str(sightline) + '_Correct_res_3_init_conditions.csv'
 # write_results_to_csv(results_list,fit_report_filename  )
-
 
 
 
@@ -597,7 +634,28 @@ PR_sep = [1.27, 1.34, 1.39, 1.38, 1.3, 1.36, 1.46, 1.33, 1.37, 1.27, 1.27, 1.29]
 PR_sep_unc = [0.09, 0.05, 0.06, 0.06, 0.09, 0.05, 0.07, 0.03, 0.05, 0.03, 0.05, 0.07]
 
 
+#Including P-wind and Jmax = 600 : 
+# B =   0.00133648 
+# delta_B =-0.03712074
+# zeta =  -0.30504896 
+# Ts = [149.107701, 164.132291, 171.459785, 180.845204, 164.716622, 161.620226, 171.711267, 156.955738, 160.809469, 154.989294, 165.244363, 155.22443]
+# sigmas = [0.17608069, 0.19488198, 0.18383431, 0.17904947, 0.21184813, 0.16204406, 0.17162014, 0.1900463, 0.19341891, 0.21389315, 0.23227593, 0.18328798]
+# origins = [0.01799722, -0.01379366, 0.00602909, -0.01255523, 0.02292328, 0.00511943, 0.06467863, 0.01711942, 0.10205201, 0.07132686, 0.02814641, 0.07115158]
+
+# #diff. init condition:
+
+# B = 0.00716641 
+# delta_B = -0.22060769 
+# zeta=   -0.28300579 
+# Ts = [26.0087408, 28.0541958, 28.8195137, 29.7400086, 27.988017, 28.4493686, 28.9159318, 27.1925374, 27.3247924, 26.8480177, 28.0843381, 26.9233065]
+# sigmas = [0.16404873, 0.17819887, 0.16614902, 0.16149411, 0.19438546, 0.1435633, 0.15385787, 0.17390746, 0.17899859, 0.19682442, 0.21241429, 0.16796392]
+# origins = [6.9908e-04, -0.03351346, -0.01441214, -0.03710527, 8.5599e-04, -0.01306664, 0.0465879, -8.7645e-05, 0.0879105, 0.05304292, 0.00728663, 0.05613493]
+
+
+
 # Alto_fits_results = np.array([PR_sep,PR_sep_unc, Ts, sigmas, origins, sightlines]).T
+
+# #sort from smallest to biggest PR_sep
 # sorted_indices = np.lexsort((Alto_fits_results[:, 1], Alto_fits_results[:, 0]))
 
 # Alto_fits_results = Alto_fits_results[sorted_indices].astype(float)
@@ -642,7 +700,10 @@ PR_sep_unc = [0.09, 0.05, 0.06, 0.06, 0.09, 0.05, 0.07, 0.03, 0.05, 0.03, 0.05, 
     
 #     plt.xlim(-5,4.5)
     
-# plt.savefig("Alto_fits_EDIBLES_6614.pdf", format = 'pdf', bbox_inches="tight")
+# #plt.show()
+# workdir = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/effect_of_Jmax/"
+# save_plot_as = workdir + "Alto_fits_EDIBLES_6614_Jmax_300.pdf"
+# plt.savefig(save_plot_as, format = 'pdf', bbox_inches="tight")
 
 '''Cami 2004'''
 # B = 0.00252688
@@ -787,28 +848,28 @@ def equivalent_width(wavelength, flux, continuum_level):
    
     return EW
 
-EWs = []
-for T, sigma, origin, sightline in zip(Ts, sigmas, origins, sightlines):
-        linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-        Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
+# EWs = []
+# for T, sigma, origin, sightline in zip(Ts, sigmas, origins, sightlines):
+#         linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+#         Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
   
-        y_model = np.interp(Obs_data['Wavelength'] , model_data[:,0], model_data[:,1])
+#         y_model = np.interp(Obs_data['Wavelength'] , model_data[:,0], model_data[:,1])
   
-        residual_y = Obs_data['Flux'] - y_model
-        residual_data = np.array([Obs_data['Wavelength'], residual_y]).transpose()
-        #residual_data = residual_data [(residual_data[:,0] >= -3.5) & (residual_data[:,0] <= -0.5)]
+#         residual_y = Obs_data['Flux'] - y_model
+#         residual_data = np.array([Obs_data['Wavelength'], residual_y]).transpose()
+#         #residual_data = residual_data [(residual_data[:,0] >= -3.5) & (residual_data[:,0] <= -0.5)]
        
-        wavelength = residual_data[:,0] #Obs_data['Wavelength']
-        flux = residual_data[:,1] #residual_y
-        continuum_level = 1.0
+#         wavelength = residual_data[:,0] #Obs_data['Wavelength']
+#         flux = residual_data[:,1] #residual_y
+#         continuum_level = 1.0
       
-        print('Residuals:')
-        EW = equivalent_width(wavelength, flux, continuum_level)
-        print('EW is  ' , EW)  
-        EWs.append(EW) 
+#         print('Residuals:')
+#         EW = equivalent_width(wavelength, flux, continuum_level)
+#         print('EW is  ' , EW)  
+#         EWs.append(EW) 
 
 
-print(EWs)
+# print(EWs)
      
 
 ############################################################################################
@@ -819,6 +880,8 @@ print(EWs)
 ############################################################################################
 ############################################################################################
 
+sigmas = [0.18055114, 0.19760700, 0.18423023, 0.18244127, 0.21244470, 0.15821120, 0.17367824, 0.19180354, 0.20377079, 0.21578868, 0.24029108, 0.18563300]
+bs=  [2.367146593, 1.789353453, 2.293734891, 1.925977983, 1.688799352, 1.634991188, 1.830094729, 2.515187171, 1.618003562, 2.418691161, 2.024811568, 2.338233138]
 
 
 
@@ -830,7 +893,7 @@ def calculate_pearson_correlation(x, y):
     return correlation
 
 
-# print("Correlation coefficient:", calculate_pearson_correlation(Ts, PR_sep))
+print("Correlation coefficient:", calculate_pearson_correlation(sigmas, bs))
 # print("Correlation coefficient:", calculate_pearson_correlation(sigmas, PR_sep))
 # print("Correlation coefficient:", calculate_pearson_correlation(sigmas, Ts))
 
@@ -1228,3 +1291,14 @@ def calculate_pearson_correlation(x, y):
 
 
 #Default blue = ##1f77b4
+
+
+# h = const.h.cgs.value
+# c = const.c.to('cm/s').value
+# k = const.k_B.cgs.value
+
+# B = 0.0005
+# T = 500
+# J_peak = np.sqrt(k*T/(2*h*c*B)) -1/2
+
+# print('J_peak = ' , J_peak)
