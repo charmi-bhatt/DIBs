@@ -520,12 +520,12 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
 
 
 #checking effect of Jmax
-B = 0.0013337 # 0.0026 
-delta_B = -0.037003020 # -0.07 
-zeta = -0.30513462
-T = 160 #95 #
-sigma = 0.2
-origin = 0
+# B = 0.0013337 # 0.0026 
+# delta_B = -0.037003020 # -0.07 
+# zeta = -0.30513462
+# T = 160 #95 #
+# sigma = 0.2
+# origin = 0
 # Jmax = [1000, 800, 300]#, 400, 500, 600, 700]
 
 # plt.figure(figsize=(30,8))
@@ -548,7 +548,7 @@ origin = 0
 
 
 
-Jmax = 300
+Jmax = 1000
 combinations  = allowed_perperndicular_transitions(Jmax) 
 
 #Cami 2004
@@ -593,17 +593,18 @@ for sightline in sightlines:
 plt.plot(wave_list, flux_list)
 #plt.show()
 
-# result1 = fit_model(B = 0.01, delta_B = -0.1, zeta = -0.312, T = 10, sigma = 0.18 , origin =  0.014)
-# result2 = fit_model(B = 0.002, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
-# result3 = fit_model(B = 0.0001, delta_B = -0.1, zeta = -0.312, T = 180, sigma = 0.18 , origin =  0.014)
+result1 = fit_model(B = 0.001, delta_B = -0.1, zeta = -0.312, T = 100, sigma = 0.18 , origin =  0.014)
+result2 = fit_model(B = 0.002, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
+result3 = fit_model(B = 0.0001, delta_B = -0.1, zeta = -0.312, T = 180, sigma = 0.18 , origin =  0.014)
+result4  = fit_model(B = 0.005, delta_B = -0.1, zeta = -0.312, T = 60, sigma = 0.18 , origin =  0.014)
+result5  = fit_model(B = 0.009, delta_B = -0.1, zeta = -0.312, T = 40, sigma = 0.18 , origin =  0.014)
 
-# report = result2.fit_report()
-# print(report)
-linelist, model = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+report = result1.fit_report()
+print(report)
 
 workdir = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/"
-save_fit_result_as = 'fit_report_Jmax_1000_B_init{:.4f}.txt'.format(B)
-np.savetxt(save_fit_result_as, linelist)
+save_fit_result_as = workdir + 'fit_report_Jmax_1000_T_init{:.2f}.txt'.format(T)
+np.savetxt(save_fit_result_as, report)
 
 # with open("Alto_fit_report_Cami_3.txt", "w") as f:
 #     f.write(report)
@@ -632,6 +633,12 @@ sigmas = [0.18055114, 0.19760700, 0.18423023, 0.18244127, 0.21244470, 0.15821120
 origins = [0.02073839, -0.01342350, 0.00257408, -0.01106586, 0.02076492, -0.00374113, 0.06300594, 0.01604905, 0.11597056, 0.07103430, 0.03415804, 0.07097977]
 PR_sep = [1.27, 1.34, 1.39, 1.38, 1.3, 1.36, 1.46, 1.33, 1.37, 1.27, 1.27, 1.29]
 PR_sep_unc = [0.09, 0.05, 0.06, 0.06, 0.09, 0.05, 0.07, 0.03, 0.05, 0.03, 0.05, 0.07]
+
+#At jmax = 1000
+# Ts = [57.6011016, 62.1023003, 63.8959281, 65.9367659, 61.9449444, 62.9214533, 64.0519755, 60.1955110, 60.5262702, 59.4114021, 62.0635621, 59.5961519]
+# sigmas = [0.16338840, 0.17788725, 0.16570998, 0.16102132, 0.19401663, 0.14327215, 0.15361382, 0.17375430, 0.17862829, 0.19656620, 0.21245939, 0.16766571]
+
+
 
 
 #Including P-wind and Jmax = 600 : 

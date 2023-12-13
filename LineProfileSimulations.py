@@ -484,14 +484,14 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
 
 
 '''Inputs'''    
-Jmax = 400
+#Jmax = 400
 
 #Cami 2004
 # spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Research/Cami_2004_data/heliocentric/6614/")
 # #sightlines = ['144217', '144470',  '145502', '147165', '149757', '179406', '184915'] 
 # sightlines = ['144217']
 # filename = 'hd{}_dib6614.txt'
-method = 'ampgo'
+#method = 'ampgo'
 
 #EDIBLES data
 spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
@@ -513,13 +513,34 @@ for sightline in sightlines:
     stddev_array = np.concatenate((stddev_array, one_sl_stddev))
   
 
-result1 = fit_model(B = 0.01, delta_B = -0.1, zeta = -0.312, T = 10, sigma = 0.18 , origin =  0.014)
-result2 = fit_model(B = 0.005, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
-result3 = fit_model(B = 0.0001, delta_B = -0.1, zeta = -0.312, T = 180, sigma = 0.18 , origin =  0.014)
+# result1 = fit_model(B = 0.01, delta_B = -0.1, zeta = -0.312, T = 10, sigma = 0.18 , origin =  0.014)
+# result2 = fit_model(B = 0.005, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
+# result3 = fit_model(B = 0.0001, delta_B = -0.1, zeta = -0.312, T = 180, sigma = 0.18 , origin =  0.014)
 
 # results_list = [result1, result2, result3] #, result4, result5]
 # fit_report_filename = str(sightline) + '_3_init_conditions_Cami_2004_'  + str(method) + '.csv'
 # write_results_to_csv(results_list,fit_report_filename  )
+
+
+B =  0.0013337 # 0.0026 
+delta_B = -0.037003020 # -0.07 
+zeta = -0.30513462
+T = 160 #95 #
+sigma = 0.2
+origin = 0
+Jmax = 800 #, 400, 500, 600, 700]
+
+combinations = allowed_perperndicular_transitions(Jmax)
+linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+plt.plot(model_data[:,0], model_data[:,1], label = Jmax)
+plt.show()
+# for J in Jmax: 
+#     combinations = allowed_perperndicular_transitions(J)
+#     linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+#     plt.plot(model_data[:,0], model_data[:,1], label = J)
+#     #plt.plot(linelist['wavenos'], linelist['intensities'])
+#     plt.legend()
+# plt.show()
 
 def fwhm(x, y):
     """
@@ -569,9 +590,9 @@ def fwhm(x, y):
 #     plt.show()
 
 
-for sightline in sightlines: 
-    Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
-    print(std_dev)
+# for sightline in sightlines: 
+#     Obs_data, x_equal_spacing, y_obs_data, std_dev = obs_curve_to_fit(sightline)
+#     print(std_dev)
 #plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'], color = 'black' ) #, label = 'HD ' + str(sightline) , color = 'black')
 
 
