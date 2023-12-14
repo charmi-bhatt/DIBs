@@ -20,8 +20,9 @@ V_rad_data = pd.read_csv(vrad_filename)
 
 #object = 'HD 23180'
 
-sightlines = ['HD 23180', 'HD 24398', 'HD 144470', 'HD 147165', 'HD 147683', 'HD 149757', 'HD 166937', 'HD 170740', 'HD 184915', 'HD 185418', 'HD 185859', 'HD 203532']
+#sightlines = ['HD 23180', 'HD 24398', 'HD 144470', 'HD 147165', 'HD 147683', 'HD 149757', 'HD 166937', 'HD 170740', 'HD 184915', 'HD 185418', 'HD 185859', 'HD 203532']
 
+sightlines = ['HD 149757']
 result_row = []
 
 for i, sightline in enumerate(sightlines):
@@ -68,6 +69,9 @@ for i, sightline in enumerate(sightlines):
         # normflux = plotflux / linefit
 
         wavegrid = np.array(plotwave)
+        
+        plt.plot(plotwave, normflux, 'b-', label='Data')
+
         
         #Model = voigt_absorption_line()
 
