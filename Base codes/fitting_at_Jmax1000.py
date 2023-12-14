@@ -621,37 +621,37 @@ for sightline in sightlines:
 #######################################################
 '''Test: After including linewidth, can models reproduce peak separations and width of Q branch?'''
 
-B = 0.00320092
-delta_B = -0.10171446
-zeta = -0.28852371
-Ts = (59.41, 64.05)
-sigmas = (0.197, 0.154)
-origins = (0.06, 0.053)
-vertical_offset = 0.05
+# B = 0.00320092
+# delta_B = -0.10171446
+# zeta = -0.28852371
+# Ts = (59.41, 64.05)
+# sigmas = (0.197, 0.154)
+# origins = (0.06, 0.053)
+# vertical_offset = 0.05
 
-plt.figure(figsize=(12,8))
-for T, sigma, origin in zip(Ts, sigmas, origins):
-    linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-    plt.plot(model_data[:,0], model_data[:,1], label = 'Models: T = ' + str(T) + ' K, $\sigma = $' + str(sigma) + 'cm$^{{-1}}$')  
+# plt.figure(figsize=(12,8))
+# for T, sigma, origin in zip(Ts, sigmas, origins):
+#     linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+#     plt.plot(model_data[:,0], model_data[:,1], label = 'Models: T = ' + str(T) + ' K, $\sigma = $' + str(sigma) + 'cm$^{{-1}}$')  
     
-    plt.axvline(x = -0.70, color = 'black', linestyle = 'dotted')
-    plt.axvline(x = -0.58, color = 'black', linestyle = 'dotted')
-    plt.axvline(x = 0.64, color = 'black', linestyle = 'dotted')
-    plt.axvline(x = 0.78, color = 'black', linestyle = 'dotted')
-    plt.title(f"B = {B} $cm^{{-1}}$  $\Delta B = ${delta_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$" ) #"$\sigma = ${sigma} cm$^{{-1}}$")
-    plt.legend()
+#     plt.axvline(x = -0.70, color = 'black', linestyle = 'dotted')
+#     plt.axvline(x = -0.58, color = 'black', linestyle = 'dotted')
+#     plt.axvline(x = 0.64, color = 'black', linestyle = 'dotted')
+#     plt.axvline(x = 0.78, color = 'black', linestyle = 'dotted')
+#     plt.title(f"B = {B} $cm^{{-1}}$  $\Delta B = ${delta_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$" ) #"$\sigma = ${sigma} cm$^{{-1}}$")
+#     plt.legend()
     
-    plt.xlim(-3, 3)
+#     plt.xlim(-3, 3)
     
-sightlineos = ['185418', '166937']
+# sightlineos = ['185418', '166937']
 
-for sightline in sightlineos:
+# for sightline in sightlineos:
     
-    Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
+#     Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
     
-    plt.plot(Obs_data['Wavelength'], Obs_data['Flux'] - vertical_offset, label = 'HD ' + str(sightline))
-    plt.xlim(-3,3)
-    plt.legend()
+#     plt.plot(Obs_data['Wavelength'], Obs_data['Flux'] - vertical_offset, label = 'HD ' + str(sightline))
+#     plt.xlim(-3,3)
+#     plt.legend()
     
     
 
@@ -709,22 +709,22 @@ PR_sep_unc = [0.09, 0.05, 0.06, 0.06, 0.09, 0.05, 0.07, 0.03, 0.05, 0.03, 0.05, 
 # origins = [0.01917529, -0.01267290, 0.00716138, -0.01135742, 0.02414879, 0.00621067, 0.06580864, 0.01825883, 0.10320087, 0.07251069, 0.02930526, 0.07228776]
 
 #result 2:
-B = 0.00366061
-delta_B = -0.11690375
-zeta = -0.28794094
-Ts = [50.4584759, 54.4089696, 55.9300404, 57.7623896, 54.2335384, 55.1167376, 56.1023185, 52.7293497, 53.0172320, 51.9960519, 54.3866336, 52.2158002]
-sigmas = [0.16354866, 0.17829608, 0.16608433, 0.16134650, 0.19376837, 0.14317326, 0.15373872, 0.17405465, 0.17898838, 0.19522098, 0.21233036, 0.16784647]
-origins = [0.00745506, -0.02674507, -0.00796882, -0.03106210, 0.00849811, -0.00656314, 0.05279654, 0.00649340, 0.09440735, 0.06057686, 0.01477381, 0.06255684]
+# B = 0.00366061
+# delta_B = -0.11690375
+# zeta = -0.28794094
+# Ts = [50.4584759, 54.4089696, 55.9300404, 57.7623896, 54.2335384, 55.1167376, 56.1023185, 52.7293497, 53.0172320, 51.9960519, 54.3866336, 52.2158002]
+# sigmas = [0.16354866, 0.17829608, 0.16608433, 0.16134650, 0.19376837, 0.14317326, 0.15373872, 0.17405465, 0.17898838, 0.19522098, 0.21233036, 0.16784647]
+# origins = [0.00745506, -0.02674507, -0.00796882, -0.03106210, 0.00849811, -0.00656314, 0.05279654, 0.00649340, 0.09440735, 0.06057686, 0.01477381, 0.06255684]
 
 #result 3 (fitting going on forever)
 
 #result 4:
-# B = 0.00320092
-# delta_B = -0.10171446
-# zeta = -0.28852371
-# Ts = [57.6011016, 62.1023003, 63.8959281, 65.9367659, 61.9449444, 62.9214533, 64.0519755, 60.1955110, 60.5262702, 59.4114021, 62.0635621, 59.5961519]
-# sigmas = [0.16338840, 0.17788725, 0.16570998, 0.16102132, 0.19401663, 0.14327215, 0.15361382, 0.17375430, 0.17862829, 0.19656620, 0.21245939, 0.16766571]
-# origins = [0.00796759, -0.02613640, -0.00783215, -0.03041224, 0.00887835, -0.00632561, 0.05309031, 0.00695721, 0.09483662, 0.06089886, 0.01561717, 0.06308816]
+B = 0.00320092
+delta_B = -0.10171446
+zeta = 0 #-0.28852371
+Ts = [57.6011016, 62.1023003, 63.8959281, 65.9367659, 61.9449444, 62.9214533, 64.0519755, 60.1955110, 60.5262702, 59.4114021, 62.0635621, 59.5961519]
+sigmas = [0.16338840, 0.17788725, 0.16570998, 0.16102132, 0.19401663, 0.14327215, 0.15361382, 0.17375430, 0.17862829, 0.19656620, 0.21245939, 0.16766571]
+origins = [0.00796759, -0.02613640, -0.00783215, -0.03041224, 0.00887835, -0.00632561, 0.05309031, 0.00695721, 0.09483662, 0.06089886, 0.01561717, 0.06308816]
 
 #result 5:
 # B = 0.00356084
@@ -735,52 +735,52 @@ origins = [0.00745506, -0.02674507, -0.00796882, -0.03106210, 0.00849811, -0.006
 # origins = [0.00745423, -0.02642639, -0.00793709, -0.03039302, 0.00810005, -0.00653293, 0.05311018, 0.00666238, 0.09461986, 0.06054467, 0.01470807, 0.06290139]
 
 
-# Alto_fits_results = np.array([PR_sep,PR_sep_unc, Ts, sigmas, origins, sightlines]).T
+Alto_fits_results = np.array([PR_sep,PR_sep_unc, Ts, sigmas, origins, sightlines]).T
 
-# #sort from smallest to biggest PR_sep
-# sorted_indices = np.lexsort((Alto_fits_results[:, 1], Alto_fits_results[:, 0]))
+#sort from smallest to biggest PR_sep
+sorted_indices = np.lexsort((Alto_fits_results[:, 1], Alto_fits_results[:, 0]))
 
-# Alto_fits_results = Alto_fits_results[sorted_indices].astype(float)
+Alto_fits_results = Alto_fits_results[sorted_indices].astype(float)
 
-# #Alto_fits_results = Alto_fits_results[:2]
+#Alto_fits_results = Alto_fits_results[:2]
 
-# plt.figure(figsize = (15,35))
-# start = 0
-# spacing = 0.07
-# count = 12
+plt.figure(figsize = (15,35))
+start = 0
+spacing = 0.07
+count = 12
 
-# offset = np.arange(start, start + spacing * count, spacing)
+offset = np.arange(start, start + spacing * count, spacing)
 
-# print(offset)
-# for i, offset in enumerate(offset):  
-#     T = Alto_fits_results[:,2][i]
-#     sigma = Alto_fits_results[:,3][i]
-#     origin = Alto_fits_results[:,4][i]
-#     sightline = int(Alto_fits_results[:,5][i])
+print(offset)
+for i, offset in enumerate(offset):  
+    T = Alto_fits_results[:,2][i]
+    sigma = Alto_fits_results[:,3][i]
+    origin = Alto_fits_results[:,4][i]
+    sightline = int(Alto_fits_results[:,5][i])
 
-#     Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
-#     plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset, color = 'black') #, label = 'HD ' + str(sightline) , color = 'black')
+    Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
+    # plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset, color = 'black') #, label = 'HD ' + str(sightline) , color = 'black')
 
 
-#     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-#     plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'crimson', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
+    linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+    plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'crimson', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
 
-#     plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
-#     plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
-#     plt.tick_params(axis='both', which='major', labelsize=22)
-#     plt.title(f"B = {B:.4f} cm$^{{-1}}$  $\Delta$B = {delta_B:.2f}%  $\zeta$ = {zeta:.2f} cm$^{{-1}}$", fontsize=22)
+    plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
+    plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
+    plt.tick_params(axis='both', which='major', labelsize=22)
+    plt.title(f"B = {B:.4f} cm$^{{-1}}$  $\Delta$B = {delta_B:.2f}%  $\zeta$ = {zeta:.2f} cm$^{{-1}}$", fontsize=22)
     
-#     xy = (Obs_data['Wavelength'][120] , Obs_data['Flux'][120] - offset)
-#     plt.annotate('HD' + str(sightline), xy = xy , xytext = (3, Obs_data['Flux'][25] - offset + 0.0095), fontsize = 17 )
-#     plt.annotate('T = {:.2f}'.format(T) + ' K', xy = xy , xytext = (-4.7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
-#     plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = xy , xytext = (-3.5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
+    xy = (Obs_data['Wavelength'][120] , Obs_data['Flux'][120] - offset)
+    plt.annotate('HD' + str(sightline), xy = xy , xytext = (3, Obs_data['Flux'][25] - offset + 0.0095), fontsize = 17 )
+    plt.annotate('T = {:.2f}'.format(T) + ' K', xy = xy , xytext = (-4.7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+    plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = xy , xytext = (-3.5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
     
-#     plt.axvline(x = -0.70, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.axvline(x = -0.54, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.axvline(x = 0.74, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.axvline(x = 0.87, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+    plt.axvline(x = -0.70, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+    plt.axvline(x = -0.54, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+    plt.axvline(x = 0.74, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+    plt.axvline(x = 0.87, color = 'gray', linestyle = 'dotted', alpha = 0.5)
     
-#     plt.xlim(-5,4.5)
+    plt.xlim(-5,4.5)
     
 #plt.show()
 # workdir  = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/effect_of_Jmax/Alto_fits_at_Jmax_1000/"
