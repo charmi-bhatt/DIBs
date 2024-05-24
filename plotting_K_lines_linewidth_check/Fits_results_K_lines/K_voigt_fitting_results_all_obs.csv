@@ -1,0 +1,286 @@
+Sightline,Red Chi-Squared,lambda0,f,gamma,b,N,v_rad,v_resolution,n_step,fit_report
+HD 23180,0.004440713,7698.9,0.3393,38000000,1.184453525,2.89101E+13,2.78001736,3.75,25,"[[Model]]
+    Model(voigt_absorption_line)
+[[Fit Statistics]]
+    # fitting method   = leastsq
+    # function evals   = 110
+    # data points      = 14
+    # variables        = 3
+    chi-square         = 0.04884785
+    reduced chi-square = 0.00444071
+    Akaike info crit   = -73.2134322
+    Bayesian info crit = -71.2962603
+    R-squared          = 0.96784391
+[[Variables]]
+    lambda0:       7698.9 (fixed)
+    f:             0.3393 (fixed)
+    gamma:         3.8e+07 (fixed)
+    b:             1.18445352 +/- 2.25431643 (190.33%) (init = 2.36)
+    N:             2.8910e+13 +/- 4.3866e+14 (1517.31%) (init = 7e+11)
+    v_rad:         2.78001736 +/- 0.10554948 (3.80%) (init = 0.06)
+    v_resolution:  3.75 (fixed)
+    n_step:        25 (fixed)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(b, N)     = -0.9998
+    C(N, v_rad) = +0.1048
+    C(b, v_rad) = -0.1044"
+HD 24398,0.014455264,7698.9,0.3393,38000000,0.945302764,1.6656E+13,2.869595927,3.75,25,"[[Model]]
+    Model(voigt_absorption_line)
+[[Fit Statistics]]
+    # fitting method   = leastsq
+    # function evals   = 86
+    # data points      = 14
+    # variables        = 3
+    chi-square         = 0.15900790
+    reduced chi-square = 0.01445526
+    Akaike info crit   = -56.6900219
+    Bayesian info crit = -54.7728500
+    R-squared          = 0.90987833
+[[Variables]]
+    lambda0:       7698.9 (fixed)
+    f:             0.3393 (fixed)
+    gamma:         3.8e+07 (fixed)
+    b:             0.94530276 +/- 3.56013185 (376.61%) (init = 2.36)
+    N:             1.6656e+13 +/- 4.6127e+14 (2769.40%) (init = 7e+11)
+    v_rad:         2.86959593 +/- 0.20301604 (7.07%) (init = 0.06)
+    v_resolution:  3.75 (fixed)
+    n_step:        25 (fixed)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(b, N) = -0.9997"
+HD 144470,0.009744152,7698.9,0.3393,38000000,1.143515408,2.7887E+13,2.933954722,3.75,25,"[[Model]]
+    Model(voigt_absorption_line)
+[[Fit Statistics]]
+    # fitting method   = leastsq
+    # function evals   = 128
+    # data points      = 15
+    # variables        = 3
+    chi-square         = 0.11692983
+    reduced chi-square = 0.00974415
+    Akaike info crit   = -66.8134723
+    Bayesian info crit = -64.6893217
+    R-squared          = 0.93309649
+[[Variables]]
+    lambda0:       7698.9 (fixed)
+    f:             0.3393 (fixed)
+    gamma:         3.8e+07 (fixed)
+    b:             1.14351541 +/- 2.57556703 (225.23%) (init = 2.36)
+    N:             2.7887e+13 +/- 4.9731e+14 (1783.31%) (init = 7e+11)
+    v_rad:         2.93395472 +/- 0.15571824 (5.31%) (init = 0.06)
+    v_resolution:  3.75 (fixed)
+    n_step:        25 (fixed)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(b, N) = -0.9996"
+HD 147165,0.011905544,7698.9,0.3393,38000000,0.903892423,1.45972E+13,2.913941165,3.75,25,"[[Model]]
+    Model(voigt_absorption_line)
+[[Fit Statistics]]
+    # fitting method   = leastsq
+    # function evals   = 83
+    # data points      = 15
+    # variables        = 3
+    chi-square         = 0.14286653
+    reduced chi-square = 0.01190554
+    Akaike info crit   = -63.8084201
+    Bayesian info crit = -61.6842694
+    R-squared          = 0.91724930
+[[Variables]]
+    lambda0:       7698.9 (fixed)
+    f:             0.3393 (fixed)
+    gamma:         3.8e+07 (fixed)
+    b:             0.90389242 +/- 3.05169068 (337.62%) (init = 2.36)
+    N:             1.4597e+13 +/- 3.5519e+14 (2433.28%) (init = 7e+11)
+    v_rad:         2.91394117 +/- 0.18645991 (6.40%) (init = 0.06)
+    v_resolution:  3.75 (fixed)
+    n_step:        25 (fixed)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(b, N) = -0.9997"
+HD 147683,0.00939211,7698.9,0.3393,38000000,1.984819489,2.57207E+12,3.113155535,3.75,25,"[[Model]]
+    Model(voigt_absorption_line)
+[[Fit Statistics]]
+    # fitting method   = leastsq
+    # function evals   = 51
+    # data points      = 14
+    # variables        = 3
+    chi-square         = 0.10331320
+    reduced chi-square = 0.00939211
+    Akaike info crit   = -62.7266637
+    Bayesian info crit = -60.8094917
+    R-squared          = 0.91396513
+[[Variables]]
+    lambda0:       7698.9 (fixed)
+    f:             0.3393 (fixed)
+    gamma:         3.8e+07 (fixed)
+    b:             1.98481949 +/- 0.47887015 (24.13%) (init = 2.36)
+    N:             2.5721e+12 +/- 1.4919e+12 (58.00%) (init = 7e+11)
+    v_rad:         3.11315554 +/- 0.16737501 (5.38%) (init = 0.06)
+    v_resolution:  3.75 (fixed)
+    n_step:        25 (fixed)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(b, N)     = -0.9473
+    C(b, v_rad) = +0.1157"
+HD 149757,0.011826186,7698.9,0.3393,38000000,5.833238693,3.18384E+12,1.534935765,3.75,25,"[[Model]]
+    Model(voigt_absorption_line)
+[[Fit Statistics]]
+    # fitting method   = leastsq
+    # function evals   = 33
+    # data points      = 14
+    # variables        = 3
+    chi-square         = 0.13008805
+    reduced chi-square = 0.01182619
+    Akaike info crit   = -59.5004150
+    Bayesian info crit = -57.5832430
+    R-squared          = 0.50042604
+[[Variables]]
+    lambda0:       7698.9 (fixed)
+    f:             0.3393 (fixed)
+    gamma:         3.8e+07 (fixed)
+    b:             5.83323869 +/- 1.12777264 (19.33%) (init = 2.36)
+    N:             3.1838e+12 +/- 3.3550e+11 (10.54%) (init = 7e+11)
+    v_rad:         1.53493577 +/- 0.52820405 (34.41%) (init = 0.06)
+    v_resolution:  3.75 (fixed)
+    n_step:        25 (fixed)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(b, v_rad) = -0.4190
+    C(b, N)     = +0.3853
+    C(N, v_rad) = -0.3539"
+HD 166937,0.016138896,7698.9,0.3393,38000000,0.920277349,1.73443E+13,2.666359075,3.75,25,"[[Model]]
+    Model(voigt_absorption_line)
+[[Fit Statistics]]
+    # fitting method   = leastsq
+    # function evals   = 101
+    # data points      = 14
+    # variables        = 3
+    chi-square         = 0.17752785
+    reduced chi-square = 0.01613890
+    Akaike info crit   = -55.1475913
+    Bayesian info crit = -53.2304193
+    R-squared          = 0.88846548
+[[Variables]]
+    lambda0:       7698.9 (fixed)
+    f:             0.3393 (fixed)
+    gamma:         3.8e+07 (fixed)
+    b:             0.92027735 +/- 3.21914314 (349.80%) (init = 2.36)
+    N:             1.7344e+13 +/- 4.4877e+14 (2587.42%) (init = 7e+11)
+    v_rad:         2.66635908 +/- 0.21404254 (8.03%) (init = 0.06)
+    v_resolution:  3.75 (fixed)
+    n_step:        25 (fixed)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(b, N) = -0.9996"
+HD 170740,0.002221174,7698.9,0.3393,38000000,1.164834363,4.82559E+13,3.131161573,3.75,25,"[[Model]]
+    Model(voigt_absorption_line)
+[[Fit Statistics]]
+    # fitting method   = leastsq
+    # function evals   = 113
+    # data points      = 15
+    # variables        = 3
+    chi-square         = 0.02665408
+    reduced chi-square = 0.00222117
+    Akaike info crit   = -88.9929474
+    Bayesian info crit = -86.8687968
+    R-squared          = 0.98383641
+[[Variables]]
+    lambda0:       7698.9 (fixed)
+    f:             0.3393 (fixed)
+    gamma:         3.8e+07 (fixed)
+    b:             1.16483436 +/- 0.58446147 (50.18%) (init = 2.36)
+    N:             4.8256e+13 +/- 2.0191e+14 (418.41%) (init = 7e+11)
+    v_rad:         3.13116157 +/- 0.07458010 (2.38%) (init = 0.06)
+    v_resolution:  3.75 (fixed)
+    n_step:        25 (fixed)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(b, N)     = -0.9983
+    C(N, v_rad) = +0.1050
+    C(b, v_rad) = -0.1036"
+HD 184915,0.010809713,7698.9,0.3393,38000000,0.922142541,1.78125E+13,2.631103556,3.75,25,"[[Model]]
+    Model(voigt_absorption_line)
+[[Fit Statistics]]
+    # fitting method   = leastsq
+    # function evals   = 99
+    # data points      = 15
+    # variables        = 3
+    chi-square         = 0.12971655
+    reduced chi-square = 0.01080971
+    Akaike info crit   = -65.2568064
+    Bayesian info crit = -63.1326558
+    R-squared          = 0.92277220
+[[Variables]]
+    lambda0:       7698.9 (fixed)
+    f:             0.3393 (fixed)
+    gamma:         3.8e+07 (fixed)
+    b:             0.92214254 +/- 2.26248763 (245.35%) (init = 2.36)
+    N:             1.7813e+13 +/- 3.2454e+14 (1822.00%) (init = 7e+11)
+    v_rad:         2.63110356 +/- 0.17479441 (6.64%) (init = 0.06)
+    v_resolution:  3.75 (fixed)
+    n_step:        25 (fixed)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(b, N) = -0.9995"
+HD 185418,0.013922064,7698.9,0.3393,38000000,2.048371209,2.19936E+12,2.953749123,3.75,25,"[[Model]]
+    Model(voigt_absorption_line)
+[[Fit Statistics]]
+    # fitting method   = leastsq
+    # function evals   = 50
+    # data points      = 14
+    # variables        = 3
+    chi-square         = 0.15314271
+    reduced chi-square = 0.01392206
+    Akaike info crit   = -57.2161934
+    Bayesian info crit = -55.2990214
+    R-squared          = 0.87516170
+[[Variables]]
+    lambda0:       7698.9 (fixed)
+    f:             0.3393 (fixed)
+    gamma:         3.8e+07 (fixed)
+    b:             2.04837121 +/- 0.50131147 (24.47%) (init = 2.36)
+    N:             2.1994e+12 +/- 1.0858e+12 (49.37%) (init = 7e+11)
+    v_rad:         2.95374912 +/- 0.20505273 (6.94%) (init = 0.06)
+    v_resolution:  3.75 (fixed)
+    n_step:        25 (fixed)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(b, N) = -0.9129"
+HD 185859,0.003891305,7698.9,0.3393,38000000,0.993950542,9.31356E+13,2.973212616,3.75,25,"[[Model]]
+    Model(voigt_absorption_line)
+[[Fit Statistics]]
+    # fitting method   = leastsq
+    # function evals   = 112
+    # data points      = 15
+    # variables        = 3
+    chi-square         = 0.04669566
+    reduced chi-square = 0.00389131
+    Akaike info crit   = -80.5823127
+    Bayesian info crit = -78.4581620
+    R-squared          = 0.96950341
+[[Variables]]
+    lambda0:       7698.9 (fixed)
+    f:             0.3393 (fixed)
+    gamma:         3.8e+07 (fixed)
+    b:             0.99395054 +/- 0.25927609 (26.09%) (init = 2.36)
+    N:             9.3136e+13 +/- 1.8161e+14 (194.99%) (init = 7e+11)
+    v_rad:         2.97321262 +/- 0.09963953 (3.35%) (init = 0.06)
+    v_resolution:  3.75 (fixed)
+    n_step:        25 (fixed)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(b, N) = -0.9869"
+HD 203532,0.006020463,7698.9,0.3393,38000000,1.163623224,2.81477E+13,2.940009466,3.75,25,"[[Model]]
+    Model(voigt_absorption_line)
+[[Fit Statistics]]
+    # fitting method   = leastsq
+    # function evals   = 132
+    # data points      = 14
+    # variables        = 3
+    chi-square         = 0.06622509
+    reduced chi-square = 0.00602046
+    Akaike info crit   = -68.9525447
+    Bayesian info crit = -67.0353727
+    R-squared          = 0.95827411
+[[Variables]]
+    lambda0:       7698.9 (fixed)
+    f:             0.3393 (fixed)
+    gamma:         3.8e+07 (fixed)
+    b:             1.16362322 +/- 2.27503349 (195.51%) (init = 2.36)
+    N:             2.8148e+13 +/- 4.3706e+14 (1552.75%) (init = 7e+11)
+    v_rad:         2.94000947 +/- 0.12508133 (4.25%) (init = 0.06)
+    v_resolution:  3.75 (fixed)
+    n_step:        25 (fixed)
+[[Correlations]] (unreported correlations are < 0.100)
+    C(b, N)     = -0.9997
+    C(N, v_rad) = +0.1194
+    C(b, v_rad) = -0.1186"

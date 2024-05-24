@@ -104,7 +104,7 @@ startfull = timeit.default_timer()
 @count_calls
 def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
 
-    start1 = timeit.default_timer()
+    #start1 = timeit.default_timer()
 
     '''Takes in 6 parameters (molecular and environmental) 
     and calculates spectra for it. It returns linelist and model data (i.e profile after convolution)
@@ -246,7 +246,7 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     # model_data = model_data[::-1]
 
     
-    end4 = timeit.default_timer()
+    #end4 = timeit.default_timer()
     # print('>>>> Time taken for convolution  ' + str(end4 - start4) + '  sec')
     # print('==========')
 
@@ -328,6 +328,7 @@ def obs_curve_to_fit(sightline):
         Obs_data['Wavelength'] = Obs_data['Wavelength'] - Obs_data['Wavelength'][min_index] #+ 6614
         
         Obs_data['Flux'] = (Obs_data['Flux'] - min(Obs_data['Flux'])) / (1 - min(Obs_data['Flux'])) * 0.1 + 0.9
+        
         
         #plt.plot(Obs_data['Wavelength'], Obs_data['Flux'])
         
@@ -490,16 +491,7 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
     result = mod.fit(flux_list, params, xx=wave_list, weights = 1/stddev_array , method = method) #, fit_kws={'ftol': 1e-2, 'xtol': 1e-2} )
     
     
-    # def plot_best_fit(result, x_equal_spacing, y_obs_data):
-    #     plt.figure()
-    #     plt.scatter(x_equal_spacing, y_obs_data, label='Observations')
-    #     plt.plot(x_equal_spacing, result.best_fit, 'r-', label='Best Fit')
-    #     plt.xlabel('x')
-    #     plt.ylabel('y')
-    #     plt.legend()
-    #     plt.show()
-            
-    #plot_best_fit(result, x_equal_spacing, y_obs_data)
+  
     
     return result
 
@@ -519,32 +511,7 @@ def fit_model(B, delta_B, zeta, T, sigma, origin):
 
 
 
-#checking effect of Jmax
-# B = 0.0013337 # 0.0026 
-# delta_B = -0.037003020 # -0.07 
-# zeta = -0.30513462
-# T = 160 #95 #
-# sigma = 0.2
-# origin = 0
-# Jmax = [1000, 800, 300]#, 400, 500, 600, 700]
 
-# plt.figure(figsize=(30,8))
-
-# colors = [ 'red', 'green', 'blue']
-# plt.figure(figsize=(30,8))
-# for idx, J in enumerate(Jmax): 
-    
-#     combinations = allowed_perperndicular_transitions(J)
-#     linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-
-#     P_branch = linelist[(linelist['delta_J'] == 1)]
-#     plt.stem(P_branch['wavenos'], P_branch['intensities'], label=str(J), linefmt=colors[idx]) #, markerfmt='o'+colors[idx])    
-#     plt.legend() 
-#     plt.title('R Branch')  
-#     #plt.plot(model_data[:,0], model_data[:,1], label = J)
-#     #plt.plot(linelist['wavenos'], linelist['intensities'])
-
-# plt.show()
 
 
 
@@ -552,23 +519,23 @@ Jmax = 1000
 combinations  = allowed_perperndicular_transitions(Jmax) 
 
 #Cami 2004
-# spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Research/Cami_2004_data/heliocentric/6614/")
-# sightlines = ['144217', '144470',  '145502', '147165', '149757', '179406', '184915'] 
-# filename = 'hd{}_dib6614.txt'
+spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Research/Cami_2004_data/heliocentric/6614/")
+sightlines = ['144217', '144470',  '145502', '147165', '149757', '179406', '184915'] 
+filename = 'hd{}_dib6614.txt'
 method = 'leastsq'
 
 #EDIBLES data
 spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
 filename = '6614_HD{}.txt'
 sightlines = ['23180', '24398', '144470', '147165' , '147683', '149757', '166937', '170740', '184915', '185418', '185859', '203532']
-#sightlines = ['185418']
+#sightlines = ['203532']
 
 
 lambda_start = 6611 #6612.5453435174495 #-1.134 #
 lambda_end = 6616 # 6615 #1.039609311008462 #
 
 
-common_grid_for_all = make_grid(lambda_start, lambda_end, resolution=220000, oversample=2)
+common_grid_for_all = make_grid(lambda_start, lambda_end, resolution=107000, oversample=2) #22000
 common_grid_for_all = (1 / common_grid_for_all) * 1e8
 common_grid_for_all = common_grid_for_all - 15119.4
 common_grid_for_all = common_grid_for_all[::-1]
@@ -593,8 +560,8 @@ for sightline in sightlines:
     one_sl_stddev = [std_dev] * len(common_grid_for_all)
     stddev_array = np.concatenate((stddev_array, one_sl_stddev))
   
-#plt.plot(wave_list, flux_list)
-#plt.show()
+plt.plot(wave_list, flux_list)
+plt.show()
 
 #result1 = fit_model(B = 0.001, delta_B = -0.1, zeta = -0.312, T = 100, sigma = 0.18 , origin =  0.014)
 #result2 = fit_model(B = 0.002, delta_B = -0.1, zeta = -0.312, T = 90, sigma = 0.18 , origin =  0.014)
@@ -602,20 +569,21 @@ for sightline in sightlines:
 #result4  = fit_model(B = 0.005, delta_B = -0.1, zeta = -0.312, T = 60, sigma = 0.18 , origin =  0.014)
 #result5  = fit_model(B = 0.009, delta_B = -0.1, zeta = -0.312, T = 40, sigma = 0.18 , origin =  0.014)
 
-# report = result5.fit_report()
+# report = result1.fit_report()
 # print(report)
-
-# workdir = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/"
-# save_fit_result_as = workdir + 'fit_report_Jmax_1000_T_init5.txt'
+# #save altogther results into a txt file
+# workdir = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/Cami_2004_data/"
+# save_fit_result_as = workdir + 'fit_report_Jmax_1000_Cami_res_init1.txt'
 # np.savetxt(save_fit_result_as, report)
 
-# with open("Alto_fit_report_Cami_3.txt", "w") as f:
-#     f.write(report)
 
-# results_list = [result1, result2, result3] #, result4, result5]
-# fit_report_filename = str(sightline) + '_Correct_res_3_init_conditions.csv'
-# write_results_to_csv(results_list,fit_report_filename  )
 
+#save individual sightliune results into a csv file
+# save_here_dir = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/Individual_at-maxJ_1000/"
+# results_list = [result1, result2, result3, result4, result5]
+# fit_report_filename = str(sightline) + '_maxJ_1000_5_init_conditions.csv'
+# write_results_to_csv(results_list, fit_report_filename  )
+# write_results_to_csv(results_list, save_here_dir + fit_report_filename  )
 
 
 #######################################################
@@ -657,7 +625,64 @@ for sightline in sightlines:
 
 ########################################################
 
+'''checking effect of Jmax'''
+# B = 0.0022 # 0.0026 
+# delta_B = -0.07003020 # -0.07 
+# zeta = -0.28
+# T = 92
+# sigma = 0.21
+# origin = 0
+# Jmax = [1000, 800, 300]#, 400, 500, 600, 700]
 
+# plt.figure(figsize=(30,8))
+
+# colors = [ 'red', 'green', 'blue']
+# plt.figure(figsize=(30,8))
+# for idx, J in enumerate(Jmax): 
+    
+#     combinations = allowed_perperndicular_transitions(J)
+#     linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+
+#     P_branch = linelist[(linelist['delta_J'] == 0)]
+#     plt.stem(P_branch['wavenos'], P_branch['intensities'], label=str(J), linefmt=colors[idx]) #, markerfmt='o'+colors[idx])    
+#     plt.legend() 
+#     plt.title('Q Branch')  
+#     #plt.plot(model_data[:,0], model_data[:,1], label = J)
+#     #plt.plot(linelist['wavenos'], linelist['intensities'])
+
+# plt.show()
+
+#############################################################
+'''At zeta = 0'''
+
+# B=0.0022
+# delta_B= -0.07
+# zeta = 0 #-0.289
+# Ts = [81.18658, 87.365539, 89.9437666, 92.4637866, 87.0832607, 88.3588874, 90.2125208, 84.7285498, 85.168429, 83.6203956, 87.5451781, 83.7653075]
+# sigmas = [0.16286939, 0.17714702, 0.16487818, 0.16119119, 0.19473806, 0.14253173, 0.1532089, 0.1730355, 0.17778417, 0.19593083, 0.21270658, 0.16688067]
+# origins = [0.01108004, -0.02271621, -0.0045765, -0.02639547, 0.01160903, -0.00360227, 0.05564258, 0.01000857, 0.09846675, 0.06436222, 0.01817963, 0.06677305]
+# origin = 0 #because we are not comparing with observations
+
+# plt.figure(figsize=(20,8))
+# for T, sigma, sightline in zip(Ts, sigmas, sightlines ):
+    
+#    # if T == 81.18658:
+#         linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+#         plt.plot(model_data[:,0], model_data[:,1], label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
+#         plt.subplots_adjust(right=0.5)
+#         #plt.legend()
+#         plt.legend(loc='upper left', bbox_to_anchor=(1,1))
+#         plt.title(f"B = {B:.4f} cm$^{{-1}}$  $\Delta$B = {delta_B:.2f}%  $\zeta$ = {zeta:.2f} cm$^{{-1}}$", fontsize=15)
+#         plt.xlim(2.5, -2.5) #flipped beacuse astronomers are used to wavelength x axis
+#         #plt.figtext(0.55, 0.02, 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma), wrap=True, horizontalalignment='left', fontsize=10)
+#         plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
+#         plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
+#         plt.tick_params(axis='both', which='major', labelsize=22)
+#         save_here = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/"
+#         save_plot_as = save_here + "profiles_at_zeta_0.pdf"
+#         plt.savefig(save_plot_as, format = 'pdf', bbox_inches="tight")
+
+        
 
 ############################################################################################
 ############################################################################################
@@ -680,120 +705,93 @@ PR_sep = [1.27, 1.34, 1.39, 1.38, 1.3, 1.36, 1.46, 1.33, 1.37, 1.27, 1.27, 1.29]
 PR_sep_unc = [0.09, 0.05, 0.06, 0.06, 0.09, 0.05, 0.07, 0.03, 0.05, 0.03, 0.05, 0.07]
 
 
-#Including P-wind and Jmax = 600 : 
-# B =   0.00133648 
-# delta_B =-0.03712074
-# zeta =  -0.30504896 
-# Ts = [149.107701, 164.132291, 171.459785, 180.845204, 164.716622, 161.620226, 171.711267, 156.955738, 160.809469, 154.989294, 165.244363, 155.22443]
-# sigmas = [0.17608069, 0.19488198, 0.18383431, 0.17904947, 0.21184813, 0.16204406, 0.17162014, 0.1900463, 0.19341891, 0.21389315, 0.23227593, 0.18328798]
-# origins = [0.01799722, -0.01379366, 0.00602909, -0.01255523, 0.02292328, 0.00511943, 0.06467863, 0.01711942, 0.10205201, 0.07132686, 0.02814641, 0.07115158]
 
-# #diff. init condition:
-
-# B = 0.00716641 
-# delta_B = -0.22060769 
-# zeta=   -0.28300579 
-# Ts = [26.0087408, 28.0541958, 28.8195137, 29.7400086, 27.988017, 28.4493686, 28.9159318, 27.1925374, 27.3247924, 26.8480177, 28.0843381, 26.9233065]
-# sigmas = [0.16404873, 0.17819887, 0.16614902, 0.16149411, 0.19438546, 0.1435633, 0.15385787, 0.17390746, 0.17899859, 0.19682442, 0.21241429, 0.16796392]
-# origins = [6.9908e-04, -0.03351346, -0.01441214, -0.03710527, 8.5599e-04, -0.01306664, 0.0465879, -8.7645e-05, 0.0879105, 0.05304292, 0.00728663, 0.05613493]
+'''Now, Jmax = 1000 and EDIBLES resolution'''
+B=0.0022
+delta_B= -0.07
+zeta = -0.289
+Ts = [81.18658, 87.365539, 89.9437666, 92.4637866, 87.0832607, 88.3588874, 90.2125208, 84.7285498, 85.168429, 83.6203956, 87.5451781, 83.7653075]
+sigmas = [0.16286939, 0.17714702, 0.16487818, 0.16119119, 0.19473806, 0.14253173, 0.1532089, 0.1730355, 0.17778417, 0.19593083, 0.21270658, 0.16688067]
+origins = [0.01108004, -0.02271621, -0.0045765, -0.02639547, 0.01160903, -0.00360227, 0.05564258, 0.01000857, 0.09846675, 0.06436222, 0.01817963, 0.06677305]
 
 
-'''Now, Jmax = 1000'''
-
-#result 1: 
-# B = 8.0177e-04
-# delta_B = -0.02256004
-# zeta = -0.30661825
-# Ts = [247.873405, 272.836995, 284.951033, 300.440188, 273.769543, 268.610727, 285.383012, 260.923899, 267.328019, 257.660776, 274.728050, 258.039768]
-# sigmas = [0.17633031, 0.19514351, 0.18412368, 0.17930781, 0.21209570, 0.16234341, 0.17189785, 0.19031727, 0.19365435, 0.21415964, 0.23253070, 0.18353855]
-# origins = [0.01917529, -0.01267290, 0.00716138, -0.01135742, 0.02414879, 0.00621067, 0.06580864, 0.01825883, 0.10320087, 0.07251069, 0.02930526, 0.07228776]
-
-#result 2:
-# B = 0.00366061
-# delta_B = -0.11690375
-# zeta = -0.28794094
-# Ts = [50.4584759, 54.4089696, 55.9300404, 57.7623896, 54.2335384, 55.1167376, 56.1023185, 52.7293497, 53.0172320, 51.9960519, 54.3866336, 52.2158002]
-# sigmas = [0.16354866, 0.17829608, 0.16608433, 0.16134650, 0.19376837, 0.14317326, 0.15373872, 0.17405465, 0.17898838, 0.19522098, 0.21233036, 0.16784647]
-# origins = [0.00745506, -0.02674507, -0.00796882, -0.03106210, 0.00849811, -0.00656314, 0.05279654, 0.00649340, 0.09440735, 0.06057686, 0.01477381, 0.06255684]
-
-#result 3 (fitting going on forever)
-
-#result 4:
-B = 0.00320092
-delta_B = -0.10171446
-zeta = 0 #-0.28852371
-Ts = [57.6011016, 62.1023003, 63.8959281, 65.9367659, 61.9449444, 62.9214533, 64.0519755, 60.1955110, 60.5262702, 59.4114021, 62.0635621, 59.5961519]
-sigmas = [0.16338840, 0.17788725, 0.16570998, 0.16102132, 0.19401663, 0.14327215, 0.15361382, 0.17375430, 0.17862829, 0.19656620, 0.21245939, 0.16766571]
-origins = [0.00796759, -0.02613640, -0.00783215, -0.03041224, 0.00887835, -0.00632561, 0.05309031, 0.00695721, 0.09483662, 0.06089886, 0.01561717, 0.06308816]
-
-#result 5:
-# B = 0.00356084
-# delta_B = -0.11421574
-# zeta = -0.29009465
-# Ts = [51.7637997, 55.8018739, 57.3593217, 59.1811400, 55.6661240, 56.4933330, 57.5236000, 54.0908898, 54.3861804, 53.3761936, 55.8433788, 53.5489090]
-# sigmas = [0.16438236, 0.17843442, 0.16643265, 0.16181164, 0.19570302, 0.14429874, 0.15417760, 0.17426982, 0.17911965, 0.19719967, 0.21369731, 0.16812799]
-# origins = [0.00745423, -0.02642639, -0.00793709, -0.03039302, 0.00810005, -0.00653293, 0.05311018, 0.00666238, 0.09461986, 0.06054467, 0.01470807, 0.06290139]
 
 
-Alto_fits_results = np.array([PR_sep,PR_sep_unc, Ts, sigmas, origins, sightlines]).T
+# Alto_fits_results = np.array([PR_sep,PR_sep_unc, Ts, sigmas, origins, sightlines]).T
 
-#sort from smallest to biggest PR_sep
-sorted_indices = np.lexsort((Alto_fits_results[:, 1], Alto_fits_results[:, 0]))
+# #sort from smallest to biggest PR_sep
+# sorted_indices = np.lexsort((Alto_fits_results[:, 1], Alto_fits_results[:, 0]))
 
-Alto_fits_results = Alto_fits_results[sorted_indices].astype(float)
+# Alto_fits_results = Alto_fits_results[sorted_indices].astype(float)
 
-#Alto_fits_results = Alto_fits_results[:2]
+# #Alto_fits_results = Alto_fits_results[:2]
 
-plt.figure(figsize = (15,35))
-start = 0
-spacing = 0.07
-count = 12
+# plt.figure(figsize = (15,35))
+# start = 0
+# spacing = 0.07
+# count = 12
 
-offset = np.arange(start, start + spacing * count, spacing)
+# offset = np.arange(start, start + spacing * count, spacing)
 
-print(offset)
-for i, offset in enumerate(offset):  
-    T = Alto_fits_results[:,2][i]
-    sigma = Alto_fits_results[:,3][i]
-    origin = Alto_fits_results[:,4][i]
-    sightline = int(Alto_fits_results[:,5][i])
-
-    Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
-    # plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset, color = 'black') #, label = 'HD ' + str(sightline) , color = 'black')
-
-
-    linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-    plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'crimson', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
-
-    plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
-    plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
-    plt.tick_params(axis='both', which='major', labelsize=22)
-    plt.title(f"B = {B:.4f} cm$^{{-1}}$  $\Delta$B = {delta_B:.2f}%  $\zeta$ = {zeta:.2f} cm$^{{-1}}$", fontsize=22)
+# print(offset)
+# for i, offset in enumerate(offset):  
     
-    xy = (Obs_data['Wavelength'][120] , Obs_data['Flux'][120] - offset)
-    plt.annotate('HD' + str(sightline), xy = xy , xytext = (3, Obs_data['Flux'][25] - offset + 0.0095), fontsize = 17 )
-    plt.annotate('T = {:.2f}'.format(T) + ' K', xy = xy , xytext = (-4.7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
-    plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = xy , xytext = (-3.5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
+#     #if i == 0:
+#     T = Alto_fits_results[:,2][i]
+#     sigma = Alto_fits_results[:,3][i]
+#     origin = Alto_fits_results[:,4][i]
+#     sightline = int(Alto_fits_results[:,5][i])
+
+#     Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
+#     plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset, color = 'black') #, label = 'HD ' + str(sightline) , color = 'black')
+
+
+#     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+#     plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'crimson', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
     
-    plt.axvline(x = -0.70, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-    plt.axvline(x = -0.54, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-    plt.axvline(x = 0.74, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-    plt.axvline(x = 0.87, color = 'gray', linestyle = 'dotted', alpha = 0.5)
     
-    plt.xlim(-5,4.5)
+#     plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
+#     plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
+#     plt.tick_params(axis='both', which='major', labelsize=22)
+#     plt.title(f"B = {B:.4f} cm$^{{-1}}$  $\Delta$B = {delta_B:.2f}%  $\zeta$ = {zeta:.2f} cm$^{{-1}}$", fontsize=22)
     
-#plt.show()
-# workdir  = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/effect_of_Jmax/Alto_fits_at_Jmax_1000/"
-# save_plot_as = workdir + "Alto_fits_EDIBLES_Jmax_1000_2.pdf"
+#     xy = (Obs_data['Wavelength'][120] , Obs_data['Flux'][120] - offset)
+#     # plt.annotate('HD' + str(sightline), xy = xy , xytext = (3, Obs_data['Flux'][25] - offset + 0.0095), fontsize = 17 )
+#     # plt.annotate('T = {:.2f}'.format(T) + ' K', xy = xy , xytext = (-4.7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+#     # plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = xy , xytext = (-3.5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
+    
+#     plt.annotate('HD' + str(sightline), xy = xy , xytext = (2.5, model_data[:,1][5] - offset + 0.006), fontsize = 17 )
+#     plt.annotate('T = {:.2f}'.format(T) + 'K', xy = xy , xytext = (-2.3, model_data[:,1][5] - offset + 0.005), fontsize = 17 )
+#     plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + 'cm$^{-1}$', xy = xy , xytext = (-3.5, model_data[:,1][5] - offset + 0.005), fontsize = 17)
+   
+#     plt.axvline(x = -0.70, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+#     plt.axvline(x = -0.54, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+#     plt.axvline(x = 0.74, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+#     plt.axvline(x = 0.87, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+    
+#     #plt.xlim(-5,4.5)
+#     plt.xlim(4.5, -5)
+    
+# #plt.show()
+# save_here = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/Altogther_at_maxJ_1000/"
+# #save_plot_as = save_here + "Alto_fits_EDIBLES_maxJ_1000.pdf"
+
 # plt.savefig(save_plot_as, format = 'pdf', bbox_inches="tight")
 
 '''Cami 2004'''
-# B = 0.00252688
-# delta_B = -0.02816744
-# zeta = -0.33395654
-# Ts = [101.080285, 96.1085760, 100.637741, 102.787284, 102.310020, 87.7427099, 94.6884889]
-# sigmas = [0.19084834, 0.17532329, 0.18244590, 0.18657923, 0.19612793, 0.19852667, 0.21209539]
-# origins = [0.02652663, -0.02126270, -0.07778282, -0.05086524, 0.05448191, 0.06379547, 0.01083778]
+
+# B = 0.0024
+# delat_B = -0.043
+# zeta = -0.302
+# Ts = [86.7510061, 83.4888836, 86.7591371, 87.2017017, 89.1137989, 77.9659866, 82.9993103]
+# sigmas = [0.16072784, 0.14735417, 0.15423695, 0.15793055, 0.16483438, 0.16934683, 0.17905383]
+# origins = [0.02422319, -0.02411924, -0.08243510, -0.05932105, 0.05731874, 0.05975262, 0.00277156]
+
+
+
+
+
+
 # PR_sep = [1.527, 1.518, 1.507, 1.481, 1.386, 1.356, 1.330]
 
 # Alto_fits_results = np.array([PR_sep, Ts, sigmas, origins, sightlines]).T
@@ -830,17 +828,114 @@ for i, offset in enumerate(offset):
     
 #     xy = (Obs_data['Wavelength'][300] , Obs_data['Flux'][300] - offset)
    
-#     plt.annotate('HD' + str(sightline), xy = xy , xytext = (2.5, model_data[:,1][5] - offset + 0.006), fontsize = 17 )
-#     plt.annotate('T = {:.2f}'.format(T) + 'K', xy = xy , xytext = (-4.7, model_data[:,1][5] - offset + 0.005), fontsize = 17 )
-#     plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + 'cm$^{-1}$', xy = xy , xytext = (-3, model_data[:,1][5] - offset + 0.005), fontsize = 17)
+#     # plt.annotate('HD' + str(sightline), xy = xy , xytext = (2.5, model_data[:,1][5] - offset + 0.006), fontsize = 17 )
+#     # plt.annotate('T = {:.2f}'.format(T) + 'K', xy = xy , xytext = (-4.7, model_data[:,1][5] - offset + 0.005), fontsize = 17 )
+#     # plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + 'cm$^{-1}$', xy = xy , xytext = (-3, model_data[:,1][5] - offset + 0.005), fontsize = 17)
     
+
+#     plt.annotate('HD' + str(sightline), xy = xy , xytext = (2.5, model_data[:,1][5] - offset + 0.006), fontsize = 17 )
+#     plt.annotate('T = {:.2f}'.format(T) + 'K', xy = xy , xytext = (-2.3, model_data[:,1][5] - offset + 0.005), fontsize = 17 )
+#     plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + 'cm$^{-1}$', xy = xy , xytext = (-3.5, model_data[:,1][5] - offset + 0.005), fontsize = 17)
+
 #     plt.axvline(x = -0.70, color = 'gray', linestyle = 'dotted', alpha = 0.5)
 #     plt.axvline(x = -0.54, color = 'gray', linestyle = 'dotted', alpha = 0.5)
 #     plt.axvline(x = 0.74, color = 'gray', linestyle = 'dotted', alpha = 0.5)
 #     plt.axvline(x = 0.87, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.xlim(-5,4.5)
+#     #plt.xlim(-5,4.5)
+#     plt.xlim(4.5, -5)
     
-# plt.savefig("Alto_fits_Cami_2004_6614.pdf", format = 'pdf', bbox_inches="tight")
+# save_here = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/Cami_2004_data/"
+# save_plot_as = save_here + "Alto_fits_Cami_2004_maxJ_1000.pdf"
+# plt.savefig(save_plot_as, format = 'pdf', bbox_inches="tight")
+
+
+
+
+
+
+##########################################################################################
+'''Residual Plotting'''
+##########################################################################################
+
+B=0.0022
+delta_B= -0.07
+zeta = -0.289
+Ts = [81.18658, 87.365539, 89.9437666, 92.4637866, 87.0832607, 88.3588874, 90.2125208, 84.7285498, 85.168429, 83.6203956, 87.5451781, 83.7653075]
+sigmas = [0.16286939, 0.17714702, 0.16487818, 0.16119119, 0.19473806, 0.14253173, 0.1532089, 0.1730355, 0.17778417, 0.19593083, 0.21270658, 0.16688067]
+origins = [0.01108004, -0.02271621, -0.0045765, -0.02639547, 0.01160903, -0.00360227, 0.05564258, 0.01000857, 0.09846675, 0.06436222, 0.01817963, 0.06677305]
+
+
+PR_sep = [1.27, 1.34, 1.39, 1.38, 1.3, 1.36, 1.46, 1.33, 1.37, 1.27, 1.27, 1.29]
+PR_sep_unc = [0.09, 0.05, 0.06, 0.06, 0.09, 0.05, 0.07, 0.03, 0.05, 0.03, 0.05, 0.07]
+
+
+
+Alto_fits_results = np.array([PR_sep,PR_sep_unc, Ts, sigmas, origins, sightlines]).T
+
+#sort from smallest to biggest PR_sep
+sorted_indices = np.lexsort((Alto_fits_results[:, 1], Alto_fits_results[:, 0]))
+
+Alto_fits_results = Alto_fits_results[sorted_indices].astype(float)
+
+#Alto_fits_results = Alto_fits_results[:2]
+
+plt.figure(figsize = (15,35))
+start = 0
+spacing = 0.07
+count = 12
+
+offset = np.arange(start, start + spacing * count, spacing)
+
+print(offset)
+for i, offset in enumerate(offset):  
+    
+    #if i == 0:
+    T = Alto_fits_results[:,2][i]
+    sigma = Alto_fits_results[:,3][i]
+    origin = Alto_fits_results[:,4][i]
+    sightline = int(Alto_fits_results[:,5][i])
+
+    Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
+    #plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset, color = 'black') #, label = 'HD ' + str(sightline) , color = 'black')
+
+
+    linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+    #plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'crimson', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
+    model_flux = model_data[:,1]
+    model_wavelength = model_data[:,0]
+    
+    model_flux = np.interp(Obs_data['Wavelength'], model_wavelength, model_flux)
+
+    plt.plot(Obs_data['Wavelength'], (Obs_data['Flux'] /model_flux) - offset, color = 'black' )
+    
+    
+    plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
+    plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
+    plt.tick_params(axis='both', which='major', labelsize=22)
+    plt.title(f"B = {B:.4f} cm$^{{-1}}$  $\Delta$B = {delta_B:.2f}%  $\zeta$ = {zeta:.2f} cm$^{{-1}}$", fontsize=22)
+    
+    xy = (Obs_data['Wavelength'][120] , Obs_data['Flux'][120] - offset)
+    # plt.annotate('HD' + str(sightline), xy = xy , xytext = (3, Obs_data['Flux'][25] - offset + 0.0095), fontsize = 17 )
+    # plt.annotate('T = {:.2f}'.format(T) + ' K', xy = xy , xytext = (-4.7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+    # plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = xy , xytext = (-3.5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
+    
+    plt.annotate('HD' + str(sightline), xy = xy , xytext = (2.5, model_data[:,1][5] - offset + 0.006), fontsize = 17 )
+    plt.annotate('T = {:.2f}'.format(T) + 'K', xy = xy , xytext = (-2.3, model_data[:,1][5] - offset + 0.005), fontsize = 17 )
+    plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + 'cm$^{-1}$', xy = xy , xytext = (-3.5, model_data[:,1][5] - offset + 0.005), fontsize = 17)
+   
+    plt.axvline(x = -0.70, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+    plt.axvline(x = -0.54, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+    plt.axvline(x = 0.74, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+    plt.axvline(x = 0.87, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+    
+    #plt.xlim(-5,4.5)
+    plt.xlim(4.5, -5)
+    
+#plt.show()
+save_here = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/Altogther_at_maxJ_1000/"
+save_plot_as = save_here + "residual_plot_Alto_fits_EDIBLES_maxJ_1000.pdf"
+
+plt.savefig(save_plot_as, format = 'pdf', bbox_inches="tight")
 
 ############################################################################################
 ############################################################################################
@@ -853,6 +948,7 @@ for i, offset in enumerate(offset):
 
 # results = pd.read_excel("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fit results at correct resolution/min_redchi_data.xlsx")
 
+# results = pd.read_excel("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/Individual_at-maxJ_1000/individual_best_fit_results.xlsx")
 # for i in range(len(results)):
     
 #     print(i)
@@ -878,16 +974,18 @@ for i, offset in enumerate(offset):
 #     plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'], color = 'black', label = 'HD' +str(sightline)) #, label = 'HD ' + str(sightline) , color = 'black')
 
 #     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-#     plt.plot(model_data[:,0], model_data[:,1], label = f"B = {B:.4f} cm$^{{-1}}$  $\Delta B =$ {delta_B:.2f}%  $\zeta^{{\prime}}  = ${zeta:.2f} cm$^{{-1}}$  \n T = {T:.2f} K $\sigma =$ {sigma:.3f} cm$^{{-1}}$ $\chi^2 = {redchi:.2f}$") # , color = '#1f77b4', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
+#     plt.plot(model_data[:,0], model_data[:,1], label = f"B = {B:.4f} cm$^{{-1}}$  $\Delta B =$ {delta_B:.2f}%  \n $\zeta^{{\prime}}  = ${zeta:.2f} cm$^{{-1}}$  T = {T:.2f} K $\sigma =$ \n {sigma:.3f} cm$^{{-1}}$ $\chi^2 = {redchi:.2f}$") # , color = '#1f77b4', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
     
 #     #plt.title(f"B = {B:.4f} cm$^{{-1}}$  $\Delta B =$ {delta_B:.2f}%  $\zeta^{{\prime}}  = ${zeta:.2f} cm$^{{-1}}$  T = {T:.2f} K $\sigma =$ {sigma:.3f} cm$^{{-1}}$ $\chi^2 = {redchi:.2f}$", fontsize=22, pad = 10)
     
 #     plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
 #     plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
-#     plt.legend(loc = 'lower right')
-#     plt.xlim(-4, 4)
-#     save_as_name  = str(sightline) + 'one_sl_fit_EDIBLES.pdf'
-#     plt.savefig(save_as_name, format = 'pdf', bbox_inches="tight")
+#     plt.legend(loc = 'lower right', fontsize = 14)
+#     plt.xlim(4, -4)
+#     #plt.ylim(0.88, 0.101)
+#     save_as_name  = str(sightline) + 'one_sl_fit_EDIBLES_maxJ_1000.pdf'
+#     save_here = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/Individual_at-maxJ_1000/"
+#     plt.savefig(save_here + save_as_name, format = 'pdf', bbox_inches="tight")
 
 #     plt.show()
     
@@ -963,8 +1061,14 @@ def equivalent_width(wavelength, flux, continuum_level):
 ############################################################################################
 
 #sigmas = [0.18055114, 0.19760700, 0.18423023, 0.18244127, 0.21244470, 0.15821120, 0.17367824, 0.19180354, 0.20377079, 0.21578868, 0.24029108, 0.18563300]
-bs=  [2.367146593, 1.789353453, 2.293734891, 1.925977983, 1.688799352, 1.634991188, 1.830094729, 2.515187171, 1.618003562, 2.418691161, 2.024811568, 2.338233138]
+#K line
+bs_of_K_lines=  [2.367146593, 1.789353453, 2.293734891, 1.925977983, 1.688799352, 1.634991188, 1.830094729, 2.515187171, 1.618003562, 2.418691161, 2.024811568, 2.338233138]
 
+#Ch+ at 4232.5
+bs_of_CHplus = [
+    2.470915299, 1.84973144, 2.255398269, 1.463192807, 4.823955101,
+    1.536558284, 1.903430362, 3.328394328, 2.286741314, 4.042538528,
+    3.066717666, 1.964602087]
 
 
 def calculate_pearson_correlation(x, y):
@@ -974,13 +1078,17 @@ def calculate_pearson_correlation(x, y):
     correlation = np.corrcoef(x, y)[0, 1]
     return correlation
 
+print("Correlation coefficient of T and sigma:", calculate_pearson_correlation(Ts,sigmas))
+print("Correlation coefficient of T and PR peak separation:", calculate_pearson_correlation(Ts, PR_sep))
+print("Correlation coefficient of sigma and PR peak separation :", calculate_pearson_correlation(sigmas, PR_sep))
+# print("Correlation coefficient of sigma and linewidth of K lines:", calculate_pearson_correlation(sigmas, bs_of_K_lines))
+# print("Correlation coefficient of sigma and linewidth of CH+ lines:", calculate_pearson_correlation(Ts, bs_of_CHplus))
 
-print("Correlation coefficient:", calculate_pearson_correlation(sigmas, bs))
-# print("Correlation coefficient:", calculate_pearson_correlation(sigmas, PR_sep))
-# print("Correlation coefficient:", calculate_pearson_correlation(sigmas, Ts))
+#print("Correlation coefficient of sigma and linewidth of CH+ lines:", calculate_pearson_correlation(bs_of_K_lines, bs_of_CHplus))
 
 
     
+
 
     
 # B = 0.00263686

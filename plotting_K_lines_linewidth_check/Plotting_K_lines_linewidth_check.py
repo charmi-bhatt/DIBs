@@ -20,7 +20,7 @@ V_rad_data = pd.read_csv(vrad_filename)
 
 #object = 'HD 23180'
 
-#sightlines = ['HD 23180', 'HD 24398', 'HD 144470', 'HD 147165', 'HD 147683', 'HD 149757', 'HD 166937', 'HD 170740', 'HD 184915', 'HD 185418', 'HD 185859', 'HD 203532']
+sightlines = ['HD 23180', 'HD 24398', 'HD 144470', 'HD 147165', 'HD 147683', 'HD 149757', 'HD 166937', 'HD 170740', 'HD 184915', 'HD 185418', 'HD 185859', 'HD 203532']
 
 sightlines = ['HD 149757']
 result_row = []
@@ -79,7 +79,7 @@ for i, sightline in enumerate(sightlines):
         model.set_param_hint('lambda0', value=7698.974, vary=False)
         model.set_param_hint('f', value=3.393e-1, vary=False)
         model.set_param_hint('gamma', value=3.8e7, vary=False)
-        model.set_param_hint('v_resolution', value=0.56, vary=False)
+        model.set_param_hint('v_resolution', value=3.75, vary=False)
         model.set_param_hint('n_step', value=25, vary=False)
         model.set_param_hint('N', value=7e11)
         model.set_param_hint('b', value=2.36)
@@ -125,13 +125,13 @@ for i, sightline in enumerate(sightlines):
         plt.subplots_adjust(right=0.5)
         plt.figtext(0.55, 0.02, f'Sightline : {sightline} \n \n'  + result.fit_report(), wrap=True, horizontalalignment='left', fontsize=10)
         #plt.show()
-        save_plot_as = workdir + f'{sightline}_K_lines_width_check_all_obs.png'
-        plt.savefig(save_plot_as, format = 'png')
-        plt.close()
+        # save_plot_as = workdir + f'{sightline}_K_lines_width_check_all_obs.png'
+        # plt.savefig(save_plot_as, format = 'png')
+        # plt.close()
         
-print(results_dataframe)
-save_results_into_csv_as = workdir + 'voigt_fitting_results_of_all_sightlines_all_obs.csv'
-results_dataframe.to_csv(save_results_into_csv_as)
+# print(results_dataframe)
+# save_results_into_csv_as = workdir + 'voigt_fitting_results_of_all_sightlines_all_obs_correct_res.csv'
+# results_dataframe.to_csv(save_results_into_csv_as)
     
 # 
 #plt.show()
