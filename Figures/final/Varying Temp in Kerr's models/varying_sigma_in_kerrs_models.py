@@ -345,38 +345,57 @@ sightlines = ['23180', '24398', '144470', '147165' , '147683', '149757', '166937
 
 # for T in Ts:
 #     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-#     # linelist['intensities'] = 1-0.1*(linelist['intensities']/max(linelist['intensities']))
-#     # plt.stem(linelist['wavenos'], linelist['intensities'], label = 'zeta = ' + str(zeta), bottom = 1)
-#     plt.plot(model_data[:,0], model_data[:,1], label = 'Simulated at T = ' + str(T) + ' K')
+#     linelist['intensities'] = 1-0.1*(linelist['intensities']/max(linelist['intensities']))
+#     #plt.stem(linelist['wavenos'], linelist['intensities'], label = 'zeta = ' + str(zeta), bottom = 1)
+#     plt.plot(model_data[:,0], model_data[:,1], label = 'Simulated at T = ' + str(T) + ' K', )
 
-#     # plt.plot(model_data[:,0], model_data[:,1], label = 'Simulated at $\sigma$ = ' + str(sigma) + ' cm$^{{-1}}$')
-#     plt.axvline(x = -0.70, color = 'black', linestyle = 'dotted')
-#     plt.axvline(x = -0.58, color = 'black', linestyle = 'dotted')
-#     plt.axvline(x = 0.64, color = 'black', linestyle = 'dotted')
-#     plt.axvline(x = 0.78, color = 'black', linestyle = 'dotted')
-#     plt.title(f"B = {B} $cm^{{-1}}$  $\Delta B = ${delta_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$ $\sigma = ${sigma} cm$^{{-1}}$", fontsize = 20)
+#     #plt.plot(model_data[:,0], model_data[:,1], label = 'Simulated at $\sigma$ = ' + str(sigma) + ' cm$^{{-1}}$')
+#     # plt.axvline(x = -0.70, color = 'black', linestyle = 'dotted')
+#     # plt.axvline(x = -0.58, color = 'black', linestyle = 'dotted')
+#     # plt.axvline(x = 0.64, color = 'black', linestyle = 'dotted')
+#     # plt.axvline(x = 0.78, color = 'black', linestyle = 'dotted')
+#     # plt.title(f"B = {B} $cm^{{-1}}$  $\Delta B = ${delta_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$ $\sigma = ${sigma} cm$^{{-1}}$", fontsize = 20)
    
-
-# for sightline in sightlines:
+# colors = ('red', 'green')
+# for sightline, color in zip(sightlines, colors):
     
 #     Obs_data = obs_curve(sightline)
     
-#     plt.plot(Obs_data['Wavelength'], Obs_data['Flux'] - vertical_offset, label = 'HD ' + str(sightline))
+#     plt.plot(Obs_data['Wavelength'], Obs_data['Flux'] - vertical_offset, label = 'HD ' + str(sightline), color = color)
 #     plt.xlim(3,-3)
 #     plt.legend()
-    
-    
-    
-    
+
+
    
 # plt.legend(loc = "lower right", fontsize = 15)
 # plt.xlabel('Wavenumbers (cm$^{-1}$)', fontsize = 20,  labelpad= 10)
 # plt.ylabel('Normalized Intenisty', fontsize = 20, labelpad= 10)
 # plt.xticks(fontsize=20)
 # plt.yticks(fontsize= 20)
+# plt.show()
+
 
 # plt.savefig("Varying_T_in_kerr_model_c_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
 
+
+'''Plotting 6614'''
+
+sightline = 166937  
+file = filename.format(sightline)
+# Obs_data = pd.read_csv(spec_dir / file,
+#                         delim_whitespace=(True))
+
+Obs_data = pd.read_csv(spec_dir / file,
+                        sep = ',')
+    
+plt.plot(Obs_data['Wavelength'], Obs_data['Flux'])
+plt.xlim(6612,6616)
+plt.xlabel('Wavenumbers (cm$^{-1}$)', fontsize = 15)
+plt.ylabel('Normalized Intenisty', fontsize = 15)
+# plt.xticks(fontsize=15)
+# plt.yticks(fontsize= 15)
+plt.show()
+    
 
 '''Varying sigma in kerr's C model'''
 
@@ -431,48 +450,50 @@ sightlines = ['23180', '24398', '144470', '147165' , '147683', '149757', '166937
 
 #All paramters are from kerr's model c, except the one varying here (T and sigma)
 
-B = 0.00336
-delta_B = -0.17
-zeta=  -0.49
-Ts = (59.41, 64.05)
-sigmas = (0.197, 0.154)
-origins = (0.06, 0.053)
-vertical_offset = 0.05
-plt.figure(figsize=(16,9))
+# B = 0.00336
+# delta_B = -0.17
+# zeta=  -0.49
+# Ts = (59.41, 64.05)
+# sigmas = (0.197, 0.154)
+# origins = (0.06, 0.053)
+# vertical_offset = 0.05
+# plt.figure(figsize=(16,9))
 
-#sightlineos = ['185418', '166937']
-sightlines = ('166937', '185418')
+# #sightlineos = ['185418', '166937']
+# sightlines = ('166937', '185418')
 
-for T, sigma, origin in zip(Ts, sigmas, origins):
-    linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-    plt.plot(model_data[:,0], model_data[:,1], label = 'Models: T = ' + str(T) + ' K, $\sigma = $' + str(sigma) + 'cm$^{{-1}}$')  
+# for T, sigma, origin in zip(Ts, sigmas, origins):
+#     linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+#     plt.plot(model_data[:,0], model_data[:,1], label = 'Models: T = ' + str(T) + ' K, $\sigma = $' + str(sigma) + 'cm$^{{-1}}$')  
     
-    plt.axvline(x = -0.70, color = 'black', linestyle = 'dotted')
-    plt.axvline(x = -0.58, color = 'black', linestyle = 'dotted')
-    plt.axvline(x = 0.64, color = 'black', linestyle = 'dotted')
-    plt.axvline(x = 0.78, color = 'black', linestyle = 'dotted')
-    plt.title(f"B = {B} $cm^{{-1}}$  $\Delta B = ${delta_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$" , fontsize = 20) #"$\sigma = ${sigma} cm$^{{-1}}$" , fontsize = 20)
-    plt.legend()
+#     # plt.axvline(x = -0.70, color = 'black', linestyle = 'dotted')
+#     # plt.axvline(x = -0.58, color = 'black', linestyle = 'dotted')
+#     # plt.axvline(x = 0.64, color = 'black', linestyle = 'dotted')
+#     # plt.axvline(x = 0.78, color = 'black', linestyle = 'dotted')
+#     # plt.title(f"B = {B} $cm^{{-1}}$  $\Delta B = ${delta_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$" , fontsize = 20) #"$\sigma = ${sigma} cm$^{{-1}}$" , fontsize = 20)
+#     plt.legend()
     
-    plt.xlim(-3, 3)
+#     plt.xlim(-3, 3)
     
-for sightline in sightlines:
+# for sightline in sightlines:
     
-    Obs_data = obs_curve(sightline)
+#     Obs_data = obs_curve(sightline)
     
-    plt.plot(Obs_data['Wavelength'], Obs_data['Flux'] - vertical_offset, label = 'HD ' + str(sightline))
-    plt.xlim(3,-3)
-    plt.legend()
+#     plt.plot(Obs_data['Wavelength'], Obs_data['Flux'] - vertical_offset, label = 'HD ' + str(sightline))
+#     plt.xlim(3,-3)
+#     #plt.legend()
     
     
-plt.legend(loc = "lower right", fontsize = 15)
-#plt.legend(bbox_to_anchor=(1.8, 0.7), loc='lower right', fontsize = 22)
-plt.xlabel('Wavenumbers (cm$^{-1}$)', fontsize = 20,  labelpad= 10)
-plt.ylabel('Normalized Intenisty', fontsize = 20, labelpad= 10)
-plt.xticks(fontsize=20)
-plt.yticks(fontsize= 20)
+# plt.legend(loc = "lower right", fontsize = 14)
+# #plt.legend(bbox_to_anchor=(1.8, 0.7), loc='lower right', fontsize = 22)
+# plt.xlabel('Wavenumbers (cm$^{-1}$)', fontsize = 20,  labelpad= 10)
+# plt.ylabel('Normalized Intenisty', fontsize = 20, labelpad= 10)
+# plt.xticks(fontsize=20)
+# plt.yticks(fontsize= 20)
 
-plt.savefig("Varying_T_and_sigma_together_in_kerr_model_c_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
+# plt.show()
+
+#plt.savefig("Varying_T_and_sigma_together_in_kerr_model_c_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
 
 
 
