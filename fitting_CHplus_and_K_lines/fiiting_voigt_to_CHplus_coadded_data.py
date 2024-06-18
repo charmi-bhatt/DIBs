@@ -146,7 +146,7 @@ def fit_voigt_to_CHplus(wave, flux, fitting_range):
 ##################################
 
 sightlines = ['HD 23180', 'HD 24398', 'HD 144470', 'HD 147165', 'HD 147683', 'HD 149757', 'HD 166937', 'HD 170740', 'HD 184915', 'HD 185418', 'HD 185859', 'HD 203532']
-sightlines = ['HD 185859']
+sightlines = ['HD 144470']
 fit_results_list = []
 for sightline in sightlines: 
 

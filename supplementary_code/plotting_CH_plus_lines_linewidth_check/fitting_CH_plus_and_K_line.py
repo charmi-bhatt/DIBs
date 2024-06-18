@@ -219,31 +219,31 @@ def fit_conitnuum (Wave,  sightlines, plotrange, conitnuum_range_before, conitnu
 
 sightlines = ['HD 23180', 'HD 24398', 'HD 144470', 'HD 147165', 'HD 147683', 'HD 149757', 'HD 166937', 'HD 170740', 'HD 184915', 'HD 185418', 'HD 185859', 'HD 203532']
 
-#sightlines = ['HD 24398']
+sightlines = ['HD 144470']
 fit_results_list = []
 
 #K lines
 save_here = '/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/supplementary_code/plotting_K_lines_linewidth_check/Fits_results_K_lines/corrected_continuum_removal/'
 
-plotwave, normflux, results_dataframe = fit_conitnuum(Wave=7698,  sightlines = sightlines, plotrange=(7698.1, 7699.9), 
-                                   conitnuum_range_before = (7698.1, 7698.5),
-                                    conitnuum_range_after = (7699.4, 7699.9),
-                                    fitting_range = (7698.5, 7699.4),
-                                     make_plot=True )
+# plotwave, normflux, results_dataframe = fit_conitnuum(Wave=7698,  sightlines = sightlines, plotrange=(7698.1, 7699.9), 
+#                                    conitnuum_range_before = (7698.1, 7698.5),
+#                                     conitnuum_range_after = (7699.4, 7699.9),
+#                                     fitting_range = (7698.5, 7699.4),
+#                                      make_plot=True )
 
-save_results_into_csv_as = save_here + 'K_voigt_fitting_results_all_obs_not_normalizing.csv'
-results_dataframe.to_csv(save_results_into_csv_as)
+# save_results_into_csv_as = save_here + 'K_voigt_fitting_results_all_obs_not_normalizing.csv'
+# results_dataframe.to_csv(save_results_into_csv_as)
 
 
 #CH+
 # save_here = '/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/supplementary_code/plotting_CH_plus_lines_linewidth_check/fit_results_CH_plus/Correction-not_normalizing_before_fitting/'
-# plotwave, normflux, results_dataframe= fit_conitnuum(Wave=4232,  sightlines = sightlines, plotrange=(4232.1, 4233), 
-#                                                     conitnuum_range_before = (4232.1, 4232.4),
-#                                                     conitnuum_range_after = (4232.75, 4233 ),
-#                                                     fitting_range= (4232.2, 4232.9),
-#                                                     make_plot=True )
+plotwave, normflux, results_dataframe= fit_conitnuum(Wave=4232,  sightlines = sightlines, plotrange=(4232.1, 4233), 
+                                                    conitnuum_range_before = (4232.1, 4232.4),
+                                                    conitnuum_range_after = (4232.75, 4233 ),
+                                                    fitting_range= (4232.2, 4232.9),
+                                                    make_plot=True )
 
-
+plt.show()
 # save_results_into_csv_as = save_here + 'CHplus_voigt_fitting_results_all_obs_not_normalizing_2.csv'
 # results_dataframe.to_csv(save_results_into_csv_as)
 

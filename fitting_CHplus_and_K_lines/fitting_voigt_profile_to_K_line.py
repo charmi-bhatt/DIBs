@@ -91,7 +91,7 @@ def fit_voigt_to_K_line(wave, flux, fitting_range):
 
     wavegrid = np.array(wave)
     model=Model(voigt_absorption_line, independent_vars=['wavegrid'])
-    model.set_param_hint('lambda0', value=7698.9, vary=False) #CH+: 4232.548 #K: 7698.9
+    model.set_param_hint('lambda0', value=7698.965, vary=False) #CH+: 4232.548 #K: 7698.965
     model.set_param_hint('f',  value= 3.393e-1, vary=False) #for K: 3.393e-1 for Ch+: 0.005450
     model.set_param_hint('gamma', value=3.8e7, vary=False) # for K: 3.8e7 for CH+ : 1.0e8
     model.set_param_hint('v_resolution', value=3.75, vary=False) #3.75, v_resolution = c/R = 3e5/8e4 for EDIBBLES
