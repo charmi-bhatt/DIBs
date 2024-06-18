@@ -80,7 +80,7 @@ def define_continuum(start_wavelength, start_flux, end_wavelength, end_flux):
     return lambda w: slope * w + intercept
 
 
-def remove_continuum(wave, flux, plotrange, continuum_range_before, continuum_range_after, show_continuum_plot, show_normalized_spectra):
+def divide_continuum(wave, flux, plotrange, continuum_range_before, continuum_range_after, show_continuum_plot):
 
     bool_keep = (wave > plotrange[0]) & (wave < plotrange[1])
     plotwave = wave[bool_keep]
@@ -125,30 +125,12 @@ def remove_continuum(wave, flux, plotrange, continuum_range_before, continuum_ra
         
         
     flux_without_continuum = plotflux / defined_continuum(plotwave)
-    #normflux = (flux_without_continuum - min(flux_without_continuum))/ (max(flux_without_continuum)- min(flux_without_continuum))
     
-    #for seeing normlaized spectra 
-
-    if show_normalized_spectra == True:
-        plt.figure(figsize=(12,8))
-        plt.plot(plotwave, normflux)
-        plt.xlim(plotrange)
-        plt.title(f'{sightline}_{filename}')
-        plt.show()
-
-    # save_plot_as = workdir + f'{sightline}_K_continuum_subtracted_and_norm__obs{i}.png'
-    # plt.savefig(save_plot_as, format = 'png')
-    #saving normalized data
-    # filename_column = [filename] * len(plotwave)
-    # combined_array = np.array([filename_column, plotwave, normflux]).T
-    # # Save the array to a text file
-    # np.savetxt(workdir + f'norm_spectra_K_{sightline}_obs{i}.txt', combined_array, fmt='%s', delimiter=' ')
-
     return plotwave, flux_without_continuum
         
 
 
-def fit_voigt(wave, flux, fitting_range, lambda0, f, gamma, v_resolution, n_step, N, b, v_rad): 
+def fit_voigt(wave, flux, fitting_range, lambda0, f, gamma, v_resolution, n_step, N, b, v_rad, show_best_fit_plot = None): 
 
     wavegrid = np.array(wave)
     model=Model(voigt_absorption_line, independent_vars=['wavegrid'])
@@ -174,8 +156,14 @@ def fit_voigt(wave, flux, fitting_range, lambda0, f, gamma, v_resolution, n_step
     print(result.fit_report())
     result.params.pretty_print()
 
-    #plt.plot(fitting_wave, result.best_fit, color = 'red')
+    v_rad = result.params['v_rad'].value
 
+    if show_best_fit_plot:
+        plt.plot(wave, flux, label = 'data')
+        plt.plot(fitting_wave, result.best_fit, color = 'red', label = f' V_rad: {v_rad}')
+        plt.plot(fitting_wave, fitting_flux, label = ' This goes into fitting')
+        plt.legend()
+        plt.show()
 
     return result
 
@@ -215,20 +203,31 @@ def coadd_data(wavegrid, all_wave, all_flux):
 
     return fig, coadded_data
 
+def filter_filenames(filenames, order_to_remove):
+
+    #getting rid of O14.fits file as CH+ feature is towards the end of the wavelength range. 
+    #SO only using O15.fits files
+    return [filename for filename in filenames if not filename.endswith(f'_{order_to_remove}.fits')]
+
 
 
 ##### Inputs ###########
 
 feature = 'CHplus' #'CHplus' or 'K'
 
-sightlines = ['HD 23180', 'HD 24398', 'HD 144470', 'HD 147165', 'HD 147683', 'HD 149757', 'HD 166937', 'HD 170740', 'HD 184915', 'HD 185418', 'HD 185859', 'HD 203532']
-sightlines= ['HD 166937']
+order_to_remove = 'O14' #014 to be removed as CH+ is toward the end of the wavelength range
+
+
+sightlines = ['HD 23180', 'HD 24398', 'HD 144470', 'HD 147165', 'HD 147683', 'HD 149757',
+            'HD 166937', 'HD 170740', 'HD 184915', 'HD 185418', 'HD 185859', 'HD 203532']
+
+sightlines =  ['HD 203532']
 
 ########################
 
 if feature == 'CHplus':
     #For removing continuum
-    plotrange=(4231.8, 4233.2)
+    plotrange=(4231.8, 4233)
     continuum_range_before = (4232.0, 4232.2)
     continuum_range_after = (4232.85, 4233)
 
@@ -280,7 +279,6 @@ if feature == 'K':
     save_K_labels = True
 
 
-
 for i, sightline in enumerate(sightlines):
 
     #Filtering EDIBLES data based on wavelength and sightline
@@ -289,45 +287,64 @@ for i, sightline in enumerate(sightlines):
     all_wave = []
     all_flux = []
 
+    #conitnuum limits are different for one sightline - 
+    # should have a better way of defining this based on fits
+    if feature == 'CHplus': 
+        if sightline == 'HD 166937':
+            continuum_range_after = (4232.6, 4232.8)
+        if sightline == 'HD 203532':
+            continuum_range_before = (4232.2, 4232.4)
+        else: 
+            continuum_range_after = (4232.85, 4233)
+            continuum_range_before = (4232.0, 4232.2)
+
+
+
+    # Data from 20-07-2015 is bad data so removing it from the list
     if feature == 'CHplus':
         if sightline == 'HD 149757':
             List = List.drop(List.index[5])
             List = List.drop(List.index[3])
-        if sightline == 'HD 166937':
-            continuum_range_after = (4232.6, 4232.8)
-    
-        if sightline == 'HD 184915':
-            List = List.drop(List.index[4])
-        
     if feature == 'K':
         if sightline == 'HD 149757':
             List = List.drop(List.index[1])
 
 
-    for i, filename in enumerate(List):  
+    try:
+        if order_to_remove:
+            filtered_filenames = filter_filenames(List, order_to_remove)
+    except NameError:
+        filtered_filenames = List  # No filtering if order_to_remove is not defined
+
+    
+
+    for i, filename in enumerate(filtered_filenames):  
 
         #getting data from filtered EDIBLES data set list
         wave, flux, target, datetime = load_EDIBLES_spectrum(filename, make_plot=False )
 
+
         #removing continuum based on defined points
 
             
-        plotwave, flux_without_continuum = remove_continuum(wave, flux, plotrange, continuum_range_before, 
-                                          continuum_range_after, show_continuum_plot = True, 
-                                          show_normalized_spectra = False)
-
+        plotwave, flux_without_continuum = divide_continuum(wave, flux, plotrange, continuum_range_before, 
+                                          continuum_range_after, show_continuum_plot = True)
+        
+       
 
         #fitting voigt porfile to v_rad that can be used for wavlength corection
-        result = fit_voigt(plotwave, flux_without_continuum, fitting_range, lambda0, f, gamma, v_resolution, n_step, N, b, v_rad)
+        result = fit_voigt(plotwave, flux_without_continuum, fitting_range, lambda0, f, gamma, 
+                           v_resolution, n_step, N, b, v_rad, show_best_fit_plot= True)
 
         
         #performing radial velocity correction
         wave_corrected = v_rad_correction(plotwave, result)
 
+        #plt.plot(wave_corrected, flux_without_continuum)
+
         #putting all observations towards a given sightline together, which can then be used for co-adding
         all_wave.append(wave_corrected)
         all_flux.append(flux_without_continuum)
-
 
     wavegrid = make_grid(lambda_start= lambda_start, lambda_end= lambda_end, resolution=resolution, oversample=oversample)
     fig, coadded_data = coadd_data(wavegrid, all_wave, all_flux)
@@ -342,10 +359,7 @@ for i, sightline in enumerate(sightlines):
         plt.savefig(savehere + f'K_line_coadded_data/{sightline}_see_coadded_data_K_line.png', format = 'png')
         np.savetxt(savehere + f'K_line_coadded_data/{sightline}_coadded_data_K_line.txt', coadded_data)
                 
-
-
-
-
+    print(List)
 
 
 
