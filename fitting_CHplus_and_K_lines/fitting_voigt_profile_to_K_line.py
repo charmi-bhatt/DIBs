@@ -86,16 +86,26 @@ def fit_voigt_to_K_line(wave, flux, fitting_range):
     # Add fit_report to result_dic
     result_dic['fit_report'] = f'{result.fit_report()}'
     
+    # fig, ax = plt.subplots(figsize=(10, 8))
+    # ax.plot(wave, flux, 'b-', label='Data')
+    # ax.plot(fitting_wave, fitting_flux, color='green', label='This goes into fitting')
+    # ax.plot(fitting_wave, result.best_fit, 'r-', label='Best Fit')
+    # ax.legend(loc='lower left', fontsize=8)
+    # ax.set_xlabel('Plotwave')
+    # ax.set_ylabel('Continuum subtracted flux')
+    # plt.subplots_adjust(right=0.5)
+    # plt.figtext(0.55, 0.02, f'Sightline : {sightline} \n \n' + result.fit_report(),
+    #             wrap=True, horizontalalignment='left', fontsize=10)
+    
+    b = result.params['b'].value
+    #for paper
     fig, ax = plt.subplots(figsize=(10, 8))
-    ax.plot(wave, flux, 'b-', label='Data')
-    ax.plot(fitting_wave, fitting_flux, color='green', label='This goes into fitting')
-    ax.plot(fitting_wave, result.best_fit, 'r-', label='Best Fit')
-    ax.legend(loc='lower left', fontsize=8)
-    ax.set_xlabel('Plotwave')
-    ax.set_ylabel('Continuum subtracted flux')
-    plt.subplots_adjust(right=0.5)
-    plt.figtext(0.55, 0.02, f'Sightline : {sightline} \n \n' + result.fit_report(),
-                wrap=True, horizontalalignment='left', fontsize=10)
+    ax.plot(wave, flux, label=f'{sightline}', color = 'black')
+    #ax.plot(fitting_wave, fitting_flux, color='green', label='This goes into fitting')
+    ax.plot(fitting_wave, result.best_fit, 'r-', label=f'Best Fit, b = {b:.2f} km/s')
+    ax.legend(loc='lower left', fontsize=15)
+    ax.set_xlabel('Wavelength ($/AA)', fontsize = 15)
+    ax.set_ylabel('Intenisty', fontsize = 15)
 
 
     return fig, result_dic
@@ -114,12 +124,11 @@ for sightline in sightlines:
 
     plotwave = coadded_data.iloc[:,0]
     plotflux = coadded_data.iloc[:,1]
-
     
     fig, result_dic = fit_voigt_to_K_line(plotwave, plotflux,fitting_range = (7698.5, 7699.4))
+    #plt.savefig(savehere + f'{sightline}_fit_result_k_line_coadded.png' , format = 'png')
+    plt.savefig(savehere + f'figures_for_paper/{sightline}_fit_result_k_line_coadded.pdf' , format = 'pdf')
 
-    plt.savefig(savehere + f'{sightline}_fit_result_k_line_coadded.png' , format = 'png')
-        
         
     fit_results_list.append(result_dic) 
 
