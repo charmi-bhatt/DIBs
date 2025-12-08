@@ -23,10 +23,12 @@ import lmfit
 from lmfit import minimize, Parameters, report_fit 
 import uncertainties as unc
 import uncertainties.umath as umath 
-import numba as nb
+#import numba as nb
 from pathlib import Path
 from lmfit import Parameters      
-
+from matplotlib.ticker import MaxNLocator
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 
 
 def allowed_perperndicular_transitions(Jmax):
@@ -231,11 +233,11 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     Intenisty_arr = np.array(linelist['intensities'])
 
 
-    @nb.njit(parallel=True)
+    #nb.njit(parallel=True)
     def calculate_smooth_intensities(wavenos, intensities, smooth_wavenos, sigma):
         smooth_intensities = np.zeros(smooth_wavenos.shape)
 
-        for i in nb.prange(len(smooth_wavenos)):
+        for i in range(len(smooth_wavenos)):
             wavepoint = smooth_wavenos[i]
             w_int = np.exp(-(wavenos - wavepoint) ** 2 / (2 * sigma ** 2)) * intensities
             smooth_intensities[i] = np.sum(w_int)
@@ -323,185 +325,328 @@ combinations  = allowed_perperndicular_transitions(Jmax)
 #method = 'ampgo'
 
 #EDIBLES data
-spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
+#spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
+
+spec_dir = Path("/home/charmibhatt/Science/DIBs/Data/Heather's_data")
+
+
+
 filename = '6614_HD{}.txt'
 sightlines = ['23180', '24398', '144470', '147165' , '147683', '149757', '166937', '170740', '184915', '185418', '185859', '203532']
 
 
-
+########################################################
 
 '''Varying T in kerr's C model'''
+########################################################
 
-#All paramters are from kerr's model c, except the one varying here (T)
-# B = 0.00336
-# delta_B = -0.17
-# zeta=  -0.49
-# Ts = (40,55)
-# sigma = 0.1953
-# origin = 0.12
-# sightlines = ('166937', '185418')
-# plt.figure(figsize=(16,9))
-# vertical_offset = 0.05
+# All paramters are from kerr's model c, except the one varying here (T)
+B = 0.00336
+delta_B = -0.17
+zeta=  -0.49
+Ts = (40,55)
+sigma = 0.1953
+origin = 0.12
+sightlines = ('166937', '185418')
+plt.figure(figsize=(3.9, 2.3))
+vertical_offset = 0.05
 
-# for T in Ts:
-#     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-#     linelist['intensities'] = 1-0.1*(linelist['intensities']/max(linelist['intensities']))
-#     #plt.stem(linelist['wavenos'], linelist['intensities'], label = 'zeta = ' + str(zeta), bottom = 1)
-#     plt.plot(model_data[:,0], model_data[:,1], label = 'Simulated at T = ' + str(T) + ' K', )
-
-#     #plt.plot(model_data[:,0], model_data[:,1], label = 'Simulated at $\sigma$ = ' + str(sigma) + ' cm$^{{-1}}$')
-#     # plt.axvline(x = -0.70, color = 'black', linestyle = 'dotted')
-#     # plt.axvline(x = -0.58, color = 'black', linestyle = 'dotted')
-#     # plt.axvline(x = 0.64, color = 'black', linestyle = 'dotted')
-#     # plt.axvline(x = 0.78, color = 'black', linestyle = 'dotted')
-#     # plt.title(f"B = {B} $cm^{{-1}}$  $\Delta B = ${delta_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$ $\sigma = ${sigma} cm$^{{-1}}$", fontsize = 20)
-   
-# colors = ('red', 'green')
-# for sightline, color in zip(sightlines, colors):
+for i,T in enumerate(Ts):
     
-#     Obs_data = obs_curve(sightline)
+    # linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+    # np.savetxt(f"Varying_temp_kerrsmodel_{i+1}.csv", model_data, delimiter = ',')
     
-#     plt.plot(Obs_data['Wavelength'], Obs_data['Flux'] - vertical_offset, label = 'HD ' + str(sightline), color = color)
-#     plt.xlim(3,-3)
-#     plt.legend()
+    model_data = pd.read_csv(f"Varying_temp_kerrsmodel_{i+1}.csv")
 
+    plt.plot(model_data.iloc[:,0], model_data.iloc[:,1], label = 'T = ' + str(T) + 'K', linewidth = 1)
+    plt.axvline(x = -0.70, color = 'black', linestyle = 'dashed', linewidth = 0.5)
+    plt.axvline(x = -0.58, color = 'black', linestyle = 'dashed', linewidth = 0.5)
+    plt.axvline(x = 0.64, color = 'black', linestyle = 'dashed', linewidth = 0.5)
+    plt.axvline(x = 0.78, color = 'black', linestyle = 'dashed', linewidth = 0.5)
+    # plt.title(f"B = {B} $cm^{{-1}}$  $\Delta B = ${delta_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$ $\sigma = ${sigma} cm$^{{-1}}$",
+    #           fontsize = 23)
+   
+    plt.title('Varying temperature only', fontsize = 9)
+ 
+    # Add the first legend for temperature curves
+    legend1 = plt.legend(loc='upper center', facecolor='white', edgecolor='white', fontsize = 9)
+    plt.gca().add_artist(legend1)  # Retain the first legend
 
    
-# plt.legend(loc = "lower right", fontsize = 15)
-# plt.xlabel('Wavenumbers (cm$^{-1}$)', fontsize = 20,  labelpad= 10)
-# plt.ylabel('Normalized Intenisty', fontsize = 20, labelpad= 10)
-# plt.xticks(fontsize=20)
-# plt.yticks(fontsize= 20)
-# plt.show()
+colors = ('red', 'green')
+observation_handles = []  # To store handles for the second legend
+observation_labels = []   # To store labels for the second legend
+for sightline, color in zip(sightlines, colors):
+    Obs_data = obs_curve(sightline)
+    handle, = plt.plot(
+            Obs_data['Wavelength'],
+            Obs_data['Flux'] - vertical_offset,
+            linewidth=1,
+            label=f'HD {sightline}',
+            color=color
+    )    
+    
+    observation_handles.append(handle)
+    observation_labels.append(f'HD {sightline}')
+
+# Add the second legend specifically for observational data
+plt.legend(handles=observation_handles, labels=observation_labels, loc='lower right',fontsize = 8 , frameon = False)
 
 
-# plt.savefig("Varying_T_in_kerr_model_c_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
+
+
+plt.xlim(2.3, -2.3)
+
+# plt.legend(loc = "lower right", fontsize = 9.5, frameon = False)
+plt.xlabel('Wavenumber (cm$^{-1}$)', fontsize = 9,  labelpad= 3)
+plt.ylabel('Normalized Intenisty', fontsize = 9, labelpad= 5)
+
+
+
+
+# Customize tick labels and reduce the number of ticks
+plt.gca().xaxis.set_major_locator(MaxNLocator(nbins=6))  
+plt.gca().yaxis.set_major_locator(MaxNLocator(nbins=4))  
+# Increase tick label size
+plt.xticks(fontsize=9)
+plt.yticks(fontsize=9)
+
+# Add minor ticks
+plt.minorticks_on()
+plt.tick_params(which='both', width=1)
+plt.tick_params(which='major', length=6, direction = 'in')
+plt.tick_params(which='minor', length=3, color='gray', direction = 'in')
+
+
+plt.savefig("Varying_T_in_kerr_model_c_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
+
+
+
+
+
+
+#  ########################################################
+'''Varying sigma in kerr's C model'''
+# ########################################################
+
+# All paramters are from kerr's model c, except the one varying here (sigma)
+B = 0.00336
+delta_B = -0.17
+zeta=  -0.49
+T = 61.2
+sigmas = (0.151, 0.195)
+
+origin = 0.12
+sightlines = ('166937', '185418')
+plt.figure(figsize=(3.9, 2.3))
+vertical_offset = 0.05
+
+for i, sigma in enumerate(sigmas):
+    # linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+    # np.savetxt(f"Varying_sigma_kerrsmodel_{i+1}.csv", model_data, delimiter = ',')
+
+    model_data = pd.read_csv(f"Varying_sigma_kerrsmodel_{i+1}.csv")
+
+    plt.plot(model_data.iloc[:,0], model_data.iloc[:,1], linewidth = 1, label = f'$\sigma$ = {sigma:.2f} cm$^{{-1}}$')
+    
+    plt.axvline(x = -0.70, color = 'black', linestyle = 'dashed', linewidth = 0.5)
+    plt.axvline(x = -0.58, color = 'black', linestyle = 'dashed', linewidth = 0.5)
+    plt.axvline(x = 0.64, color = 'black', linestyle = 'dashed', linewidth = 0.5)
+    plt.axvline(x = 0.78, color = 'black', linestyle = 'dashed', linewidth = 0.5)
+    # plt.title(f"B = {B} $cm^{{-1}}$  $\Delta B = ${delta_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$ T = {T} K", 
+    #           fontsize = 23)
+    plt.title('Varying line width only', fontsize = 9)
+
+    legend1 = plt.legend(loc='upper center', facecolor='white', edgecolor='white', fontsize = 9)
+    plt.gca().add_artist(legend1)  # Retain the first legend
+   
+colors = ('red', 'green')
+observation_handles = []  # To store handles for the second legend
+observation_labels = []   # To store labels for the second legend
+for sightline, color in zip(sightlines, colors):
+    Obs_data = obs_curve(sightline)
+    handle, = plt.plot(
+            Obs_data['Wavelength'],
+            Obs_data['Flux'] - vertical_offset,
+            linewidth=1,
+            label=f'HD {sightline}',
+            color=color
+    )    
+    
+    observation_handles.append(handle)
+    observation_labels.append(f'HD {sightline}')
+
+# Add the second legend specifically for observational data
+plt.legend(handles=observation_handles, labels=observation_labels, loc='lower right', fontsize = 8, frameon = False)
+
+
+plt.xlim(2.3, -2.3)
+plt.xlabel('Wavenumber (cm$^{-1}$)', fontsize = 9,  labelpad= 3)
+plt.ylabel('Normalized Intenisty', fontsize = 9, labelpad= 5)
+
+
+
+# Customize tick labels and reduce the number of ticks
+plt.gca().xaxis.set_major_locator(MaxNLocator(nbins=6))  
+plt.gca().yaxis.set_major_locator(MaxNLocator(nbins=4))  
+# Increase tick label size
+plt.xticks(fontsize=9)
+plt.yticks(fontsize=9)
+
+# Add minor ticks
+plt.minorticks_on()
+plt.tick_params(which='both', width=1)
+plt.tick_params(which='major', length=6, direction = 'in')
+plt.tick_params(which='minor', length=3, color='gray', direction = 'in')
+
+
+
+plt.savefig("Varying_sigma_in_kerr_model_c_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
+
+
+
+
+
+
+
+
+
+
+
+
+# ########################################################
+
+'''Test: After including linewidth, can models reproduce peak separations and width of Q branch?'''
+
+# #All paramters are from kerr's model c, except the one varying here (T and sigma)
+# ########################################################
+
+B = 0.00336
+delta_B = -0.17
+zeta=  -0.49
+Ts = (59.41, 64.05)
+sigmas = (0.197, 0.154)
+origins = (0.06, 0.053)
+vertical_offset = 0.05
+plt.figure(figsize=(3.9, 2.3))
+
+#sightlineos = ['185418', '166937']
+sightlines = ('166937', '185418')
+
+
+
+for i, (T, sigma, origin) in enumerate(zip(Ts, sigmas, origins)):
+    
+    # linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+    # np.savetxt(f"Varying_temp_and_sigma_kerrsmodel_{i+1}.csv", model_data, delimiter = ',')
+
+    model_data = pd.read_csv(f"Varying_temp_and_sigma_kerrsmodel_{i+1}.csv")
+    
+    
+    plt.plot(model_data.iloc[:,0], model_data.iloc[:,1], linewidth = 1, label = f'T={T:.0f}K, $\sigma$={sigma:.2f}cm$^{{-1}}$')  
+    
+    plt.axvline(x = -0.70, color = 'black', linestyle = 'dashed', linewidth = 0.5)
+    plt.axvline(x = -0.58, color = 'black', linestyle = 'dashed', linewidth = 0.5)
+    plt.axvline(x = 0.64, color = 'black', linestyle = 'dashed', linewidth = 0.5)
+    plt.axvline(x = 0.78, color = 'black', linestyle = 'dashed', linewidth = 0.5)
+    # plt.title(f"B = {B} $cm^{{-1}}$  $\Delta B = ${delta_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$" ,
+    #           fontsize = 23) #"$\sigma = ${sigma} cm$^{{-1}}$" , fontsize = 20)
+    plt.title('Varying both temperature and line width', fontsize = 9)
+    
+    # Define the position and size of the rectangle
+    x = -0.8 # x-coordinate of the rectangle
+    y = 0.97  # y-coordinate of the rectangle
+    width = 1.7  # Width of the rectangle
+    height = 0.04  # Height of the rectangle
+
+    # Add a white rectangle to the plot
+    rect = Rectangle(
+        (x, y), width, height,  # Position and size
+        facecolor='white',  # Rectangle color
+        edgecolor='white',  # Optional: border color
+        linewidth=1,  # Optional: border width
+        alpha = 1,
+        zorder=3  # Ensure rectangle is on top of other elements
+    )
+    plt.gca().add_patch(rect)
+
+        
+    
+    legend1 = plt.legend(loc='upper center', fontsize = 9, frameon = False) #facecolor='white', edgecolor='white', 
+plt.gca().add_artist(legend1)  # Retain the first legend
+   
+    
+
+
+
+
+colors = ('red', 'green')
+observation_handles = []  # To store handles for the second legend
+observation_labels = []   # To store labels for the second legend
+for sightline, color in zip(sightlines, colors):
+    Obs_data = obs_curve(sightline)
+    handle, = plt.plot(
+            Obs_data['Wavelength'],
+            Obs_data['Flux'] - vertical_offset,
+            linewidth=1,
+            label=f'HD {sightline}',
+            color=color
+    )    
+    
+    observation_handles.append(handle)
+    observation_labels.append(f'HD {sightline}')
+
+# Add the second legend specifically for observational data
+plt.legend(handles=observation_handles, labels=observation_labels, loc='lower right', fontsize = 8, frameon = False)
+
+
+plt.xlim(2.3, -2.3)
+# plt.ylim(0.84, 1.03)
+plt.xlabel('Wavenumber (cm$^{-1}$)', fontsize = 9,  labelpad= 3)
+plt.ylabel('Normalized Intenisty', fontsize = 9, labelpad= 5)
+
+
+
+# Customize tick labels and reduce the number of ticks
+plt.gca().xaxis.set_major_locator(MaxNLocator(nbins=6))  
+plt.gca().yaxis.set_major_locator(MaxNLocator(nbins=4))  
+# Increase tick label size
+plt.xticks(fontsize=9)
+plt.yticks(fontsize=9)
+
+# Add minor ticks
+plt.minorticks_on()
+plt.tick_params(which='both', width=1)
+plt.tick_params(which='major', length=6, direction = 'in')
+plt.tick_params(which='minor', length=3, color='gray', direction = 'in')
+
+
+
+plt.savefig("Varying_T_and_sigma_together_in_kerr_model_c_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
+
+
+
+
+
 
 
 '''Plotting 6614'''
 
-sightline = 166937  
-file = filename.format(sightline)
+# sightline = 166937  
+# file = filename.format(sightline)
+# # Obs_data = pd.read_csv(spec_dir / file,
+# #                         delim_whitespace=(True))
+
 # Obs_data = pd.read_csv(spec_dir / file,
-#                         delim_whitespace=(True))
-
-Obs_data = pd.read_csv(spec_dir / file,
-                        sep = ',')
+#                         sep = ',')
     
-plt.plot(Obs_data['Wavelength'], Obs_data['Flux'])
-plt.xlim(6612,6616)
-plt.xlabel('Wavenumbers (cm$^{-1}$)', fontsize = 15)
-plt.ylabel('Normalized Intenisty', fontsize = 15)
-# plt.xticks(fontsize=15)
-# plt.yticks(fontsize= 15)
-plt.show()
-    
-
-'''Varying sigma in kerr's C model'''
-
-#All paramters are from kerr's model c, except the one varying here (sigma)
-# B = 0.00336
-# delta_B = -0.17
-# zeta=  -0.49
-# T = 61.2
-# sigmas = (0.1512, 0.1953)
-# origin = 0.12
-# sightlines = ('166937', '185418')
-# plt.figure(figsize=(16,9))
-# vertical_offset = 0.05
-
-# for sigma in sigmas:
-#     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-#     # linelist['intensities'] = 1-0.1*(linelist['intensities']/max(linelist['intensities']))
-#     # plt.stem(linelist['wavenos'], linelist['intensities'], label = 'zeta = ' + str(zeta), bottom = 1)
-#     #plt.plot(model_data[:,0], model_data[:,1], label = 'Simulated at T = ' + str(T) + ' K')
-
-#     plt.plot(model_data[:,0], model_data[:,1], label = 'Simulated at $\sigma$ = ' + str(sigma) + ' cm$^{{-1}}$')
-    
-#     plt.axvline(x = -0.70, color = 'black', linestyle = 'dotted')
-#     plt.axvline(x = -0.58, color = 'black', linestyle = 'dotted')
-#     plt.axvline(x = 0.64, color = 'black', linestyle = 'dotted')
-#     plt.axvline(x = 0.78, color = 'black', linestyle = 'dotted')
-#     plt.title(f"B = {B} $cm^{{-1}}$  $\Delta B = ${delta_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$ T = {T} K", fontsize = 20)
-   
-    
-# for sightline in sightlines:
-    
-#     Obs_data = obs_curve(sightline)
-    
-#     plt.plot(Obs_data['Wavelength'], Obs_data['Flux'] - vertical_offset, label = 'HD ' + str(sightline))
-#     plt.xlim(3,-3)
-#     plt.legend()
-    
-    
-    
-   
-# plt.legend(loc = "lower right", fontsize = 15)
-# plt.xlabel('Wavenumbers (cm$^{-1}$)', fontsize = 20,  labelpad= 10)
-# plt.ylabel('Normalized Intenisty', fontsize = 20, labelpad= 10)
-# plt.xticks(fontsize=20)
-# plt.yticks(fontsize= 20)
-
-
-# plt.savefig("Varying_sigma_in_kerr_model_c_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
-
-
-'''Test: After including linewidth, can models reproduce peak separations and width of Q branch?'''
-
-#All paramters are from kerr's model c, except the one varying here (T and sigma)
-
-# B = 0.00336
-# delta_B = -0.17
-# zeta=  -0.49
-# Ts = (59.41, 64.05)
-# sigmas = (0.197, 0.154)
-# origins = (0.06, 0.053)
-# vertical_offset = 0.05
-# plt.figure(figsize=(16,9))
-
-# #sightlineos = ['185418', '166937']
-# sightlines = ('166937', '185418')
-
-# for T, sigma, origin in zip(Ts, sigmas, origins):
-#     linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-#     plt.plot(model_data[:,0], model_data[:,1], label = 'Models: T = ' + str(T) + ' K, $\sigma = $' + str(sigma) + 'cm$^{{-1}}$')  
-    
-#     # plt.axvline(x = -0.70, color = 'black', linestyle = 'dotted')
-#     # plt.axvline(x = -0.58, color = 'black', linestyle = 'dotted')
-#     # plt.axvline(x = 0.64, color = 'black', linestyle = 'dotted')
-#     # plt.axvline(x = 0.78, color = 'black', linestyle = 'dotted')
-#     # plt.title(f"B = {B} $cm^{{-1}}$  $\Delta B = ${delta_B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$" , fontsize = 20) #"$\sigma = ${sigma} cm$^{{-1}}$" , fontsize = 20)
-#     plt.legend()
-    
-#     plt.xlim(-3, 3)
-    
-# for sightline in sightlines:
-    
-#     Obs_data = obs_curve(sightline)
-    
-#     plt.plot(Obs_data['Wavelength'], Obs_data['Flux'] - vertical_offset, label = 'HD ' + str(sightline))
-#     plt.xlim(3,-3)
-#     #plt.legend()
-    
-    
-# plt.legend(loc = "lower right", fontsize = 14)
-# #plt.legend(bbox_to_anchor=(1.8, 0.7), loc='lower right', fontsize = 22)
-# plt.xlabel('Wavenumbers (cm$^{-1}$)', fontsize = 20,  labelpad= 10)
-# plt.ylabel('Normalized Intenisty', fontsize = 20, labelpad= 10)
-# plt.xticks(fontsize=20)
-# plt.yticks(fontsize= 20)
-
+# plt.plot(Obs_data['Wavelength'], Obs_data['Flux'])
+# plt.xlim(6612,6616)
+# plt.xlabel('Wavenumbers (cm$^{-1}$)', fontsize = 15)
+# plt.ylabel('Normalized Intenisty', fontsize = 15)
+# # plt.xticks(fontsize=15)
+# # plt.yticks(fontsize= 15)
 # plt.show()
-
-#plt.savefig("Varying_T_and_sigma_together_in_kerr_model_c_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
-
-
-
-
-
-
-
-
 
 '''PLotting'''
 

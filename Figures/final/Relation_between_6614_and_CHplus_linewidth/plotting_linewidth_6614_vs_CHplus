@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Oct  3 10:36:38 2024
+
+@author: charmibhatt
+"""
+
+import numpy as np
+from scipy.stats import pearsonr
+import matplotlib.pyplot as plt
+
+# Data for CH+ linewidth and uncertainty
+ch_plus_linewidth = [2.8497, 2.371, 2.9273, 2.0664, 5.5569, 2.3963, 2.3283, 3.743, 2.7586, 4.9278, 3.3286, 2.8754]
+ch_plus_uncertainty = [0.1215, 0.2464, 0.1296, 0.1437, 0.2709, 0.0405, 0.1195, 0.0782, 0.1459, 0.1614, 0.0517, 0.1136]
+
+# Data for DIB 6614 linewidth and uncertainty
+dib_6614_linewidth = [3.2315, 3.5148, 3.2714, 3.1982, 3.8639, 2.828, 3.0399, 3.4332, 3.5275, 3.8875, 4.2204, 3.3111]
+dib_6614_uncertainty = [0.1415, 0.1055, 0.1306, 0.3366, 0.1623, 0.2436, 0.1204, 0.0653, 0.1246, 0.094, 0.0841, 0.2353]
+
+# Plotting
+plt.errorbar(dib_6614_linewidth, ch_plus_linewidth,
+             xerr=dib_6614_uncertainty, 
+             fmt='ko', ecolor='indianred', capsize=3, markersize = 4)
+
+plt.errorbar(dib_6614_linewidth, ch_plus_linewidth,
+            yerr=ch_plus_uncertainty,
+             fmt='ko', ecolor='steelblue', capsize=3,  markersize = 4)
+
+
+
+# Adding a line of best fit (linear regression)
+
+correlation_coefficient, p_value = pearsonr( dib_6614_linewidth, ch_plus_linewidth)
+
+coefficients = np.polyfit(dib_6614_linewidth, ch_plus_linewidth,  1)
+poly = np.poly1d(coefficients)
+x_points = np.linspace(min(dib_6614_linewidth) -0.3, max(dib_6614_linewidth) +0.3)
+plt.plot(x_points, poly(x_points), color= 'gray', 
+         label=f'Pearson Correlation Coefficient: {correlation_coefficient:.2f}',
+         linestyle = 'dashed', alpha = 0.5)
+
+
+
+plt.ylabel('CH$^+$ linewidth (km/s)', fontsize = 13, labelpad=10)
+plt.xlabel(r' $\lambda$6614 linewidth (km/s)' , fontsize = 13, labelpad=10)
+plt.xticks(fontsize=13)
+plt.yticks(fontsize= 13)
+plt.ylim(1, 7)
+plt.legend(loc = 'upper left' , fontsize = 10)
+
+plt.savefig('Linewidth_6614_vs_CHplus.pdf', format = 'pdf', bbox_inches = 'tight')
+
+# Display the plot
+plt.show()

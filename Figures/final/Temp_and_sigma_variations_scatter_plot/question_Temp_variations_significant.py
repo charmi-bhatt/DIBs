@@ -16,9 +16,10 @@ import timeit
 from lmfit import Model
 import csv
 # import lmfit
-import numba as nb
 from pathlib import Path
 from lmfit import Parameters
+from matplotlib.ticker import MaxNLocator
+from matplotlib.ticker import AutoMinorLocator
 
 sightlines = ['HD 23180', 'HD 24398', 'HD 144470', 'HD 147165' , 'HD 147683', 'HD 149757', 'HD 166937', 'HD 170740', 'HD 184915', 'HD 185418', 'HD 185859', 'HD 203532']
 
@@ -45,44 +46,102 @@ sightlines, T, T_err, sigma, sigma_err, PR_sep, PR_sep_unc = zip(*data)
 
 
 x = np.linspace(1,12, 12)
+
+###############################################
+'''Scatter in T'''
+###############################################
+
+plt.figure(figsize = (3.3, 2))
 plt.errorbar(x = x, y = T, yerr = T_err, fmt='o', color='black',
-              ecolor='lightgray', elinewidth=3, capsize=0 )
+              ecolor='gray', elinewidth=1.5, capsize=2, markersize = 3 )
 
 
-plt.xticks(x, sightlines, rotation = 55, size = 9)
-#plt.xticks([])  
-plt.ylabel(' Rotational Temperature (K)', labelpad =15 , size = 14)
-plt.xlabel('12 single-cloud sightlines', labelpad= 25, size = 14)
+plt.xticks(x, sightlines, rotation = 75, size = 7)
+plt.yticks(size = 8)
+plt.ylabel(' Rotational Temperature (K)', labelpad =0 , size = 8)
+plt.xlabel('12 single-cloud sightlines', labelpad= 5, size = 8)
+
+
+
+# Add minor ticks only to the y-axis
+plt.gca().yaxis.set_minor_locator(AutoMinorLocator(2))  # Adds 2 minor ticks between each major tick on the y-axis
+
+# Disable minor ticks on the x-axis
+plt.tick_params(axis='x', which='minor', bottom=False)  # Turns off minor ticks on the x-axis
+plt.tick_params(axis='x', which='major', length=5, direction = 'in')  # Turns off minor ticks on the x-axis
+
+# Customize the minor ticks on the y-axis
+plt.tick_params(axis='y', which='minor', length=2, direction = 'in')  # Customize minor ticks
+plt.tick_params(axis='y', which='major',  length=5,  direction = 'in')  # Turns off minor ticks on the x-axis
+
 
 #plt.show()
-save_here = '/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Figures/final/Temp_and_sigma_variations_scatter_plot/'
-plt.savefig(save_here + "Temp_scatter_maxJ_1000.pdf", format="pdf", bbox_inches="tight")
+plt.savefig("Temp_scatter_maxJ_1000.pdf", format="pdf", bbox_inches="tight")
 plt.show()
-'''Sigma'''   
-plt.errorbar(x = x, y = sigma, yerr = sigma_err, fmt='o', color='black',
-              ecolor='lightgray', elinewidth=3, capsize=0 )
 
 
-plt.xticks(x, sightlines, rotation = 55, size = 9)
-#plt.xticks([])  
-plt.ylabel('Intrinsic linewidth (cm$^{-1}$)', labelpad =15 , size = 14)
-plt.xlabel('12 single-cloud sightlines', labelpad= 25, size = 14)
+###############################################
+'''Scatter in sigma'''
+###############################################
 
-#plt.show()
-plt.savefig(save_here + "linewidth_scatter_maxJ_1000.pdf", format="pdf", bbox_inches="tight")
+plt.figure(figsize = (3.3, 2))
 
+plt.errorbar(x = x, y = sigma, yerr = sigma_err, fmt='o', color='black', markersize = 3,
+              ecolor='gray', elinewidth=1.5, capsize=2 )
+
+
+plt.xticks(x, sightlines, rotation = 75, size = 7)
+plt.yticks(size = 8)
+plt.ylabel('Intrinsic line width (cm$^{-1}$)', labelpad =2  , size = 8)
+plt.xlabel('12 single-cloud sightlines', labelpad=5, size = 8)
+
+
+# Add minor ticks only to the y-axis
+plt.gca().yaxis.set_minor_locator(AutoMinorLocator(2))  # Adds 2 minor ticks between each major tick on the y-axis
+
+# Disable minor ticks on the x-axis
+plt.tick_params(axis='x', which='minor', bottom=False)  # Turns off minor ticks on the x-axis
+plt.tick_params(axis='x', which='major', length=5, direction = 'in')  # Turns off minor ticks on the x-axis
+
+# Customize the minor ticks on the y-axis
+plt.tick_params(axis='y', which='minor', length=2, direction = 'in')  # Customize minor ticks
+plt.tick_params(axis='y', which='major',  length=5,  direction = 'in')  # Turns off minor ticks on the x-axis
+
+
+
+plt.savefig("linewidth_scatter_maxJ_1000.pdf", format="pdf", bbox_inches="tight")
 plt.show()
-plt.errorbar(x = T, y = PR_sep, xerr = T_err, yerr = PR_sep_unc, fmt='o', color='black',
-              ecolor='lightgray', elinewidth=3, capsize=0 )
 
 
-#plt.xticks(x, sightlines, rotation = 55, size = 9)
-#plt.xticks([])  
-plt.ylabel('PR peak separation (cm$^{-1}$)', labelpad =15 , size = 14)
-plt.xlabel('Rotational Temperature (K)', labelpad= 25, size = 14)
+###############################################
+'''T vs PR_sep correlation'''
+###############################################
 
-#plt.show()
-plt.savefig(save_here + "T_vs_PR_sep_maxJ_1000.pdf", format="pdf", bbox_inches="tight")
+plt.figure(figsize = (3.3, 2))
+
+plt.errorbar(x = T, y = PR_sep, xerr = T_err, yerr = PR_sep_unc, fmt='o', color='black', markersize = 2,
+              ecolor='gray', elinewidth=1.5, capsize=2 )
+
+
+plt.xticks(size = 8)
+plt.yticks(size = 8)
+plt.ylabel('PR peak separation (cm$^{-1}$)', labelpad =3 , size = 8)
+plt.xlabel('Rotational Temperature (K)', labelpad= 2, size = 8)
+
+# Add minor ticks only to the y-axis
+plt.gca().yaxis.set_minor_locator(AutoMinorLocator(3))  # Adds 2 minor ticks between each major tick on the y-axis
+plt.gca().xaxis.set_minor_locator(AutoMinorLocator(3))  # Adds 2 minor ticks between each major tick on the y-axis
+
+# Disable minor ticks on the x-axis
+plt.tick_params(axis='x', which='minor', length=2, direction = 'in')  # Turns off minor ticks on the x-axis
+plt.tick_params(axis='x', which='major', length=5, direction = 'in')  # Turns off minor ticks on the x-axis
+
+# Customize the minor ticks on the y-axis
+plt.tick_params(axis='y', which='minor', length=2, direction = 'in')  # Customize minor ticks
+plt.tick_params(axis='y', which='major',  length=5,  direction = 'in')  # Turns off minor ticks on the x-axis
+
+
+plt.savefig( "T_vs_PR_sep_maxJ_1000.pdf", format="pdf", bbox_inches="tight")
 
 
 '''As subplots'''

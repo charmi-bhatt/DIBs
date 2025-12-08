@@ -1,0 +1,75 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct  2 15:11:11 2024
+
+@author: charmibhatt
+"""
+import os
+import sys
+from pathlib import Path
+import pandas as pd
+import matplotlib.pyplot as plt
+
+module_path = os.path.abspath('/home/charmibhatt/Science/Spectools/')
+if module_path not in sys.path:
+    sys.path.insert(0, module_path)
+
+import general_spectools
+import matplotlib
+matplotlib.use('TkAgg')
+
+spec_dir = Path("/home/charmibhatt/Science/DIBs/Data/Heather's_data")
+    
+filename = '6614_HD{}.txt'
+sightlines = ['23180', '24398', '144470', '147165' , '147683', '149757', '166937', '170740', '184915', '185418', '185859', '203532']
+
+EW6614_list = []
+for sightline in sightlines: 
+
+    file = filename.format(sightline)
+    # Obs_data = pd.read_csv(spec_dir / file,
+    #                         delim_whitespace=(True))
+    
+    Obs_data = pd.read_csv(spec_dir / file,
+                            sep = ',')
+    
+    plt.plot( Obs_data['Wavelength'], Obs_data['Flux'])
+    EW6614 = general_spectools.get_integrated_flux(Obs_data['Wavelength'], Obs_data['Flux'], x1 = 6611, x2= 6616)
+    EW6614_list.append(EW6614)
+      
+    
+plt.show()
+    
+
+
+
+
+    
+CHplus_filepath = Path("/home/charmibhatt/Science/DIBs/fitting_CHplus_and_K_lines/CHplus_coadded_data/")
+filename = "HD {}_coadded_data_CHplus.txt"
+
+EWCHplus_list = []
+for sightline in sightlines: 
+
+    file = filename.format(sightline)
+    
+    Obs_data = pd.read_csv(CHplus_filepath / file,
+                            sep = '\s+')
+    
+    plt.plot( Obs_data.iloc[:,0], Obs_data.iloc[:,1])
+    
+    
+    EW_CHplus = general_spectools.get_integrated_flux(Obs_data.iloc[:,0], Obs_data.iloc[:,1], x1 = 4232.2, x2= 4233)
+    
+    EWCHplus_list.append(EW_CHplus)
+      
+    
+plt.show()
+
+
+
+
+
+    
+    

@@ -21,7 +21,7 @@ import lmfit
 from lmfit import minimize, Parameters, report_fit 
 import uncertainties as unc
 import uncertainties.umath as umath 
-import numba as nb
+#import numba as nb
 from pathlib import Path
 from lmfit import Parameters      
 
@@ -217,11 +217,11 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
     Intenisty_arr = np.array(linelist['intensities'])
 
 
-    @nb.njit(parallel=True)
+    #@nb.njit(parallel=True)
     def calculate_smooth_intensities(wavenos, intensities, smooth_wavenos, sigma):
         smooth_intensities = np.zeros(smooth_wavenos.shape)
 
-        for i in nb.prange(len(smooth_wavenos)):
+        for i in range(len(smooth_wavenos)):
             wavepoint = smooth_wavenos[i]
             w_int = np.exp(-(wavenos - wavepoint) ** 2 / (2 * sigma ** 2)) * intensities
             smooth_intensities[i] = np.sum(w_int)
@@ -526,6 +526,9 @@ method = 'leastsq'
 
 #EDIBLES data
 spec_dir = Path("/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Data/Heather's_data")
+
+spec_dir = Path("/home/charmibhatt/Science/DIBs/Data/Heather's_data")
+
 filename = '6614_HD{}.txt'
 sightlines = ['23180', '24398', '144470', '147165' , '147683', '149757', '166937', '170740', '184915', '185418', '185859', '203532']
 #sightlines = ['203532']
@@ -717,66 +720,66 @@ origins = [0.01108004, -0.02271621, -0.0045765, -0.02639547, 0.01160903, -0.0036
 
 
 
-# Alto_fits_results = np.array([PR_sep,PR_sep_unc, Ts, sigmas, origins, sightlines]).T
+Alto_fits_results = np.array([PR_sep,PR_sep_unc, Ts, sigmas, origins, sightlines]).T
 
-# #sort from smallest to biggest PR_sep
-# sorted_indices = np.lexsort((Alto_fits_results[:, 1], Alto_fits_results[:, 0]))
+#sort from smallest to biggest PR_sep
+sorted_indices = np.lexsort((Alto_fits_results[:, 1], Alto_fits_results[:, 0]))
 
-# Alto_fits_results = Alto_fits_results[sorted_indices].astype(float)
+Alto_fits_results = Alto_fits_results[sorted_indices].astype(float)
 
-# #Alto_fits_results = Alto_fits_results[:2]
+#Alto_fits_results = Alto_fits_results[:2]
 
-# plt.figure(figsize = (15,35))
-# start = 0
-# spacing = 0.07
-# count = 12
+plt.figure(figsize = (15,35))
+start = 0
+spacing = 0.07
+count = 12
 
-# offset = np.arange(start, start + spacing * count, spacing)
+offset = np.arange(start, start + spacing * count, spacing)
 
-# print(offset)
-# for i, offset in enumerate(offset):  
+print(offset)
+for i, offset in enumerate(offset):  
     
-#     #if i == 0:
-#     T = Alto_fits_results[:,2][i]
-#     sigma = Alto_fits_results[:,3][i]
-#     origin = Alto_fits_results[:,4][i]
-#     sightline = int(Alto_fits_results[:,5][i])
+    #if i == 0:
+    T = Alto_fits_results[:,2][i]
+    sigma = Alto_fits_results[:,3][i]
+    origin = Alto_fits_results[:,4][i]
+    sightline = int(Alto_fits_results[:,5][i])
 
-#     Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
-#     plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset, color = 'black') #, label = 'HD ' + str(sightline) , color = 'black')
+    Obs_data, Obs_y_data_to_fit, std_dev= obs_curve_to_fit(sightline)
+    plt.plot(Obs_data['Wavelength'] , Obs_data['Flux'] - offset, color = 'black') #, label = 'HD ' + str(sightline) , color = 'black')
 
 
-#     linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-#     plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'crimson', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
+    linelist, model_data =  get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+    plt.plot(model_data[:,0], model_data[:,1] - offset, color = 'crimson', label = 'HD{}, T = {:.3f} K, sigma = {:.3f} cm-1'.format(sightline, T, sigma))
     
     
-#     plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
-#     plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
-#     plt.tick_params(axis='both', which='major', labelsize=22)
-#     plt.title(f"B = {B:.4f} cm$^{{-1}}$  $\Delta$B = {delta_B:.2f}%  $\zeta$ = {zeta:.2f} cm$^{{-1}}$", fontsize=22)
+    plt.xlabel('Wavenumber', labelpad = 14, fontsize = 22)
+    plt.ylabel('Normalized Intenisty', labelpad = 14, fontsize = 22)
+    plt.tick_params(axis='both', which='major', labelsize=22)
+    plt.title(f"B = {B:.4f} cm$^{{-1}}$  $\Delta$B = {delta_B:.2f}%  $\zeta$ = {zeta:.2f} cm$^{{-1}}$", fontsize=22)
     
-#     xy = (Obs_data['Wavelength'][120] , Obs_data['Flux'][120] - offset)
-#     # plt.annotate('HD' + str(sightline), xy = xy , xytext = (3, Obs_data['Flux'][25] - offset + 0.0095), fontsize = 17 )
-#     # plt.annotate('T = {:.2f}'.format(T) + ' K', xy = xy , xytext = (-4.7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
-#     # plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = xy , xytext = (-3.5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
+    xy = (Obs_data['Wavelength'][120] , Obs_data['Flux'][120] - offset)
+    # plt.annotate('HD' + str(sightline), xy = xy , xytext = (3, Obs_data['Flux'][25] - offset + 0.0095), fontsize = 17 )
+    # plt.annotate('T = {:.2f}'.format(T) + ' K', xy = xy , xytext = (-4.7, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17 )
+    # plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + '  cm$^{-1}$', xy = xy , xytext = (-3.5, Obs_data['Flux'][25] - offset + 0.009), fontsize = 17)
     
-#     plt.annotate('HD' + str(sightline), xy = xy , xytext = (2.5, model_data[:,1][5] - offset + 0.006), fontsize = 17 )
-#     plt.annotate('T = {:.2f}'.format(T) + 'K', xy = xy , xytext = (-2.3, model_data[:,1][5] - offset + 0.005), fontsize = 17 )
-#     plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + 'cm$^{-1}$', xy = xy , xytext = (-3.5, model_data[:,1][5] - offset + 0.005), fontsize = 17)
+    plt.annotate('HD' + str(sightline), xy = xy , xytext = (2.5, model_data[:,1][5] - offset + 0.006), fontsize = 17 )
+    plt.annotate('T = {:.2f}'.format(T) + 'K', xy = xy , xytext = (-2.3, model_data[:,1][5] - offset + 0.005), fontsize = 17 )
+    plt.annotate(r"$\sigma$ = {:.3f}".format(sigma) + 'cm$^{-1}$', xy = xy , xytext = (-3.5, model_data[:,1][5] - offset + 0.005), fontsize = 17)
    
-#     plt.axvline(x = -0.70, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.axvline(x = -0.54, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.axvline(x = 0.74, color = 'gray', linestyle = 'dotted', alpha = 0.5)
-#     plt.axvline(x = 0.87, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+    plt.axvline(x = -0.70, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+    plt.axvline(x = -0.54, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+    plt.axvline(x = 0.74, color = 'gray', linestyle = 'dotted', alpha = 0.5)
+    plt.axvline(x = 0.87, color = 'gray', linestyle = 'dotted', alpha = 0.5)
     
-#     #plt.xlim(-5,4.5)
-#     plt.xlim(4.5, -5)
+    #plt.xlim(-5,4.5)
+    plt.xlim(4.5, -5)
     
-# #plt.show()
-# save_here = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/Altogther_at_maxJ_1000/"
-# #save_plot_as = save_here + "Alto_fits_EDIBLES_maxJ_1000.pdf"
+#plt.show()
+#save_here = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/Altogther_at_maxJ_1000/"
+#save_plot_as = save_here + "Alto_fits_EDIBLES_maxJ_1000.pdf"
 
-# plt.savefig(save_plot_as, format = 'pdf', bbox_inches="tight")
+#plt.savefig(save_plot_as, format = 'pdf', bbox_inches="tight")
 
 '''Cami 2004'''
 
@@ -935,7 +938,7 @@ for i, offset in enumerate(offset):
 save_here = "/Users/charmibhatt/Library/CloudStorage/OneDrive-TheUniversityofWesternOntario/UWO_onedrive/Local_GitHub/DIBs/Fitting_at_Jmax_1000/Altogther_at_maxJ_1000/"
 save_plot_as = save_here + "residual_plot_Alto_fits_EDIBLES_maxJ_1000.pdf"
 
-plt.savefig(save_plot_as, format = 'pdf', bbox_inches="tight")
+#plt.savefig(save_plot_as, format = 'pdf', bbox_inches="tight")
 
 ############################################################################################
 ############################################################################################

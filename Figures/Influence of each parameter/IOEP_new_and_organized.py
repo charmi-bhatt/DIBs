@@ -21,9 +21,9 @@ import lmfit
 from lmfit import minimize, Parameters, report_fit 
 import uncertainties as unc
 import uncertainties.umath as umath 
-import numba as nb
 from pathlib import Path
 from lmfit import Parameters      
+from matplotlib.ticker import MaxNLocator
 
 
 
@@ -211,17 +211,20 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
    
     '''Smoothening the linelist'''
     
-    smooth_wavenos = np.linspace(np.min(linelist['wavenos']) - 1, np.max(linelist['wavenos']) + 1, 1000)  # grid_size
+    smooth_wavenos = np.linspace(np.min(linelist['wavenos']) - 1, np.max(linelist['wavenos']) + 1, 10000)  # grid_size
+    smooth_wavenos = np.linspace(-10, 10,  1000)  # grid_size
+
+
 
     Wavenos_arr = np.array(linelist['wavenos'])
     Intenisty_arr = np.array(linelist['intensities'])
 
 
-    @nb.njit(parallel=True)
+    #@nb.njit(parallel=True)
     def calculate_smooth_intensities(wavenos, intensities, smooth_wavenos, sigma):
         smooth_intensities = np.zeros(smooth_wavenos.shape)
 
-        for i in nb.prange(len(smooth_wavenos)):
+        for i in range(len(smooth_wavenos)):
             wavepoint = smooth_wavenos[i]
             w_int = np.exp(-(wavenos - wavepoint) ** 2 / (2 * sigma ** 2)) * intensities
             smooth_intensities[i] = np.sum(w_int)
@@ -276,53 +279,76 @@ def get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin):
 Jmax = 1000
 combinations  = allowed_perperndicular_transitions(Jmax) 
 
-
-'''============== Parameter Study : Sigma ================'''
-
-
-# #Ts = (2.7, 10, 30, 70, 100)
-# delta_Bs = (0, -0.2, -0.4, -0.6, -0.8)
-# ground_Bs = (0.000501, 0.001584, 0.005011, 0.0158489, 0.0501187)
-# #zetas = (-1, -0.5, 0, 0.5, 1)
-# sigmas  = (0.05, 0.11, 0.17, 0.23, 0.3)
+'''For finer binning, we have chosen 1000 points between -10 and 10 wavenumbers. 
+smooth_wavenos = np.linspace(-10, 10,  1000) 
+While exporting the whole wavelength range, this is not good trim the x axis '''
 
 # T = 61.2
-# B = 0.00336
+# B = 0.0501187
 # delta_B = -0.17
 # delta_C = -0.17
 # origin = 0
 # zeta = -0.49
 # sigma = 0.1953
 
-# m = 0
-    
-# fig, axes = plt.subplots(5, figsize=(7,10), sharex=(True), sharey=(True))
 
-# for sigma in sigmas:
-#     linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-    
-#     axes[m].plot(model_data[:,0], model_data[:,1], linewidth = 1, label = ''r'$\sigma = $'+ str(sigma) + 'cm$^{-1}$') #, label = str(delta_B))
-#     axes[m].axhline(y=1, linestyle = '--', color = 'gray')
-#     axes[m].axvline(x=0, linestyle = '--', color = 'gray')
-    
-    
-#     axes[m].xaxis.set_major_locator(plt.MultipleLocator(2))
-#     axes[m].xaxis.set_minor_locator(plt.MultipleLocator(0.5))
-#     axes[m].yaxis.set_major_locator(plt.MultipleLocator(0.05))
-#     axes[m].yaxis.set_minor_locator(plt.MultipleLocator(0.01))
-#     axes[m].tick_params(axis='x', labelsize=14)
-#     axes[m].tick_params(axis='y', labelsize=14)
-#     axes[m].legend(loc='lower right', fontsize= 12)
-#     axes[m].set_ylabel('Intensity', rotation=90, labelpad=7, fontsize = 17)
-#     axes[4].set_xlabel('Wavenumber (cm$^{-1}$)', labelpad =10, fontsize = 17)
-    
-#     plt.xlim(3, -3)
-#     fig.tight_layout()
-#     #for sigma:
-#     fig.suptitle(f"B = {B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$  T = {T} K  $\sigma =$ {sigma} cm$^{{-1}}$", size='x-large', y = 1)
-#     plt.savefig("IOEP_sigma_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
+# linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+# plt.scatter(model_data[:,0], model_data[:,1])
+# plt.xlim(3, -3)
 
-#     m = m + 1
+'''============== Parameter Study : Sigma ================'''
+
+
+#Ts = (2.7, 10, 30, 70, 100)
+delta_Bs = (0, -0.2, -0.4, -0.6, -0.8)
+ground_Bs = (0.000501, 0.001584, 0.005011, 0.0158489, 0.0501187)
+#zetas = (-1, -0.5, 0, 0.5, 1)
+sigmas  = (0.05) #, 0.11, 0.17, 0.23, 0.3)
+
+T = 61.2
+B = 0.00336
+delta_B = -0.17
+delta_C = -0.17
+origin = 0
+zeta = -0.49
+sigma = 0.1953
+
+
+plt.figure(figszie = (10,6))
+
+
+for sigma in sigmas: 
+    linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+    plt.plot(model_data[:,0], model_data[:,1], linewidth = 1, label = ''r'$\sigma = $'+ str(sigma) + 'cm$^{-1}$') #, label = str(delta_B))
+    plt.axhline(y=1, linestyle = '--', color = 'gray')
+    plt.axvline(x=0, linestyle = '--', color = 'gray')
+    
+
+# Customize tick labels and reduce the number of ticks
+plt.gca().xaxis.set_major_locator(MaxNLocator(nbins=5))  # Fewer ticks on x-axis
+plt.gca().yaxis.set_major_locator(MaxNLocator(nbins=5))  # Fewer ticks on y-axis
+
+# Increase tick label size
+plt.xticks(fontsize=12)
+plt.yticks(fontsize=12)
+
+# Add minor ticks
+plt.minorticks_on()
+plt.tick_params(which='both', width=1)
+plt.tick_params(which='major', length=7)
+plt.tick_params(which='minor', length=4, color='gray')
+plt.legend(loc='lower right', fontsize= 12)
+  
+plt.xlim(3, -3)
+plt.ylabel('Intensity', rotation=90, labelpad=7, fontsize = 17)
+plt.xlabel('Wavenumber (cm$^{-1}$)', labelpad =10, fontsize = 17)
+plt.title(f"B = {B} cm$^{{-1}}$, $\Delta B = {delta_B}\%$, $\zeta' = {zeta} cm^{{-1}}$, T = {T} K", size='x-large', y=1)
+#plt.savefig("IOEP_sigma_flipped_x_axis_new.pdf", format="pdf", bbox_inches="tight")
+
+    
+
+    
+
 
 '''============== Parameter Study : B  ================'''
 
@@ -363,123 +389,123 @@ combinations  = allowed_perperndicular_transitions(Jmax)
 
 '''============== Parameter Study : delta_B  ================'''
 
-delta_Bs = (0, -0.2, -0.4, -0.6, -0.8)
-T = 61.2
-B = 0.00336
-origin = 0
-zeta = -0.49
-sigma = 0.1953
+# delta_Bs = (0, -0.2, -0.4, -0.6, -0.8)
+# T = 61.2
+# B = 0.00336
+# origin = 0
+# zeta = -0.49
+# sigma = 0.1953
 
-m = 0 
-fig, axes = plt.subplots(5, figsize=(7,10), sharex=(True), sharey=(True))
-for delta_B in delta_Bs:
-    linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
-    axes[m].plot(model_data[:,0], model_data[:,1], linewidth = 1,  label = ''r'$\Delta B =$'r'$\Delta C =$ ' + str(delta_B) + '% ') 
-    axes[m].axhline(y=1, linestyle = '--', color = 'gray')
-    axes[m].axvline(x=0, linestyle = '--', color = 'gray')
+# m = 0 
+# fig, axes = plt.subplots(5, figsize=(7,10), sharex=(True), sharey=(True))
+# for delta_B in delta_Bs:
+#     linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+#     axes[m].plot(model_data[:,0], model_data[:,1], linewidth = 1,  label = ''r'$\Delta B =$'r'$\Delta C =$ ' + str(delta_B) + '% ') 
+#     axes[m].axhline(y=1, linestyle = '--', color = 'gray')
+#     axes[m].axvline(x=0, linestyle = '--', color = 'gray')
     
     
-    axes[m].xaxis.set_major_locator(plt.MultipleLocator(2))
-    axes[m].xaxis.set_minor_locator(plt.MultipleLocator(0.5))
-    axes[m].yaxis.set_major_locator(plt.MultipleLocator(0.05))
-    axes[m].yaxis.set_minor_locator(plt.MultipleLocator(0.01))
-    axes[m].tick_params(axis='x', labelsize=14)
-    axes[m].tick_params(axis='y', labelsize=14)
-    axes[m].legend(loc='lower right', fontsize= 12)
-    axes[m].set_ylabel('Intensity', rotation=90, labelpad=7, fontsize = 17)
-    axes[4].set_xlabel('Wavenumber (cm$^{-1}$)', labelpad =10, fontsize = 17)
+#     axes[m].xaxis.set_major_locator(plt.MultipleLocator(1))
+#     axes[m].xaxis.set_minor_locator(plt.MultipleLocator(0.5))
+#     axes[m].yaxis.set_major_locator(plt.MultipleLocator(0.05))
+#     axes[m].yaxis.set_minor_locator(plt.MultipleLocator(0.01))
+#     axes[m].tick_params(axis='x', labelsize=14)
+#     axes[m].tick_params(axis='y', labelsize=14)
+#     axes[m].legend(loc='lower right', fontsize= 12)
+#     axes[m].set_ylabel('Intensity', rotation=90, labelpad=7, fontsize = 17)
+#     axes[4].set_xlabel('Wavenumber (cm$^{-1}$)', labelpad =10, fontsize = 17)
     
-    plt.xlim(2.5, -4)
-    fig.tight_layout()
-    #for delta_B=
-    fig.suptitle(f"B = {B} cm$^{{-1}}$  $\Delta B =$ {delta_B}%  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$  T = {T} K ", size='x-large', y=1)
+#     plt.xlim(2.5, -4)
+#     fig.tight_layout()
+#     #for delta_B=
+#     fig.suptitle(f"B = {B} cm$^{{-1}}$  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$  T = {T} K  $\sigma =$ {sigma} cm$^{{-1}}$", size='x-large', y=1)
 
-    plt.savefig("IOEP_delta_B_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
+#     plt.savefig("IOEP_delta_B_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
 
-    m = m + 1
+#     m = m + 1
     
 '''============== Parameter Study : T  ================'''
 
 Ts = (2.7, 10, 30, 70, 100)
-B = 0.00336
-delta_B = -0.17
-origin = 0
-zeta = -0.49
-sigma = 0.1953
+# B = 0.00336
+# delta_B = -0.17
+# origin = 0
+# zeta = -0.49
+# sigma = 0.1953
 
-m = 0
+# m = 0
     
-fig, axes = plt.subplots(5, figsize=(7,10), sharex=(True), sharey=(True))
+# fig, axes = plt.subplots(5, figsize=(7,10), sharex=(True), sharey=(True))
 
-for T in Ts:
-    linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+# for T in Ts:
+#     linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
     
-    axes[m].plot(model_data[:,0], model_data[:,1], linewidth = 1,  label = 'T = ' + str(T) + ' K') 
-    axes[m].axhline(y=1, linestyle = '--', color = 'gray')
-    axes[m].axvline(x=0, linestyle = '--', color = 'gray')
+#     axes[m].plot(model_data[:,0], model_data[:,1], linewidth = 1,  label = 'T = ' + str(T) + ' K') 
+#     axes[m].axhline(y=1, linestyle = '--', color = 'gray')
+#     axes[m].axvline(x=0, linestyle = '--', color = 'gray')
     
     
-    axes[m].xaxis.set_major_locator(plt.MultipleLocator(2))
-    axes[m].xaxis.set_minor_locator(plt.MultipleLocator(0.5))
-    axes[m].yaxis.set_major_locator(plt.MultipleLocator(0.05))
-    axes[m].yaxis.set_minor_locator(plt.MultipleLocator(0.01))
-    axes[m].tick_params(axis='x', labelsize=14)
-    axes[m].tick_params(axis='y', labelsize=14)
-    axes[m].legend(loc='lower right', fontsize= 12)
-    axes[m].set_ylabel('Intensity', rotation=90, labelpad=7, fontsize = 17)
-    axes[4].set_xlabel('Wavenumber (cm$^{-1}$)', labelpad =10, fontsize = 17)
+#     axes[m].xaxis.set_major_locator(plt.MultipleLocator(1))
+#     axes[m].xaxis.set_minor_locator(plt.MultipleLocator(0.5))
+#     axes[m].yaxis.set_major_locator(plt.MultipleLocator(0.05))
+#     axes[m].yaxis.set_minor_locator(plt.MultipleLocator(0.01))
+#     axes[m].tick_params(axis='x', labelsize=14)
+#     axes[m].tick_params(axis='y', labelsize=14)
+#     axes[m].legend(loc='lower right', fontsize= 12)
+#     axes[m].set_ylabel('Intensity', rotation=90, labelpad=7, fontsize = 17)
+#     axes[4].set_xlabel('Wavenumber (cm$^{-1}$)', labelpad =10, fontsize = 17)
     
-    plt.xlim(2, -2.5)
-    fig.tight_layout()
+#     plt.xlim(2, -2.5)
+#     fig.tight_layout()
     
-    #for T:
-    fig.suptitle(f"B = {B} cm$^{{-1}}$  $\Delta B =$ {delta_B}%  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$  $\sigma =$ {sigma} cm$^{{-1}}$", size='x-large', y=1)
-    plt.savefig("IOEP_T_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
+#     #for T:
+#     fig.suptitle(f"B = {B} cm$^{{-1}}$  $\Delta B =$ {delta_B}%  $\zeta^{{\prime}}  = ${zeta} cm$^{{-1}}$  $\sigma =$ {sigma} cm$^{{-1}}$", size='x-large', y=1)
+#     plt.savefig("IOEP_T_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
 
-    m = m + 1
+#     m = m + 1
     
 '''============== Parameter Study : zeta  ================'''
 
 
-zetas = (-1, -0.5, 0, 0.5, 1)
+# zetas = (-1, -0.5, 0, 0.5, 1)
 
-T = 61.2
-B = 0.00336
-delta_B = -0.17
-origin = 0
-sigma = 0.1953
+# T = 61.2
+# B = 0.00336
+# delta_B = -0.17
+# origin = 0
+# sigma = 0.1953
 
-m = 0
+# m = 0
     
-fig, axes = plt.subplots(5, figsize=(7,10), sharex=(True), sharey=(True))
+# fig, axes = plt.subplots(5, figsize=(7,10), sharex=(True), sharey=(True))
 
-for zeta in zetas:
-    linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
+# for zeta in zetas:
+#     linelist, model_data = get_rotational_spectrum(B, delta_B, zeta, T, sigma, origin)
     
-    axes[m].plot(model_data[:,0], model_data[:,1], linewidth = 1, label = ''r'$\zeta^{\prime}  = $' + str(zeta) + ' cm$^{-1}$') #, label = str(delta_B))
-    axes[m].axhline(y=1, linestyle = '--', color = 'gray')
-    axes[m].axvline(x=0, linestyle = '--', color = 'gray')
+#     axes[m].plot(model_data[:,0], model_data[:,1], linewidth = 1, label = ''r'$\zeta^{\prime}  = $' + str(zeta) + ' cm$^{-1}$') #, label = str(delta_B))
+#     axes[m].axhline(y=1, linestyle = '--', color = 'gray')
+#     axes[m].axvline(x=0, linestyle = '--', color = 'gray')
     
     
-    axes[m].xaxis.set_major_locator(plt.MultipleLocator(2))
-    axes[m].xaxis.set_minor_locator(plt.MultipleLocator(0.5))
-    axes[m].yaxis.set_major_locator(plt.MultipleLocator(0.05))
-    axes[m].yaxis.set_minor_locator(plt.MultipleLocator(0.01))
-    axes[m].tick_params(axis='x', labelsize=14)
-    axes[m].tick_params(axis='y', labelsize=14)
-    axes[m].legend(loc='lower right', fontsize= 12)
-    axes[m].set_ylabel('Intensity', rotation=90, labelpad=7, fontsize = 17)
-    axes[4].set_xlabel('Wavenumber (cm$^{-1}$)', labelpad =10, fontsize = 17)
+#     axes[m].xaxis.set_major_locator(plt.MultipleLocator(1))
+#     axes[m].xaxis.set_minor_locator(plt.MultipleLocator(0.5))
+#     axes[m].yaxis.set_major_locator(plt.MultipleLocator(0.05))
+#     axes[m].yaxis.set_minor_locator(plt.MultipleLocator(0.01))
+#     axes[m].tick_params(axis='x', labelsize=14)
+#     axes[m].tick_params(axis='y', labelsize=14)
+#     axes[m].legend(loc='lower right', fontsize= 12)
+#     axes[m].set_ylabel('Intensity', rotation=90, labelpad=7, fontsize = 17)
+#     axes[4].set_xlabel('Wavenumber (cm$^{-1}$)', labelpad =10, fontsize = 17)
     
-    plt.xlim(3, -3)
-    fig.tight_layout()
-    #for zeta:
-    fig.suptitle(f"B = {B} cm$^{{-1}}$  $\Delta B =$ {delta_B}%  T = {T} K  $\sigma =$ {sigma} cm$^{{-1}}$", size='x-large', y=1)
+#     plt.xlim(3, -3)
+#     fig.tight_layout()
+#     #for zeta:
+#     fig.suptitle(f"B = {B} cm$^{{-1}}$  $\Delta B =$ {delta_B}%  T = {T} K  $\sigma =$ {sigma} cm$^{{-1}}$", size='x-large', y=1)
 
 
-    plt.savefig("IOEP_zeta_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
+#     plt.savefig("IOEP_zeta_flipped_x_axis.pdf", format="pdf", bbox_inches="tight")
 
-    m = m + 1
+#     m = m + 1
     
 
 
